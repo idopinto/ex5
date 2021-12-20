@@ -30,7 +30,7 @@ public class PepseGameManager extends danogl.GameManager{
      */
     public static void main(String[] args)
     {
-
+        new PepseGameManager().run();
     }
 
 }
