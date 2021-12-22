@@ -32,6 +32,7 @@ public class Block extends danogl.GameObject {
 //    public Block(Vector2 topLeftCorner, Renderable renderable)
 //    {
 //          API constructor without the dimensions' parameter
+    //    Vector(SIZE,SIZE)
 //    }
 
 }
