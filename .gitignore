@@ -1,3 +1,11 @@
+# out
+out/
+
+# iml files
+*.iml
+
+.idea/
+
 # Compiled class file
 *.class
 
