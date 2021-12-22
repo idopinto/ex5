@@ -3,6 +3,7 @@ package pepse.world.daynight;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.components.CoordinateSpace;
+import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
@@ -15,6 +16,8 @@ import java.awt.*;
 public class Sun {
     private static final Color SUN_COLOR = Color.YELLOW ;
     private static final int SUN_SIZE = 200;
+    private static final float FULL_CYCLE = 360;
+    private float sunCenter;
 
     /**
      *This function creates a yellow circle that moves in the sky in an elliptical path (in camera coordinates).
@@ -27,10 +30,28 @@ public class Sun {
     public static GameObject create(GameObjectCollection gameObjects,
                                     int layer, Vector2 windowDimensions, float cycleLength)
     {
-        GameObject sun = new GameObject( new Vector2(windowDimensions.x()/2, windowDimensions.y()/2), new Vector2(SUN_SIZE,SUN_SIZE), new OvalRenderable(SUN_COLOR));
+        GameObject sun = new GameObject( new Vector2(windowDimensions.x()/2, windowDimensions.y()/2),
+                new Vector2(SUN_SIZE,SUN_SIZE), new OvalRenderable(SUN_COLOR));
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sun, layer);
+//        sunCenter = sun.getCenter();
         sun.setTag("sun");
+
+//
+//        new Transition<>(
+//                sun, // the game object being changed
+//                sun.renderer()::setOpaqueness, // the method to call
+//                0f, // initial transition value
+//                FULL_CYCLE, // final transition value
+//                Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
+//                cycleLength, // transition fully over cycleLength
+//                Transition.TransitionType.TRANSITION_LOOP,
+//                null); // nothing further to execute upon reaching final value
         return sun;
     }
+
+//    private static Vector2 calcSunPosition(Vector2 windowDimensions, float angleInSky,GameObject sun)
+//    {
+//        windowDimensions.mult(0.5f).add(sun.getCenter()).mult().rotated(angleInSky);
+//    }
 }

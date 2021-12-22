@@ -33,8 +33,9 @@ public class PepseGameManager extends danogl.GameManager{
     {
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
         Vector2 windowDimensions = windowController.getWindowDimensions();
-        Sky.create(this.gameObjects(),windowController.getWindowDimensions(), Layer.BACKGROUND);
-        Night.create(this.gameObjects(), Layer.FOREGROUND,windowController.getWindowDimensions(),30);
+        Sky.create(this.gameObjects(),windowDimensions, Layer.BACKGROUND);
+        Night.create(this.gameObjects(), Layer.FOREGROUND,windowDimensions,NIGHT_CYCLE_LENGTH);
+        Sun.create(this.gameObjects(),Layer.BACKGROUND,windowDimensions,SUN_CYCLE_LENGTH);
         Terrain terrain = new Terrain(this.gameObjects(), Layer.STATIC_OBJECTS,
                 windowController.getWindowDimensions(),10); // initializing the terrain
         terrain.createInRange(0, (int) windowController.getWindowDimensions().x()); // terrain spread on the whole screen.
