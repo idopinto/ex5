@@ -24,7 +24,6 @@ public class PepseGameManager extends danogl.GameManager{
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                     UserInputListener inputListener, WindowController windowController)
     {
-
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
         GameObject sky = Sky.create(this.gameObjects(),windowController.getWindowDimensions(), Layer.BACKGROUND);
 
