@@ -2,12 +2,19 @@ package pepse.world.daynight;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
+import danogl.components.CoordinateSpace;
+import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+
+import java.awt.*;
 
 /**
  * Represents the sun - moves across the sky in an elliptical path.
  */
 public class Sun {
+    private static final Color SUN_COLOR = Color.YELLOW ;
+
     /**
      *This function creates a yellow circle that moves in the sky in an elliptical path (in camera coordinates).
      * @param gameObjects  The collection of all participating game objects.
@@ -19,6 +26,10 @@ public class Sun {
     public static GameObject create(GameObjectCollection gameObjects,
                                     int layer, Vector2 windowDimensions, float cycleLength)
     {
-        return null;
+        GameObject sun = new GameObject( Vector2.ZERO, windowDimensions, new OvalRenderable(SUN_COLOR));
+        sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+        gameObjects.addGameObject(sun, layer);
+        sun.setTag("sun");
+        return sun;
     }
 }
