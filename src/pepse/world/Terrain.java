@@ -1,12 +1,26 @@
 package pepse.world;
 
 import danogl.collisions.GameObjectCollection;
+import danogl.collisions.Layer;
+import danogl.gui.rendering.RectangleRenderable;
+import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.util.ColorSupplier;
 
+import java.awt.*;
+import java.lang.Math;
 /**
  * Responsible for the creation and management of terrain.
  */
 public class Terrain {
+
+    private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
+
+    private final int groundHeightAtX0;
+    private GameObjectCollection gameObjects;
+    private int groundLayer;
+    private Vector2 windowDimensions;
+    private int seed;
 
     /**
      * Constructor.
@@ -17,7 +31,11 @@ public class Terrain {
      */
     Terrain(GameObjectCollection gameObjects, int groundLayer, Vector2 windowDimensions, int seed)
     {
-
+        this.gameObjects = gameObjects;
+        this.groundLayer = groundLayer;
+        this.windowDimensions = windowDimensions;
+//        this.seed = seed;
+        this.groundHeightAtX0 = seed;
     }
 
     /**
@@ -27,7 +45,7 @@ public class Terrain {
      */
     public float groundHeightAt(float x)
     {
-        return 0;
+        return (float) Math.sin(x);
     }
 
     /**
@@ -37,7 +55,8 @@ public class Terrain {
      */
     public void createInRange(int minX, int maxX)
     {
-
+        Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
+        this.gameObjects.addGameObject(new Block(), Layer.STATIC_OBJECTS);
     }
 
 }
