@@ -10,11 +10,15 @@ import danogl.util.Vector2;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Night;
+import pepse.world.daynight.Sun;
 
 /**
  * The main class of the simulator.
  */
 public class PepseGameManager extends danogl.GameManager{
+
+    private static final int NIGHT_CYCLE_LENGTH = 30;
+    private static final int SUN_CYCLE_LENGTH = 30;
 
     /**
      * The method will be called once when a GameGUIComponent is created,
@@ -27,6 +31,7 @@ public class PepseGameManager extends danogl.GameManager{
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                     UserInputListener inputListener, WindowController windowController)
     {
+        Vector2 windowDimensions = windowController.getWindowDimensions();
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
         Sky.create(this.gameObjects(),windowController.getWindowDimensions(), Layer.BACKGROUND);
         Night.create(this.gameObjects(), Layer.FOREGROUND,windowController.getWindowDimensions(),30);
