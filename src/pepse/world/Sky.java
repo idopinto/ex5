@@ -8,6 +8,8 @@ import danogl.util.Vector2;
  * Represents the sky.
  */
 public class Sky {
+
+
     /**
      * This function creates a light blue rectangle which is always at the back of the window.
      * @param gameObjects The collection of all participating game objects.
@@ -17,6 +19,6 @@ public class Sky {
      */
     public static GameObject create(GameObjectCollection gameObjects, Vector2 windowDimensions, int skyLayer)
     {
-        return null;
+        return ;
     }
 }
