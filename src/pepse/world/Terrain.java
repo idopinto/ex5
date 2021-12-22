@@ -15,6 +15,7 @@ import java.lang.Math;
 public class Terrain {
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
+    private static final int TERRAIN_DEPTH = 20;
 
     private final int groundHeightAtX0;
     private GameObjectCollection gameObjects;
@@ -29,13 +30,13 @@ public class Terrain {
      * @param windowDimensions The dimensions of the windows.
      * @param seed  A seed for a random number generator.
      */
-    Terrain(GameObjectCollection gameObjects, int groundLayer, Vector2 windowDimensions, int seed)
+    public Terrain(GameObjectCollection gameObjects, int groundLayer, Vector2 windowDimensions, int seed)
     {
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
-//        this.seed = seed;
-        this.groundHeightAtX0 = seed;
+        this.seed = seed;
+        this.groundHeightAtX0 = (int) windowDimensions.y() - 100;
     }
 
     /**
@@ -45,7 +46,8 @@ public class Terrain {
      */
     public float groundHeightAt(float x)
     {
-        return (float) Math.sin(x);
+//        return (float) Math.sin(x);
+        return this.groundHeightAtX0;
     }
 
     /**
@@ -55,8 +57,18 @@ public class Terrain {
      */
     public void createInRange(int minX, int maxX)
     {
+        int newMinX = minX;
+        int newMaxX = maxX;
+        int topYBlock;
+        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
+        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
         Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-        this.gameObjects.addGameObject(new Block(), Layer.STATIC_OBJECTS);
+        for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
+            topYBlock = ((int)(groundHeightAt(60)/Block.SIZE)) * Block.SIZE; // highest block for an X coordinate.
+            for (int yBlock = (int) this.windowDimensions.y(); yBlock > topYBlock; yBlock-=Block.SIZE){
+                this.gameObjects.addGameObject(new Block(new Vector2(xBlock,yBlock), renderable), this.groundLayer);
+            }
+        }
     }
 
 }

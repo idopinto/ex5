@@ -6,7 +6,9 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.util.Vector2;
 import pepse.world.Sky;
+import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 
 /**
@@ -28,6 +30,9 @@ public class PepseGameManager extends danogl.GameManager{
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
         Sky.create(this.gameObjects(),windowController.getWindowDimensions(), Layer.BACKGROUND);
         Night.create(this.gameObjects(), Layer.FOREGROUND,windowController.getWindowDimensions(),30);
+        Terrain terrain = new Terrain(this.gameObjects(), Layer.STATIC_OBJECTS,
+                windowController.getWindowDimensions(),10); // initializing the terrain
+        terrain.createInRange(0, (int) windowController.getWindowDimensions().x()); // terrain spread on the whole screen.
 
 
     }
