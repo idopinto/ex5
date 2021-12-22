@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class Sun {
     private static final Color SUN_COLOR = Color.YELLOW ;
+    private static final int SUN_SIZE = 200;
 
     /**
      *This function creates a yellow circle that moves in the sky in an elliptical path (in camera coordinates).
@@ -26,7 +27,7 @@ public class Sun {
     public static GameObject create(GameObjectCollection gameObjects,
                                     int layer, Vector2 windowDimensions, float cycleLength)
     {
-        GameObject sun = new GameObject( Vector2.ZERO, windowDimensions, new OvalRenderable(SUN_COLOR));
+        GameObject sun = new GameObject( new Vector2(windowDimensions.x()/2, windowDimensions.y()/2), new Vector2(SUN_SIZE,SUN_SIZE), new OvalRenderable(SUN_COLOR));
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sun, layer);
         sun.setTag("sun");

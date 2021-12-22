@@ -55,8 +55,8 @@ public class Terrain {
      */
     public void createInRange(int minX, int maxX)
     {
-        Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-        this.gameObjects.addGameObject(new Block(), Layer.STATIC_OBJECTS);
+//        Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
+//        this.gameObjects.addGameObject(new Block(), Layer.STATIC_OBJECTS);
     }
 
 }
