@@ -7,6 +7,7 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import pepse.world.Sky;
+import pepse.world.daynight.Night;
 
 /**
  * The main class of the simulator.
@@ -25,7 +26,8 @@ public class PepseGameManager extends danogl.GameManager{
                     UserInputListener inputListener, WindowController windowController)
     {
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
-        GameObject sky = Sky.create(this.gameObjects(),windowController.getWindowDimensions(), Layer.BACKGROUND);
+        Sky.create(this.gameObjects(),windowController.getWindowDimensions(), Layer.BACKGROUND);
+        Night.create(this.gameObjects(), Layer.FOREGROUND,windowController.getWindowDimensions(),30);
 
 
     }
