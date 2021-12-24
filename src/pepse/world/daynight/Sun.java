@@ -34,24 +34,32 @@ public class Sun {
                 new Vector2(SUN_SIZE,SUN_SIZE), new OvalRenderable(SUN_COLOR));
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sun, layer);
-//        sunCenter = sun.getCenter();
         sun.setTag("sun");
 
-//
-//        new Transition<>(
-//                sun, // the game object being changed
-//                sun.renderer()::setOpaqueness, // the method to call
-//                0f, // initial transition value
-//                FULL_CYCLE, // final transition value
-//                Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
-//                cycleLength, // transition fully over cycleLength
-//                Transition.TransitionType.TRANSITION_LOOP,
-//                null); // nothing further to execute upon reaching final value
+        // f: [0,360] -> void
+        // f(x) = sun.setCenter(calc(x))
+
+        new Transition<>(
+                sun, // the game object being changed
+                angle-> {
+//                    sun.setCenter(windowDimensions.normalized().add(Vector2.RIGHT.mult(windowDimensions.x()/2).rotated(angle)));
+                    sun.setCenter( windowDimensions.mult(0.5f).add(Vector2.UP).mult(1).rotated(angle));
+                }, // the method to call
+                0f, // initial transition value
+                FULL_CYCLE, // final transition value
+                Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
+                cycleLength, // transition fully over cycleLength
+                Transition.TransitionType.TRANSITION_LOOP,
+                null); // nothing further to execute upon reaching final value
         return sun;
     }
 
+//    /*
+//        this method calculates the new sun position
+//     */
 //    private static Vector2 calcSunPosition(Vector2 windowDimensions, float angleInSky,GameObject sun)
 //    {
-//        windowDimensions.mult(0.5f).add(sun.getCenter()).mult().rotated(angleInSky);
+//        Vector2 newSunCenter = sun.getCenter();
+//
 //    }
 }

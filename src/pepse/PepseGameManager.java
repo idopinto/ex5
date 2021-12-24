@@ -21,7 +21,7 @@ import java.awt.*;
 public class PepseGameManager extends danogl.GameManager{
 
     private static final int NIGHT_CYCLE_LENGTH = 30;
-    private static final int SUN_CYCLE_LENGTH = 30;
+    private static final int SUN_CYCLE_LENGTH = 10;
     private static final float WINDOW_WIDTH = 1500;
     private static final float WINDOW_HEIGHT = 840;
 

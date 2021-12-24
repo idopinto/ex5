@@ -50,9 +50,9 @@ public class Terrain {
     {
 //        return (float) Math.sin(x);
 //        return this.groundHeightAtX0;
-        PerlinNoise myPerl = new PerlinNoise(this.seed);
-        return (float) myPerl.noise(x);
-//        return 600;
+//        PerlinNoise myPerl = new PerlinNoise(this.seed);
+//        return (float) myPerl.noise(x);
+        return 600;
     }
 
     /**
