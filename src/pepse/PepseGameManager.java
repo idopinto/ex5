@@ -58,6 +58,7 @@ public class PepseGameManager extends danogl.GameManager{
     {
         PepseGameManager game = new PepseGameManager("pepse",new Vector2(WINDOW_WIDTH,WINDOW_HEIGHT));
         game.run();
+
 //        new PepseGameManager().run();
     }
 
