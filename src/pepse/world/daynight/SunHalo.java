@@ -2,6 +2,9 @@ package pepse.world.daynight;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
+import danogl.components.CoordinateSpace;
+import danogl.gui.rendering.RectangleRenderable;
+import danogl.util.Vector2;
 
 import java.awt.*;
 
@@ -9,6 +12,8 @@ import java.awt.*;
  * Represents the halo of sun.
  */
 public class SunHalo {
+    /** Size of the sun halo */
+    private static final float HALO_SIZE = 400;
 
     /**
      * This function creates a halo around a given object that represents the sun.
@@ -22,6 +27,11 @@ public class SunHalo {
     public static GameObject create(GameObjectCollection gameObjects,
                                     int layer, GameObject sun, Color color)
     {
-        return null;
+        GameObject halo = new GameObject( Vector2.ZERO, new Vector2(HALO_SIZE,HALO_SIZE),
+                new RectangleRenderable(color));
+        halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+        gameObjects.addGameObject(halo, layer);
+        halo.setTag("halo");
+        return halo;
     }
 }
