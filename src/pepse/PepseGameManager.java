@@ -52,7 +52,7 @@ public class PepseGameManager extends danogl.GameManager{
         SunHalo.create(this.gameObjects(),Layer.BACKGROUND + 10,sun,new Color(255, 255, 0, 20));
 
         Terrain terrain = new Terrain(this.gameObjects(), Layer.STATIC_OBJECTS,
-                windowController.getWindowDimensions(),10); // initializing the terrain
+                windowController.getWindowDimensions(),23); // initializing the terrain
         terrain.createInRange(0, (int) windowController.getWindowDimensions().x()); // terrain spread on the whole screen.
 
 

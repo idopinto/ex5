@@ -6,6 +6,7 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
+import pepse.util.PerlinNoise;
 
 import java.awt.*;
 import java.lang.Math;
@@ -49,7 +50,9 @@ public class Terrain {
     {
 //        return (float) Math.sin(x);
 //        return this.groundHeightAtX0;
-        return 600;
+        PerlinNoise myPerl = new PerlinNoise(this.seed);
+        return (float) myPerl.noise(x);
+//        return 600;
     }
 
     /**
@@ -68,7 +71,7 @@ public class Terrain {
         // TODO setTag "ground"
 
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
-            topYBlock = ((int)(groundHeightAt(60)/Block.SIZE)) * Block.SIZE; // highest block for an X coordinate.
+            topYBlock = ((int)(groundHeightAt(xBlock)/Block.SIZE)) * Block.SIZE; // highest block for an X coordinate.
             for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 this.gameObjects.addGameObject(new Block(new Vector2(xBlock,yBlock), renderable), this.groundLayer);
