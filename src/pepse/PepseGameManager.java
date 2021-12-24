@@ -14,6 +14,7 @@ import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * The main class of the simulator.
@@ -51,8 +52,11 @@ public class PepseGameManager extends danogl.GameManager{
         GameObject sun = Sun.create(this.gameObjects(),Layer.BACKGROUND,windowDimensions,SUN_CYCLE_LENGTH);
         SunHalo.create(this.gameObjects(),Layer.BACKGROUND + 10,sun,new Color(255, 255, 0, 20));
 
+        Random random = new Random();
+        int seed = random.nextInt(500);
         Terrain terrain = new Terrain(this.gameObjects(), Layer.STATIC_OBJECTS,
-                windowController.getWindowDimensions(),23); // initializing the terrain
+                windowController.getWindowDimensions(), seed); // initializing the terrain
+
         terrain.createInRange(0, (int) windowController.getWindowDimensions().x()); // terrain spread on the whole screen.
 
     }

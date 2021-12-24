@@ -36,12 +36,11 @@ public class Terrain {
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
-        this.seed = seed;
-        this.myPerl = new PerlinNoise();
+        this.myPerl = new PerlinNoise(seed);
 //        this.groundHeightAtX0 = (int) (windowDimensions.y() / 3)*2;
-        this.groundHeightAtX0 = (int) this.windowDimensions.y();
+        this.groundHeightAtX0 = 600;
 //        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; // TODO 600
-//        this.groundHeightAtX0 = this.windowDimensions.y();
+//        this.groundHeightAtX0 = 600;
     }
 
     /**
@@ -51,8 +50,8 @@ public class Terrain {
      */
     public float groundHeightAt(float x)
     {
-        float result = (float) (this.groundHeightAtX0 + Block.SIZE *this.myPerl.noise(x/Block.SIZE)*10);
-        return (result < 0) ? this.groundHeightAtX0 : result;
+        float result = (float) (Block.SIZE *this.myPerl.noise(x/Block.SIZE)*20);
+        return (result < 0) ? this.groundHeightAtX0 : (this.groundHeightAtX0 + result);
     }
 
     /**
@@ -71,8 +70,7 @@ public class Terrain {
         // TODO setTag "ground"
 
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
-            topYBlock = (int)groundHeightAt(xBlock); // highest block for an X coordinate.
-
+            topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
             for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 this.gameObjects.addGameObject(new Block(new Vector2(xBlock,yBlock), renderable), this.groundLayer);
