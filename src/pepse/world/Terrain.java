@@ -36,7 +36,7 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
-        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; //600
+        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; // TODO 600
     }
 
     /**
@@ -62,7 +62,8 @@ public class Terrain {
         int topYBlock;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        // in inner for loop for different color each block
+        // TODO in inner for loop for different color each block
+        // TODO setTag "ground"
         Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = ((int)(groundHeightAt(60)/Block.SIZE)) * Block.SIZE; // highest block for an X coordinate.
