@@ -23,9 +23,9 @@ public class PepseGameManager extends danogl.GameManager{
     private static final float WINDOW_HEIGHT = 840;
 
 
-    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
-        super(windowTitle, windowDimensions);
-    }
+//    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
+//        super(windowTitle, windowDimensions);
+//    }
 
     /**
      * The method will be called once when a GameGUIComponent is created,
@@ -56,10 +56,10 @@ public class PepseGameManager extends danogl.GameManager{
      */
     public static void main(String[] args)
     {
-        PepseGameManager game = new PepseGameManager("pepse",new Vector2(WINDOW_WIDTH,WINDOW_HEIGHT));
-        game.run();
+//        PepseGameManager game = new PepseGameManager("pepse",new Vector2(WINDOW_WIDTH,WINDOW_HEIGHT));
+//        game.run();
 
-//        new PepseGameManager().run();
+        new PepseGameManager().run();
     }
 
 }

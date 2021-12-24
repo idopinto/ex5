@@ -36,7 +36,8 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
-        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; // TODO 600
+//        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; // TODO 600
+        this.groundHeightAtX0 = 600;
     }
 
     /**
@@ -67,7 +68,7 @@ public class Terrain {
 
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = ((int)(groundHeightAt(60)/Block.SIZE)) * Block.SIZE; // highest block for an X coordinate.
-            for (int yBlock = topYBlock; yBlock < topYBlock + TERRAIN_DEPTH*Block.SIZE ; yBlock+=Block.SIZE){
+            for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 this.gameObjects.addGameObject(new Block(new Vector2(xBlock,yBlock), renderable), this.groundLayer);
             }
