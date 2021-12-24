@@ -19,6 +19,13 @@ public class PepseGameManager extends danogl.GameManager{
 
     private static final int NIGHT_CYCLE_LENGTH = 30;
     private static final int SUN_CYCLE_LENGTH = 30;
+    private static final float WINDOW_WIDTH = 1500;
+    private static final float WINDOW_HEIGHT = 840;
+
+
+//    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
+//        super(windowTitle, windowDimensions);
+//    }
 
     /**
      * The method will be called once when a GameGUIComponent is created,
@@ -49,6 +56,8 @@ public class PepseGameManager extends danogl.GameManager{
      */
     public static void main(String[] args)
     {
+//        PepseGameManager game = new PepseGameManager("pepse",new Vector2(WINDOW_WIDTH,WINDOW_HEIGHT));
+//        game.run();
         new PepseGameManager().run();
     }
 
