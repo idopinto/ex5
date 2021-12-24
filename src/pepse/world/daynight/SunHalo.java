@@ -3,6 +3,7 @@ package pepse.world.daynight;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.components.CoordinateSpace;
+import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 
@@ -27,8 +28,8 @@ public class SunHalo {
     public static GameObject create(GameObjectCollection gameObjects,
                                     int layer, GameObject sun, Color color)
     {
-        GameObject halo = new GameObject( Vector2.ZERO, new Vector2(HALO_SIZE,HALO_SIZE),
-                new RectangleRenderable(color));
+        GameObject halo = new GameObject( Vector2.ZERO,sun.getDimensions().mult(2), new OvalRenderable(color));
+        halo.setCenter(sun.getCenter());
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(halo, layer);
         halo.setTag("halo");

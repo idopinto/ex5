@@ -30,7 +30,7 @@ public class Sun {
     public static GameObject create(GameObjectCollection gameObjects,
                                     int layer, Vector2 windowDimensions, float cycleLength)
     {
-        GameObject sun = new GameObject( new Vector2(windowDimensions.x()/2, windowDimensions.y()/2),
+        GameObject sun = new GameObject( new Vector2(windowDimensions.x()/2, windowDimensions.y()/3),
                 new Vector2(SUN_SIZE,SUN_SIZE), new OvalRenderable(SUN_COLOR));
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sun, layer);
