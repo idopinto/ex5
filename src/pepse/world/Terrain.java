@@ -48,7 +48,8 @@ public class Terrain {
     public float groundHeightAt(float x)
     {
 //        return (float) Math.sin(x);
-        return this.groundHeightAtX0;
+//        return this.groundHeightAtX0;
+        return 600;
     }
 
     /**
