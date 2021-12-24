@@ -64,10 +64,11 @@ public class Terrain {
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
         // TODO in inner for loop for different color each block
         // TODO setTag "ground"
-        Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
+
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = ((int)(groundHeightAt(60)/Block.SIZE)) * Block.SIZE; // highest block for an X coordinate.
             for (int yBlock = topYBlock; yBlock < topYBlock + TERRAIN_DEPTH*Block.SIZE ; yBlock+=Block.SIZE){
+                Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 this.gameObjects.addGameObject(new Block(new Vector2(xBlock,yBlock), renderable), this.groundLayer);
             }
         }
