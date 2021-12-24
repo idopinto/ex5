@@ -13,8 +13,6 @@ import java.awt.*;
  * Represents the halo of sun.
  */
 public class SunHalo {
-    /** Size of the sun halo */
-    private static final float HALO_SIZE = 400;
 
     /**
      * This function creates a halo around a given object that represents the sun.
