@@ -8,6 +8,7 @@ import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import pepse.util.PerlinNoise;
 
+import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
 import java.lang.Math;
 /**
@@ -19,6 +20,7 @@ public class Terrain {
     private static final int TERRAIN_DEPTH = 20;
 
     private final int groundHeightAtX0;
+    private final PerlinNoise myPerl;
     private GameObjectCollection gameObjects;
     private int groundLayer;
     private Vector2 windowDimensions;
@@ -37,6 +39,8 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
+        this.myPerl = new PerlinNoise();
+
 //        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; // TODO 600
         this.groundHeightAtX0 = 600;
     }
@@ -48,11 +52,7 @@ public class Terrain {
      */
     public float groundHeightAt(float x)
     {
-//        return (float) Math.sin(x);
-//        return this.groundHeightAtX0;
-//        PerlinNoise myPerl = new PerlinNoise(this.seed);
-//        return (float) myPerl.noise(x);
-        return 600;
+        return (float) (this.groundHeightAtX0 + Block.SIZE *this.myPerl.noise(x/Block.SIZE)*28);
     }
 
     /**
