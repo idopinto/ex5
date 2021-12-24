@@ -14,6 +14,8 @@ import java.awt.*;
  */
 public class SunHalo {
 
+    private static final String HALO_TAG = "halo";
+
     /**
      * This function creates a halo around a given object that represents the sun.
      * The halo will be tied to the given sun, and will always move with it.
@@ -31,7 +33,7 @@ public class SunHalo {
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(halo, layer);
         halo.addComponent(deltaTime -> halo.setCenter(sun.getCenter()));
-        halo.setTag("halo");
+        halo.setTag(HALO_TAG);
         return halo;
     }
 }

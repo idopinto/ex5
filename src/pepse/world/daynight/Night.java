@@ -16,6 +16,7 @@ public class Night {
 
     private static final Float MIDNIGHT_OPACITY = 0.5f;
     private static final Color NIGHT_COLOR = Color.black;
+    private static final String NIGHT_TAG = "night";
 
     /**
      * This function creates a black rectangular game object that covers the entire game window and changes
@@ -33,7 +34,7 @@ public class Night {
                 new RectangleRenderable(NIGHT_COLOR));
         night.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(night, layer);
-        night.setTag("night");
+        night.setTag(NIGHT_TAG);
 
         new Transition<>(
                 night, // the game object being changed
