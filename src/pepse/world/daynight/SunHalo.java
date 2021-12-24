@@ -30,6 +30,7 @@ public class SunHalo {
         halo.setCenter(sun.getCenter());
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(halo, layer);
+        halo.addComponent(deltaTime -> halo.setCenter(sun.getCenter()));
         halo.setTag("halo");
         return halo;
     }
