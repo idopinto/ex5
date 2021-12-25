@@ -17,8 +17,7 @@ public class TreeTop {
         for (int i = 0; i < leafInRow; i++) {
             x = (int) topLeftCorner.x();
             for (int j = 0; j < leafInRow; j++) {
-                Block leaf = Leaf.create(new Vector2(x,y));
-                gameObjects.addGameObject(leaf,layer);
+                Leaf.create(gameObjects,new Vector2(x,y),layer);
                 x += Block.SIZE;
             }
             y +=Block.SIZE;
