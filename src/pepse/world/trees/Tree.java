@@ -4,11 +4,14 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import pepse.util.ColorSupplier;
 
+import java.util.Random;
+
 /**
  * Responsible for the creation and management of trees.
  */
 public class Tree {
 
+    private final Random random = new Random();
 
 
     /**
@@ -26,11 +29,10 @@ public class Tree {
 //        return 0;
 //    }
 //
-//    public boolean needToPlant(int col)
-//    {
-//        Random random = new Random;
-//        return true;
-//    }
+    public boolean needToPlant(int col)
+    {
+        return (float) random.nextInt(100) < 10;
+    }
 //
 //    // maybe TreeLocationFactory for that return random location for the tree
 //    // random in range(0,1)
