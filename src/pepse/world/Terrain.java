@@ -9,6 +9,8 @@ import pepse.util.ColorSupplier;
 import pepse.util.PerlinNoise;
 import java.awt.*;
 import java.lang.Math;
+import java.util.Random;
+
 /**
  * Responsible for the creation and management of terrain.
  */
@@ -24,6 +26,7 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
+    private final Random random = new Random();
 
     /**
      * Constructor.
@@ -49,7 +52,8 @@ public class Terrain {
     public float groundHeightAt(float x)
     {
         float result = (float) (Block.SIZE *this.myPerl.noise(x/Block.SIZE)*20);
-        if (result < 0) return this.groundHeightAtX0;
+        if (result < 0) return this.groundHeightAtX0 + this.random.nextInt(
+                (int) windowDimensions.y() - this.groundHeightAtX0 - 100);
         else if (this.groundHeightAtX0 + result > windowDimensions.y()) return windowDimensions.y() - 60;
         return this.groundHeightAtX0 + result;
     }

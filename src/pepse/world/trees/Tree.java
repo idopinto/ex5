@@ -2,7 +2,9 @@ package pepse.world.trees;
 
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
+import pepse.world.Block;
 
 import java.util.Random;
 
@@ -21,7 +23,21 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
-        
+//        int newMinX = minX;
+//        int newMaxX = maxX;
+//        int topYBlock;
+//        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
+//        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
+//
+//        for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
+//            topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
+//            for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
+//                Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
+//                Block block = new Block(new Vector2(xBlock,yBlock), renderable);
+//                this.gameObjects.addGameObject(block, this.groundLayer);
+//                block.setTag(GROUND_TAG);
+//            }
+//        }
     }
 
 //    public int getRandomTrunkHeight()
