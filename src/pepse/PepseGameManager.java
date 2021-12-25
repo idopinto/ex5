@@ -12,6 +12,7 @@ import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
+import pepse.world.trees.Tree;
 
 import java.awt.*;
 import java.util.Random;
@@ -57,8 +58,9 @@ public class PepseGameManager extends danogl.GameManager{
         Terrain terrain = new Terrain(this.gameObjects(), Layer.STATIC_OBJECTS,
                 windowController.getWindowDimensions(), seed); // initializing the terrain
 
-        terrain.createInRange(0, (int) windowController.getWindowDimensions().x()); // terrain spread on the whole screen.
-
+        terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
+        Tree trees = new Tree(this.gameObjects(), terrain);
+        trees.createInRange(0, (int) windowDimensions.x());
     }
 
     /**

@@ -1,5 +1,7 @@
 package pepse.world.trees;
 
+import danogl.collisions.GameObjectCollection;
+import danogl.collisions.Layer;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
@@ -14,9 +16,19 @@ import java.util.Random;
  */
 public class Tree {
 
+    private static final int MINIMAL_TREE_HEIGHT = 4; //means four blocks
+    private static final int MAXIMAL_TREE_HEIGHT = 10;
+
     private final Random random = new Random();
+    private final GameObjectCollection gameObjects;
+    private Terrain terrain;
 
 
+
+    public Tree (GameObjectCollection gameObjects, Terrain terrain){
+        this.gameObjects = gameObjects;
+        this.terrain = terrain;
+    }
 
     /**
      * This method creates trees in a given range of x-values.
@@ -25,32 +37,37 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
+        int newMinX = minX;
+        int newMaxX = maxX;
+        int bottomYBlock;
+        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
+        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
+        int leafInRow;
+        int topOfTheTree;
+        Vector2 treeTopTopLeftCorner;
+//        int x = trunkTopX - (LEAF_IN_ROW/2)*Block.SIZE;
+//        int y = trunkTopY - (LEAF_IN_ROW/2)*Block.SIZE;
+        for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE) {
+            if (needToPlant()){
+                topOfTheTree = getRandomTrunkHeight();
+                leafInRow = (int)topOfTheTree/2;
+                bottomYBlock = (int) terrain.groundHeightAt(xBlock);
+                treeTopTopLeftCorner = new Vector2(xBlock - (leafInRow/2f)*Block.SIZE,
+                        (bottomYBlock + topOfTheTree*Block.SIZE) - (leafInRow/2f)*Block.SIZE);
+                Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,
+                        this.gameObjects);
+                TreeTop.createTreeTop(this.gameObjects, Layer.BACKGROUND+20,treeTopTopLeftCorner,leafInRow);
+            }
 
+        }
     }
 
-//        int newMinX = minX;
-//        int newMaxX = maxX;
-//        int topYBlock;
-//        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
-//        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-//
-//        for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
-//            topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
-//            for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
-//                Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-//                Block block = new Block(new Vector2(xBlock,yBlock), renderable);
-//                this.gameObjects.addGameObject(block, this.groundLayer);
-//                block.setTag(GROUND_TAG);
-//            }
-//        }
+    private int getRandomTrunkHeight()
+    {
+        return this.random.nextInt(MAXIMAL_TREE_HEIGHT-MINIMAL_TREE_HEIGHT) + MINIMAL_TREE_HEIGHT;
     }
 
-//    public int getRandomTrunkHeight()
-//    {
-//        return 0;
-//    }
-//
-    public boolean needToPlant()
+    private boolean needToPlant()
     {
         return (float) random.nextInt(100) < 10;
     }

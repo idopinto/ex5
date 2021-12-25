@@ -14,8 +14,6 @@ public class TreeTop {
         int x = (int) topLeftCorner.x();
         int y = (int) topLeftCorner.y();
 
-//        int x = trunkTopX - (LEAF_IN_ROW/2)*Block.SIZE;
-//        int y = trunkTopY - (LEAF_IN_ROW/2)*Block.SIZE;
         for (int i = 0; i < leafInRow; i++) {
             for (int j = 0; j < leafInRow; j++) {
                 Block leaf = Leaf.create(new Vector2(x,y));
