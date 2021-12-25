@@ -1,6 +1,7 @@
 package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
+import danogl.components.ScheduledTask;
 import danogl.util.Vector2;
 import pepse.world.Block;
 
@@ -17,7 +18,9 @@ public class TreeTop {
         for (int i = 0; i < leafInRow; i++) {
             x = (int) topLeftCorner.x();
             for (int j = 0; j < leafInRow; j++) {
-                Leaf.create(gameObjects,new Vector2(x,y),layer,(float)0.1 * counter);
+                Leaf leaf = new Leaf();
+                leaf.create(gameObjects,new Vector2(x,y),layer);
+
                 x += Block.SIZE;
                 counter++;
             }

@@ -12,21 +12,30 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Leaf {
 
     private static final Color LEAF_COLOR =new Color(50, 200, 30);
+    private Block leaf;
 
-    static Block create(GameObjectCollection gameObjects, Vector2 leafTopLeftCorner, int layer,float waitTime){
+
+    public Block create(GameObjectCollection gameObjects, Vector2 leafTopLeftCorner, int layer){
         Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
-        Block leaf = new Block(leafTopLeftCorner,renderable);
+        leaf = new Block(leafTopLeftCorner,renderable);
         gameObjects.addGameObject(leaf,layer);
         leaf.setTag("leaf");
+        new ScheduledTask(leaf,new Random().nextFloat() ,true,this::makeItMove);
+        return leaf;
+    }
 
+
+    private void makeItMove()
+    {
         new Transition<Float>(leaf,
                 leaf.renderer()::setRenderableAngle,
                 0f,
-                15f,
+                50f,
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a cubic interpolator
                 3, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
@@ -41,10 +50,6 @@ public class Leaf {
                 3, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
-
-        new ScheduledTask(leaf,waitTime,true,()->{});
-
-        return leaf;
     }
 
 
