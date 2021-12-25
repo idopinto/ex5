@@ -7,6 +7,8 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import pepse.util.PerlinNoise;
+import pepse.world.trees.Leaf;
+
 import java.awt.*;
 import java.lang.Math;
 import java.util.Random;

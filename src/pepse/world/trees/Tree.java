@@ -5,6 +5,7 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
+import pepse.world.Terrain;
 
 import java.util.Random;
 
@@ -16,6 +17,7 @@ public class Tree {
     private final Random random = new Random();
 
 
+
     /**
      * This method creates trees in a given range of x-values.
      * @param minX  The lower bound of the given range (will be rounded to a multiple of Block. SIZE).
@@ -23,6 +25,9 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
+
+    }
+
 //        int newMinX = minX;
 //        int newMaxX = maxX;
 //        int topYBlock;
@@ -45,7 +50,7 @@ public class Tree {
 //        return 0;
 //    }
 //
-    public boolean needToPlant(int col)
+    public boolean needToPlant()
     {
         return (float) random.nextInt(100) < 10;
     }
