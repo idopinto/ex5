@@ -49,7 +49,8 @@ public class Tree {
             if (needToPlant()){
                 topOfTheTree = getRandomTrunkHeight();
                 leafInRow = (int)topOfTheTree/2;
-                bottomYBlock = (int) terrain.groundHeightAt(xBlock)- Block.SIZE;
+                bottomYBlock = (int) terrain.groundHeightAt(xBlock)- Block.SIZE +
+                        (int) terrain.groundHeightAt(xBlock)%Block.SIZE;
                 treeTopTopLeftCorner = new Vector2(xBlock - (leafInRow/2f)*Block.SIZE,
                         (bottomYBlock + topOfTheTree*Block.SIZE) - (leafInRow/2f)*Block.SIZE);
                 Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,
