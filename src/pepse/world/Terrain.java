@@ -58,6 +58,7 @@ public class Terrain {
                 (int) windowDimensions.y() - this.groundHeightAtX0 - 100);
         else if (this.groundHeightAtX0 + result > windowDimensions.y()) return windowDimensions.y() - 60;
         return this.groundHeightAtX0 + result;
+//        return this.groundHeightAtX0;
     }
 
     /**
