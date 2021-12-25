@@ -15,7 +15,9 @@ public class Leaf {
     private static final Color LEAF_COLOR =new Color(50, 200, 30);
 
     static Block create(Vector2 leafTopLeftCorner){
-        return new Block(leafTopLeftCorner, new RectangleRenderable(LEAF_COLOR));
+        Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
+
+        return new Block(leafTopLeftCorner, renderable);
     }
 
 

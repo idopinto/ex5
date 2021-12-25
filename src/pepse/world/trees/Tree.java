@@ -48,13 +48,15 @@ public class Tree {
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE) {
             if (needToPlant()){
                 topOfTheTree = getRandomTrunkHeight();
-                leafInRow = (int)topOfTheTree/2;
+                leafInRow = topOfTheTree/2;
                 bottomYBlock = (int) terrain.groundHeightAt(xBlock)- Block.SIZE;
-                treeTopTopLeftCorner = new Vector2(xBlock - (leafInRow/2f)*Block.SIZE,
-                        (bottomYBlock + topOfTheTree*Block.SIZE) - (leafInRow/2f)*Block.SIZE);
+//                float x = xBlock - (leafInRow/2f)*Block.SIZE;
+
+                treeTopTopLeftCorner = new Vector2(xBlock - ((leafInRow/2f)*Block.SIZE),
+                        (bottomYBlock - topOfTheTree*Block.SIZE) - (leafInRow/2f)*Block.SIZE);
                 Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,
                         this.gameObjects);
-                TreeTop.createTreeTop(this.gameObjects, Layer.BACKGROUND+50,treeTopTopLeftCorner,leafInRow);
+                TreeTop.createTreeTop(this.gameObjects, Layer.STATIC_OBJECTS+10,treeTopTopLeftCorner,leafInRow);
             }
 
         }
