@@ -14,15 +14,12 @@ public class TreeTop {
     {
         int x ;
         int y = (int) topLeftCorner.y();
-        float counter = 1;
         for (int i = 0; i < leafInRow; i++) {
             x = (int) topLeftCorner.x();
             for (int j = 0; j < leafInRow; j++) {
                 Leaf leaf = new Leaf();
                 leaf.create(gameObjects,new Vector2(x,y),layer);
-
                 x += Block.SIZE;
-                counter++;
             }
             y +=Block.SIZE;
         }

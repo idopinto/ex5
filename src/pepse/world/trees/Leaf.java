@@ -17,6 +17,7 @@ import java.util.Random;
 public class Leaf {
 
     private static final Color LEAF_COLOR =new Color(50, 200, 30);
+    private static final String LEAF_TAG = "leaf";
     private Block leaf;
 
 
@@ -24,7 +25,7 @@ public class Leaf {
         Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
         leaf = new Block(leafTopLeftCorner,renderable);
         gameObjects.addGameObject(leaf,layer);
-        leaf.setTag("leaf");
+        leaf.setTag(LEAF_TAG);
         new ScheduledTask(leaf,new Random().nextFloat() ,true,this::makeItMove);
         return leaf;
     }
