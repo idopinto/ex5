@@ -37,21 +37,21 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
-        int newMinX = minX;
-        int newMaxX = maxX;
-        int bottomYBlock;
+        int newMinX = minX; int newMaxX = maxX; int bottomYBlock;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        int leafInRow;
-        int topOfTheTree;
+        int leafInRow; int topOfTheTree;
         Vector2 treeTopTopLeftCorner;
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE) {
             if (needToPlant()){
                 topOfTheTree = getRandomTrunkHeight();
-//                leafInRow = topOfTheTree;
+                leafInRow = topOfTheTree/2;
                 bottomYBlock = (int) terrain.groundHeightAt(xBlock)- Block.SIZE;
-                treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
-                        (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
+//                treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
+//                        (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
+
+                treeTopTopLeftCorner = new Vector2(xBlock - ((leafInRow/2f)*Block.SIZE),
+                        (bottomYBlock - topOfTheTree*Block.SIZE) - (leafInRow/2f)*Block.SIZE);
                 Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,
                         this.gameObjects);
                 TreeTop.createTreeTop(this.gameObjects, Layer.STATIC_OBJECTS+10,treeTopTopLeftCorner,topOfTheTree);
