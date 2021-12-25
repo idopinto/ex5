@@ -26,11 +26,11 @@ public class Tree {
 //        return 0;
 //    }
 //
-    public boolean needToPlant(int col)
-    {
-        Random random = new Random;
-        return true;
-    }
+//    public boolean needToPlant(int col)
+//    {
+//        Random random = new Random;
+//        return true;
+//    }
 //
 //    // maybe TreeLocationFactory for that return random location for the tree
 //    // random in range(0,1)

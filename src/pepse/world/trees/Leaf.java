@@ -9,6 +9,4 @@ public class Leaf {
 
     //    Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
 
-
-
 }

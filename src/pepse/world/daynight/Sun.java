@@ -16,7 +16,7 @@ import java.awt.*;
 public class Sun {
     private static final Color SUN_COLOR = Color.YELLOW ;
     private static final int SUN_SIZE = 200;
-    private static final float FULL_CYCLE = 360;
+    private static final float FULL_CYCLE = (float) (2 * Math.PI);
     private static final String SUN_TAG = "sun";
     private float sunCenter;
 
@@ -41,12 +41,15 @@ public class Sun {
         // f: [0,360] -> void
         // f(x) = sun.setCenter(calc(x))
 
-        new Transition<>(
+        new Transition<Float>(
                 sun, // the game object being changed
-                angle-> {
-//                    sun.setCenter(windowDimensions.normalized().add(Vector2.RIGHT.mult(windowDimensions.x()/2).rotated(angle)));
-                    sun.setCenter( windowDimensions.mult(0.5f).add(Vector2.UP).mult(1).rotated(angle));
-                }, // the method to call
+                angle->
+                {
+                    Vector2 vecToAdd = new Vector2((float)(Math.sin(angle)* windowDimensions.x()/2),
+                            (float)Math.cos(angle)* windowDimensions.y()*(1/3f));
+
+                    sun.setCenter( windowDimensions.mult(0.5f).add(vecToAdd));
+                    }, // the method to call
                 0f, // initial transition value
                 FULL_CYCLE, // final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
@@ -55,13 +58,4 @@ public class Sun {
                 null); // nothing further to execute upon reaching final value
         return sun;
     }
-
-//    /*
-//        this method calculates the new sun position
-//     */
-//    private static Vector2 calcSunPosition(Vector2 windowDimensions, float angleInSky,GameObject sun)
-//    {
-//        Vector2 newSunCenter = sun.getCenter();
-//
-//    }
 }
