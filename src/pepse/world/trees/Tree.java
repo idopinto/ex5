@@ -1,9 +1,15 @@
 package pepse.world.trees;
 
+import danogl.gui.rendering.RectangleRenderable;
+import danogl.gui.rendering.Renderable;
+import pepse.util.ColorSupplier;
+
 /**
  * Responsible for the creation and management of trees.
  */
 public class Tree {
+
+
 
     /**
      * This method creates trees in a given range of x-values.
@@ -12,7 +18,7 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
-
+        
     }
 
 //    public int getRandomTrunkHeight()
@@ -20,13 +26,19 @@ public class Tree {
 //        return 0;
 //    }
 //
-//    public boolean needToPlant(int col)
-//    {
-//        return true;
-//    }
+    public boolean needToPlant(int col)
+    {
+        Random random = new Random;
+        return true;
+    }
 //
 //    // maybe TreeLocationFactory for that return random location for the tree
 //    // random in range(0,1)
 //
 //    // if it is random <= 0.1 then we return true for this location
+
+
+
+
+
 }

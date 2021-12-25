@@ -14,4 +14,8 @@ public class Trunk {
     }
 
 
+    //    Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR));
+
+
+
 }
