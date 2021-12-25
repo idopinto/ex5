@@ -10,6 +10,8 @@ import pepse.world.Block;
 import pepse.world.Terrain;
 
 import java.util.Random;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Responsible for the creation and management of trees.
@@ -21,13 +23,15 @@ public class Tree {
 
     private final Random random = new Random();
     private final GameObjectCollection gameObjects;
+    private UnaryOperator<Float> groundHeightFunc;
     private Terrain terrain;
 
 
 
-    public Tree (GameObjectCollection gameObjects, Terrain terrain){
+    public Tree (GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc){
         this.gameObjects = gameObjects;
-        this.terrain = terrain;
+        this.groundHeightFunc = groundHeightFunc;
+//        this.terrain = terrain;
     }
 
     /**
@@ -37,28 +41,28 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
-        int newMinX = minX; int newMaxX = maxX; int bottomYBlock;
+        int newMinX = minX;
+        int newMaxX = maxX;
+        int bottomYBlock;
+        int topOfTheTree;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        int leafInRow; int topOfTheTree;
+
         Vector2 treeTopTopLeftCorner;
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE) {
             if (needToPlant()){
                 topOfTheTree = getRandomTrunkHeight();
-                leafInRow = topOfTheTree/2;
-                bottomYBlock = (int) terrain.groundHeightAt(xBlock)- Block.SIZE;
-//                treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
-//                        (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
+                bottomYBlock = (int) (this.groundHeightFunc.apply((float)xBlock)- Block.SIZE);
 
-                treeTopTopLeftCorner = new Vector2(xBlock - ((leafInRow/2f)*Block.SIZE),
-                        (bottomYBlock - topOfTheTree*Block.SIZE) - (leafInRow/2f)*Block.SIZE);
-                Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,
-                        this.gameObjects);
+                treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
+                        (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
+                Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,this.gameObjects);
                 TreeTop.createTreeTop(this.gameObjects, Layer.STATIC_OBJECTS+10,treeTopTopLeftCorner,topOfTheTree);
             }
 
         }
     }
+
 
     private int getRandomTrunkHeight()
     {
@@ -69,14 +73,5 @@ public class Tree {
     {
         return (float) random.nextInt(100) < 10;
     }
-//
-//    // maybe TreeLocationFactory for that return random location for the tree
-//    // random in range(0,1)
-//
-//    // if it is random <= 0.1 then we return true for this location
-
-
-
-
 
 }
