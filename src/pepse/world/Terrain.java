@@ -21,10 +21,9 @@ public class Terrain {
 
     private final int groundHeightAtX0;
     private final PerlinNoise myPerl;
-    private GameObjectCollection gameObjects;
-    private int groundLayer;
-    private Vector2 windowDimensions;
-    private int seed;
+    private final GameObjectCollection gameObjects;
+    private final int groundLayer;
+    private final Vector2 windowDimensions;
 
     /**
      * Constructor.
@@ -39,10 +38,7 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.myPerl = new PerlinNoise(seed);
-//        this.groundHeightAtX0 = (int) (windowDimensions.y() / 3)*2;
         this.groundHeightAtX0 = MAXIMUM_HEIGHT_OF_TERRAIN;
-//        this.groundHeightAtX0 = (int) windowDimensions.y() - 100; // TODO 600
-//        this.groundHeightAtX0 = 600;
     }
 
     /**
@@ -56,8 +52,6 @@ public class Terrain {
         if (result < 0) return this.groundHeightAtX0;
         else if (this.groundHeightAtX0 + result > windowDimensions.y()) return windowDimensions.y() - 60;
         return this.groundHeightAtX0 + result;
-//        return (result < 0 || this.groundHeightAtX0 + result > windowDimensions.y()) ? this.groundHeightAtX0 :
-//                (this.groundHeightAtX0 + result);
     }
 
     /**
@@ -72,8 +66,6 @@ public class Terrain {
         int topYBlock;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        // TODO in inner for loop for different color each block
-        // TODO setTag "ground"
 
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
