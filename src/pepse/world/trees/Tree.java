@@ -15,5 +15,18 @@ public class Tree {
 
     }
 
-    //
+//    public int getRandomTrunkHeight()
+//    {
+//        return 0;
+//    }
+//
+//    public boolean needToPlant(int col)
+//    {
+//        return true;
+//    }
+//
+//    // maybe TreeLocationFactory for that return random location for the tree
+//    // random in range(0,1)
+//
+//    // if it is random <= 0.1 then we return true for this location
 }
