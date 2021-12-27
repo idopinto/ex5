@@ -1,8 +1,6 @@
 package pepse.world.trees;
 
-import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
-import danogl.components.CoordinateSpace;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
@@ -27,7 +25,8 @@ public class Leaf {
         gameObjects.addGameObject(leaf,layer);
         leaf.setTag(LEAF_TAG);
         new ScheduledTask(leaf,new Random().nextFloat() ,true,this::makeItMove);
-        leaf.renderer().fadeOut(6);
+        new ScheduledTask(leaf, new Random().nextInt(5), true, this::makeItFade);
+//        leaf.renderer().fadeOut(6);
         return leaf;
     }
 
@@ -58,8 +57,8 @@ public class Leaf {
 //        )
     }
 
-    private void makeItFall(){
-
+    private void makeItFade(){
+        leaf.renderer().fadeOut(6);
     }
 
 
