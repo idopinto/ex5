@@ -92,6 +92,7 @@ public class Leaf extends Block {
 
 
     private void makeItFall() {
+
         this.transform().setVelocityY(Vector2.DOWN.y() * FALL_VELOCITY);
         this.horizontalTransition = new Transition<Float>(
                 this, // the game object being changed

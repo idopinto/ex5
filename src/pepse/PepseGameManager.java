@@ -27,8 +27,17 @@ public class PepseGameManager extends danogl.GameManager{
 
     private static final int NIGHT_CYCLE_LENGTH = 30;
     private static final int SUN_CYCLE_LENGTH = 30;
-    private static final float WINDOW_WIDTH = 1500;
+    private static final int SKY_LAYER = Layer.BACKGROUND;
+    private static final int NIGHT_LAYER = Layer.FOREGROUND;
+    private static final int SUN_LAYER = Layer.BACKGROUND;
+    private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
+    private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
+    private static final int FALLING_LEAF_LAYER =  Layer.STATIC_OBJECTS + 10;
+
     private static final float WINDOW_HEIGHT = 840;
+    private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
+    private static final int AVATAR_LAYER = Layer.DEFAULT;
+    private static final float AVATAR_INITIAL_X_POS = 200;
 
 
 //    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -51,23 +60,23 @@ public class PepseGameManager extends danogl.GameManager{
         Vector2 windowDimensions = windowController.getWindowDimensions();
 
         // Create game objects
-        Sky.create(this.gameObjects(),windowDimensions, Layer.BACKGROUND);
-        Night.create(this.gameObjects(), Layer.FOREGROUND,windowDimensions,NIGHT_CYCLE_LENGTH);
-        GameObject sun = Sun.create(this.gameObjects(),Layer.BACKGROUND,windowDimensions,SUN_CYCLE_LENGTH);
-        SunHalo.create(this.gameObjects(),Layer.BACKGROUND + 10,sun,new Color(255, 255, 0, 20));
+        Sky.create(this.gameObjects(),windowDimensions, SKY_LAYER);
+        Night.create(this.gameObjects(), NIGHT_LAYER,windowDimensions,NIGHT_CYCLE_LENGTH);
+        GameObject sun = Sun.create(this.gameObjects(),SUN_LAYER,windowDimensions,SUN_CYCLE_LENGTH);
+        SunHalo.create(this.gameObjects(),SUN_HALO_LAYER,sun,SUN_HALO_COLOR);
 
         Random random = new Random();
         int seed = random.nextInt(500);
-        Terrain terrain = new Terrain(this.gameObjects(), Layer.STATIC_OBJECTS,
-                windowController.getWindowDimensions(), seed); // initializing the terrain
-
+        Terrain terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, seed); // initializing the terrain
         terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
+
         Tree trees = new Tree(this.gameObjects(), terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
-        gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS+10, Layer.STATIC_OBJECTS,
-                true);
 
-        Avatar avatar = Avatar.create(gameObjects(),Layer.DEFAULT,new Vector2(200,terrain.groundHeightAt(200)-Block.SIZE),inputListener,imageReader);
+        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
+
+        Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
+        Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
 
     }
 

@@ -72,16 +72,27 @@ public class Terrain {
         int topYBlock;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        boolean checkedGroundLayer = true;
+        int counter = 0;
+
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
             for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
+
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 Block block = new Block(new Vector2(xBlock,yBlock), renderable);
-                this.gameObjects.addGameObject(block, this.groundLayer);
+                if ((yBlock == topYBlock)||(yBlock == topYBlock + Block.SIZE))
+                {
+                    this.gameObjects.addGameObject(block, this.groundLayer);
+                    counter++;
+                }
+                else{
+                    this.gameObjects.addGameObject(block, this.groundLayer + 2);
+                }
+
                 block.setTag(GROUND_TAG);
             }
         }
+        System.out.println(counter);
     }
 
 }
