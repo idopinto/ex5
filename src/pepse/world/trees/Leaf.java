@@ -14,12 +14,13 @@ import java.util.Random;
 
 public class Leaf extends Block{
 
-//    private static final Color LEAF_COLOR =new Color(50, 200, 30);
-//    private static final String LEAF_TAG = "leaf";
-    private static final int FADEOUT_TIME = 6;
+    private static final int FADEOUT_TIME = 15;
+    private static final float HORIZONTAL_MOVEMENT_RANGE = 50;
+    private static final float HORIZONTAL_MOVEMENT_CYCLE_LENGTH = 2;
+    private static final int MAX_DEATH_TIME_SPAN = 20;
+    private static final int MAX_LIFE_TIME_SPAN = 50;
     private static final int FALL_VELOCITY = 20;
     private final Random random = new Random();
-    private int  randomLifeSpan;
 
 
 
@@ -68,7 +69,7 @@ public class Leaf extends Block{
     private void leafRoutine()
     {
         new ScheduledTask(this,random.nextFloat() ,true,this::makeItMove);
-        new ScheduledTask(this, random.nextInt(30), false, this::leafFallRoutine);
+        new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN), false, this::leafFallRoutine);
     }
 
     private void leafFallRoutine()
@@ -78,11 +79,25 @@ public class Leaf extends Block{
     }
 
     private void makeItFade(){
-        this.renderer().fadeOut(FADEOUT_TIME);
+        this.renderer().fadeOut(FADEOUT_TIME,this::deathRoutine);
+    }
+
+    private void deathRoutine() {
+        new ScheduledTask(this,random.nextInt(MAX_DEATH_TIME_SPAN) ,false,()->{});
     }
 
     private void makeItFall(){
         this.transform().setVelocityY(Vector2.DOWN.y()*FALL_VELOCITY);
+        new Transition<Float>(
+                this, // the game object being changed
+                x-> {this.transform().setVelocityX(x);}, // the method to call
+                -HORIZONTAL_MOVEMENT_RANGE, // initial transition value
+                HORIZONTAL_MOVEMENT_RANGE, // final transition value
+                Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
+                HORIZONTAL_MOVEMENT_CYCLE_LENGTH, // transition fully over cycleLength
+                Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
+                null); // nothing further to execute upon reaching final value
+
 
     }
 
