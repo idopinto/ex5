@@ -27,7 +27,7 @@ public class Tree {
 
 
 
-    public Tree (GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc){
+    public Tree(GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc){
         this.gameObjects = gameObjects;
         this.groundHeightFunc = groundHeightFunc;
     }

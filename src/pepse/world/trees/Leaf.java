@@ -15,7 +15,8 @@ import pepse.world.Block;
 import java.awt.*;
 import java.util.Random;
 
-public class Leaf extends Block {
+public class Leaf extends Block
+{
 
     private static final int FADEOUT_TIME = 15;
     private static final float HORIZONTAL_MOVEMENT_RANGE = 50;
@@ -29,6 +30,7 @@ public class Leaf extends Block {
     private Transition<Float> movingAngle;
     private Transition<Vector2> movingDimensions;
     private final float opaqueness;
+    private boolean hitTheGround = false;
 
 
     /**
@@ -48,6 +50,7 @@ public class Leaf extends Block {
 
 
     private void leafRoutine() {
+        this.hitTheGround = false;
         new ScheduledTask(this, random.nextFloat(), true, this::makeItMove);
         new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN),
                 false, this::leafFallRoutine);
@@ -81,14 +84,14 @@ public class Leaf extends Block {
 
 
     private void makeItFade() {
-        this.renderer().fadeOut(FADEOUT_TIME, this::deathRoutine);
+        this.renderer().fadeOut(FADEOUT_TIME, ()->{});
     }
 
 
-    private void deathRoutine() {
-        new ScheduledTask(this, random.nextInt(MAX_DEATH_TIME_SPAN), false, () -> {
-        });
-    }
+//    private void deathRoutine() {
+//        new ScheduledTask(this, random.nextInt(MAX_DEATH_TIME_SPAN), false, () -> {
+//        });
+//    }
 
 
     private void makeItFall() {
@@ -107,7 +110,8 @@ public class Leaf extends Block {
     }
 
 
-    private void returningToTreeTop(){
+    private void returningToTreeTop() {
+        this.renderer().fadeIn(0.1f);
         this.setCenter(this.initialPositionOfLeaf);
         this.renderer().setOpaqueness(this.opaqueness);
         leafRoutine();
@@ -117,16 +121,16 @@ public class Leaf extends Block {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-
+//        if (!this.hitTheGround) {
         this.transform().setVelocity(Vector2.ZERO);
 
         this.removeComponent(this.horizontalTransition);
         this.removeComponent(this.movingAngle);
         this.removeComponent(this.movingDimensions);
-
+//            this.hitTheGround = true;
         new ScheduledTask(this, this.random.nextInt(5), false,
                 this::returningToTreeTop);
-
+//        }
 
     }
 
