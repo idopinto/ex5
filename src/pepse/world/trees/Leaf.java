@@ -3,6 +3,7 @@ package pepse.world.trees;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
+import danogl.components.GameObjectPhysics;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
@@ -38,7 +39,9 @@ public class Leaf extends Block {
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
         this.initialPositionOfLeaf = topLeftCorner;
+        physics().setMass(0.0f);
         leafRoutine();
+
     }
 
 
