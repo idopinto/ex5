@@ -24,14 +24,12 @@ public class Tree {
     private final Random random = new Random();
     private final GameObjectCollection gameObjects;
     private UnaryOperator<Float> groundHeightFunc;
-    private Terrain terrain;
 
 
 
     public Tree (GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc){
         this.gameObjects = gameObjects;
         this.groundHeightFunc = groundHeightFunc;
-//        this.terrain = terrain;
     }
 
     /**
@@ -53,7 +51,6 @@ public class Tree {
             if (needToPlant()){
                 topOfTheTree = getRandomTrunkHeight();
                 bottomYBlock = (int) (this.groundHeightFunc.apply((float)xBlock)- Block.SIZE);
-
                 treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
                         (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
                 Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,this.gameObjects);

@@ -27,6 +27,7 @@ public class Leaf {
         gameObjects.addGameObject(leaf,layer);
         leaf.setTag(LEAF_TAG);
         new ScheduledTask(leaf,new Random().nextFloat() ,true,this::makeItMove);
+        leaf.renderer().fadeOut(6);
         return leaf;
     }
 
@@ -42,7 +43,6 @@ public class Leaf {
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
 
-
         new Transition<Vector2>(leaf,
                 leaf::setDimensions,
                 new Vector2(26,26),
@@ -51,6 +51,15 @@ public class Leaf {
                 3, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
+
+//        new Transition<Vector2>(leaf,
+//                leaf.renderer()::fadeOut,
+//                new
+//        )
+    }
+
+    private void makeItFall(){
+
     }
 
 
