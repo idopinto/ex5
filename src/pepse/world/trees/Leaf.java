@@ -1,5 +1,7 @@
 package pepse.world.trees;
 
+import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
@@ -12,7 +14,7 @@ import pepse.world.Block;
 import java.awt.*;
 import java.util.Random;
 
-public class Leaf extends Block{
+public class Leaf extends Block {
 
     private static final int FADEOUT_TIME = 15;
     private static final float HORIZONTAL_MOVEMENT_RANGE = 50;
@@ -21,27 +23,28 @@ public class Leaf extends Block{
     private static final int MAX_LIFE_TIME_SPAN = 50;
     private static final int FALL_VELOCITY = 20;
     private final Random random = new Random();
-
+    private final Vector2 initialPositionOfLeaf;
 
 
     /**
      * Construct a new GameObject instance.
      *
-     * @param topLeftCorner The location of the top-left corner of the created block
-     * @param renderable    - A renderable to render as the block.
+     * @param topLeftCorner         The location of the top-left corner of the created block
+     * @param renderable            - A renderable to render as the block.
      */
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
+        this.initialPositionOfLeaf = topLeftCorner;
         leafRoutine();
     }
 
-//    public Block create(GameObjectCollection gameObjects, Vector2 leafTopLeftCorner, int layer){
-//        Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
-//        leaf = new Block(leafTopLeftCorner,renderable);
-//        gameObjects.addGameObject(leaf,layer);
-//        leaf.setTag(LEAF_TAG);
-//        return leaf;
-//    }
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+        if (other.getTag().equals("ground")) {
+            this.setVelocity(Vector2.ZERO);
+        }
+    }
 
 
     private void makeItMove()
