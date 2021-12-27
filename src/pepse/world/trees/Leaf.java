@@ -24,6 +24,7 @@ public class Leaf extends Block {
     private static final int FALL_VELOCITY = 20;
     private final Random random = new Random();
     private final Vector2 initialPositionOfLeaf;
+    private Transition<Float> horizontalTransition;
 
 
     /**
@@ -36,14 +37,6 @@ public class Leaf extends Block {
         super(topLeftCorner, renderable);
         this.initialPositionOfLeaf = topLeftCorner;
         leafRoutine();
-    }
-
-    @Override
-    public void onCollisionEnter(GameObject other, Collision collision) {
-        super.onCollisionEnter(other, collision);
-        if (other.getTag().equals("ground")) {
-            this.setVelocity(Vector2.ZERO);
-        }
     }
 
 
@@ -89,9 +82,10 @@ public class Leaf extends Block {
         new ScheduledTask(this,random.nextInt(MAX_DEATH_TIME_SPAN) ,false,()->{});
     }
 
+
     private void makeItFall(){
         this.transform().setVelocityY(Vector2.DOWN.y()*FALL_VELOCITY);
-        new Transition<Float>(
+        this.horizontalTransition = new Transition<Float>(
                 this, // the game object being changed
                 x-> {this.transform().setVelocityX(x);}, // the method to call
                 -HORIZONTAL_MOVEMENT_RANGE, // initial transition value
@@ -103,5 +97,19 @@ public class Leaf extends Block {
 
 
     }
+
+
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+//        if (other.getTag().equals("ground")) {
+//            this.setVelocity(Vector2.ZERO);
+//        }
+
+
+    }
+
+
+
 
 }
