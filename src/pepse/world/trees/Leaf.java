@@ -25,13 +25,15 @@ public class Leaf extends Block {
     private final Random random = new Random();
     private final Vector2 initialPositionOfLeaf;
     private Transition<Float> horizontalTransition;
+    private Transition<Float> movingAngle;
+    private Transition<Vector2> movingDimensions;
 
 
     /**
      * Construct a new GameObject instance.
      *
-     * @param topLeftCorner         The location of the top-left corner of the created block
-     * @param renderable            - A renderable to render as the block.
+     * @param topLeftCorner The location of the top-left corner of the created block
+     * @param renderable    - A renderable to render as the block.
      */
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
@@ -40,9 +42,8 @@ public class Leaf extends Block {
     }
 
 
-    private void makeItMove()
-    {
-        new Transition<Float>(this,
+    private void makeItMove() {
+        this.movingAngle = new Transition<Float>(this,
                 this.renderer()::setRenderableAngle,
                 0f,
                 50f,
@@ -51,10 +52,10 @@ public class Leaf extends Block {
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
 
-        new Transition<Vector2>(this,
+        this.movingDimensions = new Transition<Vector2>(this,
                 this::setDimensions,
-                new Vector2(26,26),
-                new Vector2(30,30),
+                new Vector2(26, 26),
+                new Vector2(30, 30),
                 Transition.LINEAR_INTERPOLATOR_VECTOR, // use a cubic interpolator
                 3, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
@@ -62,32 +63,33 @@ public class Leaf extends Block {
 
     }
 
-    private void leafRoutine()
-    {
-        new ScheduledTask(this,random.nextFloat() ,true,this::makeItMove);
+    private void leafRoutine() {
+        new ScheduledTask(this, random.nextFloat(), true, this::makeItMove);
         new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN), false, this::leafFallRoutine);
     }
 
-    private void leafFallRoutine()
-    {
+    private void leafFallRoutine() {
         makeItFall();
         makeItFade();
     }
 
-    private void makeItFade(){
-        this.renderer().fadeOut(FADEOUT_TIME,this::deathRoutine);
+    private void makeItFade() {
+        this.renderer().fadeOut(FADEOUT_TIME, this::deathRoutine);
     }
 
     private void deathRoutine() {
-        new ScheduledTask(this,random.nextInt(MAX_DEATH_TIME_SPAN) ,false,()->{});
+        new ScheduledTask(this, random.nextInt(MAX_DEATH_TIME_SPAN), false, () -> {
+        });
     }
 
 
-    private void makeItFall(){
-        this.transform().setVelocityY(Vector2.DOWN.y()*FALL_VELOCITY);
+    private void makeItFall() {
+        this.transform().setVelocityY(Vector2.DOWN.y() * FALL_VELOCITY);
         this.horizontalTransition = new Transition<Float>(
                 this, // the game object being changed
-                x-> {this.transform().setVelocityX(x);}, // the method to call
+                x -> {
+                    this.transform().setVelocityX(x);
+                }, // the method to call
                 -HORIZONTAL_MOVEMENT_RANGE, // initial transition value
                 HORIZONTAL_MOVEMENT_RANGE, // final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
@@ -102,12 +104,15 @@ public class Leaf extends Block {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-//        if (other.getTag().equals("ground")) {
-//            this.setVelocity(Vector2.ZERO);
-//        }
-
-
+        if (other.getTag().equals("ground")) {
+            this.setVelocity(Vector2.ZERO);
+            this.removeComponent(this.horizontalTransition);
+            this.removeComponent(this.movingAngle);
+            this.removeComponent(this.movingDimensions);
     }
+
+
+}
 
 
 

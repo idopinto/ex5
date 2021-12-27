@@ -61,6 +61,8 @@ public class PepseGameManager extends danogl.GameManager{
         terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
         Tree trees = new Tree(this.gameObjects(), terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
+        gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS+10, Layer.STATIC_OBJECTS,
+                true);
     }
 
     /**
