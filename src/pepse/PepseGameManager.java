@@ -34,7 +34,6 @@ public class PepseGameManager extends danogl.GameManager{
     private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int FALLING_LEAF_LAYER =  Layer.STATIC_OBJECTS + 10;
 
-    private static final float WINDOW_HEIGHT = 840;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final float AVATAR_INITIAL_X_POS = 200;
@@ -70,13 +69,14 @@ public class PepseGameManager extends danogl.GameManager{
         Terrain terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, seed); // initializing the terrain
         terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
 
-        Tree trees = new Tree(this.gameObjects(), terrain::groundHeightAt);
+        Tree trees = new Tree(this.gameObjects(),terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
 
-        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
 
         Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
         Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
+        gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
+        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
 
     }
 

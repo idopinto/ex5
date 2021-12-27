@@ -11,11 +11,11 @@ import java.awt.*;
 
 public class Trunk {
     private static final Color TRUNK_COLOR =new Color(100, 50, 20);
-    private static final String TRUNK_TAG = "trunkBlock";
+    private static final String TRUNK_TAG = "trunk";
 
 
 
-    static void createTrunk (Vector2 trunkLocation, int trunkHeight, int layer, GameObjectCollection gameObjects)
+    static void createTrunk (GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight)
     {
         int counter = 0;
         for (int currentHeightOfTree = 0; currentHeightOfTree < trunkHeight;
@@ -23,7 +23,7 @@ public class Trunk {
             Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR));
             Block trunkBlock = new Block(new Vector2(trunkLocation.x(),
                     trunkLocation.y() - Block.SIZE*counter), renderable);
-            gameObjects.addGameObject(trunkBlock, layer);
+            gameObjects.addGameObject(trunkBlock, Tree.TRUNK_LAYER);
             trunkBlock.setTag(TRUNK_TAG);
             counter ++;
         }

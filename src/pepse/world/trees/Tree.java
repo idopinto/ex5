@@ -21,9 +21,12 @@ public class Tree {
     private static final int MINIMAL_TREE_HEIGHT = 4; //means four blocks
     private static final int MAXIMAL_TREE_HEIGHT = 10;
 
+    static final int TRUNK_LAYER = Layer.STATIC_OBJECTS + 6;
+    static final int LEAF_LAYER = Layer.STATIC_OBJECTS + 8;
+
     private final Random random = new Random();
     private final GameObjectCollection gameObjects;
-    private UnaryOperator<Float> groundHeightFunc;
+    private final UnaryOperator<Float> groundHeightFunc;
 
 
 
@@ -53,8 +56,8 @@ public class Tree {
                 bottomYBlock = (int) (this.groundHeightFunc.apply((float)xBlock)- Block.SIZE);
                 treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
                         (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
-                Trunk.createTrunk(new Vector2(xBlock, bottomYBlock), topOfTheTree, Layer.STATIC_OBJECTS+10,this.gameObjects);
-                TreeTop.createTreeTop(this.gameObjects, Layer.STATIC_OBJECTS+10,treeTopTopLeftCorner,topOfTheTree);
+                Trunk.createTrunk(this.gameObjects,new Vector2(xBlock, bottomYBlock), topOfTheTree);
+                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,topOfTheTree);
             }
 
         }

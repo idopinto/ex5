@@ -1,5 +1,6 @@
 package pepse.world.trees;
 
+import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.components.ScheduledTask;
@@ -18,7 +19,7 @@ public class TreeTop {
     private static final String LEAF_TAG = "leaf";
 
 
-    static void createTreeTop(GameObjectCollection gameObjects, int layer, Vector2 topLeftCorner,int  leafInRow)
+    static void createTreeTop(GameObjectCollection gameObjects, Vector2 topLeftCorner,int  leafInRow)
     {
         int x ;
         int y = (int) topLeftCorner.y();
@@ -26,8 +27,8 @@ public class TreeTop {
             x = (int) topLeftCorner.x();
             for (int j = 0; j < leafInRow; j++) {
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
-                Leaf leaf = new Leaf(new Vector2(x,y),renderable);
-                gameObjects.addGameObject(leaf,layer);
+                Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable);
+                gameObjects.addGameObject(leaf,Tree.LEAF_LAYER);
 
                 leaf.setTag(LEAF_TAG);
                 x += Block.SIZE;

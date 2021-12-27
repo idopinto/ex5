@@ -2,6 +2,7 @@ package pepse.world.trees;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;
+import danogl.collisions.GameObjectCollection;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.Renderable;
@@ -12,29 +13,31 @@ import java.util.Random;
 public class Leaf extends Block
 {
 
-    private static final int FADEOUT_TIME = 15;
-    private static final float HORIZONTAL_MOVEMENT_RANGE = 50;
+    private static final int FADEOUT_TIME = 30;
+    private static final float HORIZONTAL_MOVEMENT_RANGE = 30;
     private static final float HORIZONTAL_MOVEMENT_CYCLE_LENGTH = 2;
-    private static final int MAX_DEATH_TIME_SPAN = 20;
+    private static final int MAX_DEATH_TIME_SPAN = 50;
     private static final int MAX_LIFE_TIME_SPAN = 50;
-    private static final int FALL_VELOCITY = 20;
+    private static final int FALL_VELOCITY = 30;
     private final Random random = new Random();
     private final Vector2 initialPositionOfLeaf;
     private Transition<Float> horizontalTransition;
     private Transition<Float> movingAngle;
     private Transition<Vector2> movingDimensions;
     private final float opaqueness;
-    private boolean hitTheGround = false;
+    private final GameObjectCollection gameObjects;
 
 
     /**
      * Construct a new GameObject instance.
      *
+     * @param gameObjects
      * @param topLeftCorner The location of the top-left corner of the created block
      * @param renderable    - A renderable to render as the block.
      */
-    public Leaf(Vector2 topLeftCorner, Renderable renderable) {
+    public Leaf(GameObjectCollection gameObjects, Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
+        this.gameObjects = gameObjects;
         // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();
         this.initialPositionOfLeaf = this.getCenter();
@@ -48,12 +51,15 @@ public class Leaf extends Block
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
+
         this.transform().setVelocity(Vector2.ZERO);
 
         // Removing all the transitions made before
         this.removeComponent(this.horizontalTransition);
         this.removeComponent(this.movingAngle);
         this.removeComponent(this.movingDimensions);
+
+
 
         leafReBirth();
 
@@ -92,6 +98,11 @@ public class Leaf extends Block
     }
 
     private void fallingLeafRoutine() {
+        gameObjects.removeGameObject(this,Tree.LEAF_LAYER);
+
+        gameObjects.addGameObject(this,Tree.LEAF_LAYER + 2);
+
+
         makeLeafFallToTheGround();
         makeLeafFadeOut();
     }
@@ -116,18 +127,18 @@ public class Leaf extends Block
                 null); // nothing further to execute upon reaching final value
     }
 
-
-    private void returningToTreeTop() {
-
-        // set the leaf to initial state
-        this.renderer().fadeIn(0.1f);
-        this.setCenter(this.initialPositionOfLeaf);
-        this.renderer().setOpaqueness(this.opaqueness);
-
-        // start again the life cycle
-        leafRoutine();
-    }
-
+//
+//    private void returningToTreeTop() {
+//
+//        // set the leaf to initial state
+//        this.renderer().fadeIn(0.1f);
+//        this.setCenter(this.initialPositionOfLeaf);
+//        this.renderer().setOpaqueness(this.opaqueness);
+//
+//        // start again the life cycle
+//        leafRoutine();
+//    }
+//
 
 
 
@@ -136,7 +147,12 @@ public class Leaf extends Block
      */
     private void leafReBirth()
     {
-        new ScheduledTask(this, this.random.nextInt(MAX_DEATH_TIME_SPAN), false, this::returningToTreeTop);
+//        if (gameObjects.removeGameObject(this,Tree.LEAF_LAYER + 2))
+//        {
+//            System.out.println("leaf removed");
+//        }
+//        gameObjects.addGameObject(this, Tree.LEAF_LAYER);
+//        new ScheduledTask(this, this.random.nextInt(MAX_DEATH_TIME_SPAN), false, this::returningToTreeTop);
 
     }
 
