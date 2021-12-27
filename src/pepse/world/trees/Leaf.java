@@ -54,7 +54,7 @@ public class Leaf extends Block {
         this.movingAngle = new Transition<Float>(this,
                 this.renderer()::setRenderableAngle,
                 0f,
-                15f,
+                50f,
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a cubic interpolator
                 3, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,

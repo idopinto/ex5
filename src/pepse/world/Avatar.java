@@ -1,10 +1,18 @@
 package pepse.world;
 
+import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
+import danogl.components.CoordinateSpace;
+import danogl.components.ScheduledTask;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
+import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -14,6 +22,13 @@ import danogl.util.Vector2;
  */
 public class Avatar extends danogl.GameObject
 {
+
+    private static final float VELOCITY_X = 300;
+    private static final float VELOCITY_Y = -300;
+    private static final float GRAVITY = 500;
+    private static final String AVATAR_TAG = "avatar";
+    private static UserInputListener inputListener;
+    private static ImageReader imageReader;
     /**
      * Construct a new GameObject instance.
      *
@@ -24,6 +39,8 @@ public class Avatar extends danogl.GameObject
      */
     public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
         super(topLeftCorner, dimensions, renderable);
+        physics().preventIntersectionsFromDirection(Vector2.ZERO);
+        transform().setAccelerationY(GRAVITY);
     }
 
     /**
@@ -39,8 +56,43 @@ public class Avatar extends danogl.GameObject
     public static Avatar create(GameObjectCollection gameObjects, int layer, Vector2 topLeftCorner,
                                 UserInputListener inputListener, ImageReader imageReader)
     {
-        return null;
+        Avatar.inputListener = inputListener;
+        Avatar.imageReader = imageReader;
+        Avatar avatar = new Avatar(topLeftCorner,new Vector2(40,40),new OvalRenderable(Color.BLUE));
+        gameObjects.addGameObject(avatar, layer);
+        avatar.setTag(AVATAR_TAG);
+        return avatar;
+
     }
 
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        float xVel = 0;
+        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT))
+            xVel -= VELOCITY_X;
+        if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT))
+            xVel += VELOCITY_X;
+        transform().setVelocityX(xVel);
+        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE)&&(getVelocity().y() == 0))
+        {
+            transform().setVelocityY(VELOCITY_Y);
+        }
+        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)) {
+            transform().setVelocityY(VELOCITY_Y);
+            if(inputListener.wasKeyReleasedThisFrame(KeyEvent.VK_SHIFT))
+            {
+//                physics().preventIntersectionsFromDirection(Vector2.ZERO);
+            }
 
+
+        }
+//            physics().preventIntersectionsFromDirection(null);
+//            new ScheduledTask(this, .5f, false,
+//                    ()->physics().preventIntersectionsFromDirection(Vector2.ZERO));
+//            return;
+//        }
+//        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0)
+//            transform().setVelocityY(VELOCITY_Y);
+    }
 }

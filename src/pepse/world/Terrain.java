@@ -53,10 +53,11 @@ public class Terrain {
      */
     public float groundHeightAt(float x)
     {
-        float result = (float) (Block.SIZE *this.myPerl.noise(x/Block.SIZE)*20);
-        if (result < 0) return this.groundHeightAtX0;
-        else if (this.groundHeightAtX0 + result > windowDimensions.y()) return windowDimensions.y() - 60;
-        return this.groundHeightAtX0 + result;
+//        float result = (float) (Block.SIZE *this.myPerl.noise(x/Block.SIZE)*20);
+//        if (result < 0) return this.groundHeightAtX0;
+//        else if (this.groundHeightAtX0 + result > windowDimensions.y()) return windowDimensions.y() - 60;
+//        return this.groundHeightAtX0 + result;
+        return 600;
     }
 
     /**
