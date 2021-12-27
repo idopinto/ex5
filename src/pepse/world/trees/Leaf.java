@@ -2,17 +2,11 @@ package pepse.world.trees;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;
-import danogl.collisions.GameObjectCollection;
-import danogl.components.GameObjectPhysics;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.ColorSupplier;
 import pepse.world.Block;
-
-import java.awt.*;
 import java.util.Random;
 
 public class Leaf extends Block
@@ -41,22 +35,42 @@ public class Leaf extends Block
      */
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
+        // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();
         this.initialPositionOfLeaf = this.getCenter();
         physics().setMass(5f);
+
+        // start leaf routine
         leafRoutine();
 
     }
 
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+        this.transform().setVelocity(Vector2.ZERO);
 
-    private void leafRoutine() {
-        this.hitTheGround = false;
-        new ScheduledTask(this, random.nextFloat(), true, this::makeItMove);
-        new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN),
-                false, this::leafFallRoutine);
+        // Removing all the transitions made before
+        this.removeComponent(this.horizontalTransition);
+        this.removeComponent(this.movingAngle);
+        this.removeComponent(this.movingDimensions);
+
+        leafReBirth();
+
+
     }
 
-    private void makeItMove() {
+    private void leafRoutine() {
+//        this.hitTheGround = false;
+
+        //  starts the vibrations of this leaf in the wind
+        float waitTimeBeforeLeafVibrate = this.random.nextFloat();
+        int waitTimeUntilLeafFall = this.random.nextInt(MAX_LIFE_TIME_SPAN);
+        new ScheduledTask(this,waitTimeBeforeLeafVibrate , true, this::vibrationsRoutine);
+        new ScheduledTask(this, waitTimeUntilLeafFall, false, this::fallingLeafRoutine);
+    }
+
+    private void vibrationsRoutine() {
         this.movingAngle = new Transition<Float>(this,
                 this.renderer()::setRenderableAngle,
                 0f,
@@ -77,61 +91,52 @@ public class Leaf extends Block
 
     }
 
-    private void leafFallRoutine() {
-        makeItFall();
-        makeItFade();
+    private void fallingLeafRoutine() {
+        makeLeafFallToTheGround();
+        makeLeafFadeOut();
     }
 
 
-    private void makeItFade() {
+    private void makeLeafFadeOut() {
         this.renderer().fadeOut(FADEOUT_TIME, ()->{});
     }
 
 
-//    private void deathRoutine() {
-//        new ScheduledTask(this, random.nextInt(MAX_DEATH_TIME_SPAN), false, () -> {
-//        });
-//    }
 
-
-    private void makeItFall() {
+    private void makeLeafFallToTheGround() {
 
         this.transform().setVelocityY(Vector2.DOWN.y() * FALL_VELOCITY);
-        this.horizontalTransition = new Transition<Float>(
-                this, // the game object being changed
-                x -> {
-                    this.transform().setVelocityX(x);
-                }, // the method to call
+        this.horizontalTransition = new Transition<Float>(this,
+                x -> this.transform().setVelocityX(x), // the method to call
                 -HORIZONTAL_MOVEMENT_RANGE, // initial transition value
                 HORIZONTAL_MOVEMENT_RANGE, // final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
-                HORIZONTAL_MOVEMENT_CYCLE_LENGTH, // transition fully over cycleLength
+                HORIZONTAL_MOVEMENT_CYCLE_LENGTH, //
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
     }
 
 
     private void returningToTreeTop() {
+
+        // set the leaf to initial state
         this.renderer().fadeIn(0.1f);
         this.setCenter(this.initialPositionOfLeaf);
         this.renderer().setOpaqueness(this.opaqueness);
+
+        // start again the life cycle
         leafRoutine();
     }
 
 
-    @Override
-    public void onCollisionEnter(GameObject other, Collision collision) {
-        super.onCollisionEnter(other, collision);
-//        if (!this.hitTheGround) {
-        this.transform().setVelocity(Vector2.ZERO);
 
-        this.removeComponent(this.horizontalTransition);
-        this.removeComponent(this.movingAngle);
-        this.removeComponent(this.movingDimensions);
-//            this.hitTheGround = true;
-        new ScheduledTask(this, this.random.nextInt(5), false,
-                this::returningToTreeTop);
-//        }
+
+    /*
+
+     */
+    private void leafReBirth()
+    {
+        new ScheduledTask(this, this.random.nextInt(MAX_DEATH_TIME_SPAN), false, this::returningToTreeTop);
 
     }
 

@@ -26,9 +26,7 @@ public class Sky {
      */
     public static GameObject create(GameObjectCollection gameObjects, Vector2 windowDimensions, int skyLayer)
     {
-        GameObject sky = new GameObject(
-                Vector2.ZERO, windowDimensions,
-                new RectangleRenderable(BASIC_SKY_COLOR));
+        GameObject sky = new GameObject(Vector2.ZERO, windowDimensions, new RectangleRenderable(BASIC_SKY_COLOR));
         sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sky, skyLayer);
         sky.setTag(SKY_TAG);
