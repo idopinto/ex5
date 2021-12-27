@@ -68,7 +68,6 @@ public class PepseGameManager extends danogl.GameManager{
                 true);
 
         Avatar avatar = Avatar.create(gameObjects(),Layer.DEFAULT,new Vector2(200,terrain.groundHeightAt(200)-Block.SIZE),inputListener,imageReader);
-        ;
 
     }
 
@@ -78,9 +77,6 @@ public class PepseGameManager extends danogl.GameManager{
      */
     public static void main(String[] args)
     {
-//        PepseGameManager game = new PepseGameManager("pepse",new Vector2(WINDOW_WIDTH,WINDOW_HEIGHT));
-//        game.run();
-
         new PepseGameManager().run();
     }
 

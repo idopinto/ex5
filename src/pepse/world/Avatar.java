@@ -1,6 +1,7 @@
 package pepse.world;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.components.CoordinateSpace;
 import danogl.components.ScheduledTask;
@@ -23,7 +24,7 @@ import java.awt.event.KeyEvent;
 public class Avatar extends danogl.GameObject
 {
 
-    private static final float VELOCITY_X = 300;
+    private static final float VELOCITY_X = 200;
     private static final float VELOCITY_Y = -300;
     private static final float GRAVITY = 500;
     private static final String AVATAR_TAG = "avatar";
@@ -69,24 +70,32 @@ public class Avatar extends danogl.GameObject
     public void update(float deltaTime) {
         super.update(deltaTime);
         float xVel = 0;
+
+        // Move left
         if(inputListener.isKeyPressed(KeyEvent.VK_LEFT))
             xVel -= VELOCITY_X;
+
+        // Move right
         if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT))
             xVel += VELOCITY_X;
+
+        // Update X velocity
         transform().setVelocityX(xVel);
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE)&&(getVelocity().y() == 0))
+
+        // Jump only if on the ground
+        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && (getVelocity().y() == 0))
         {
             transform().setVelocityY(VELOCITY_Y);
         }
+        // Fly with (Space + Shift)
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)) {
             transform().setVelocityY(VELOCITY_Y);
-            if(inputListener.wasKeyReleasedThisFrame(KeyEvent.VK_SHIFT))
-            {
-//                physics().preventIntersectionsFromDirection(Vector2.ZERO);
-            }
-
-
         }
+//        if (inputListener.wasKeyReleasedThisFrame(KeyEvent.VK_SPACE))
+//        {
+//            transform().setVelocityY(0);
+//
+//        }
 //            physics().preventIntersectionsFromDirection(null);
 //            new ScheduledTask(this, .5f, false,
 //                    ()->physics().preventIntersectionsFromDirection(Vector2.ZERO));
