@@ -107,15 +107,15 @@ public class Leaf extends Block {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-//        if (other.getTag().equals("ground") && this.getVelocity().y() != 0) {
-        this.removeComponent(this.movingAngle);
-        this.removeComponent(this.movingDimensions);
-        this.removeComponent(this.horizontalTransition);
-        this.transform().setVelocity(Vector2.ZERO);
-//    }
+        if (other.getTag().equals("ground") && this.getVelocity().y() != 0) {
+            this.removeComponent(this.movingAngle);
+            this.removeComponent(this.movingDimensions);
+            this.removeComponent(this.horizontalTransition);
+            this.transform().setVelocity(Vector2.ZERO);
+        }
 
 
-}
+    }
 
 
 }
