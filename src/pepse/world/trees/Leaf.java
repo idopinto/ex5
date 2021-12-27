@@ -39,7 +39,7 @@ public class Leaf extends Block {
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
         this.initialPositionOfLeaf = topLeftCorner;
-        physics().setMass(0.0f);
+        physics().setMass(5f);
         leafRoutine();
 
     }
@@ -107,11 +107,11 @@ public class Leaf extends Block {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other.getTag().equals("ground") && this.getVelocity().y() != 0) {
+        if (other.getTag().equals("ground")) {
+            this.transform().setVelocity(Vector2.ZERO);
+            this.removeComponent(this.horizontalTransition);
             this.removeComponent(this.movingAngle);
             this.removeComponent(this.movingDimensions);
-            this.removeComponent(this.horizontalTransition);
-            this.transform().setVelocity(Vector2.ZERO);
         }
 
 
