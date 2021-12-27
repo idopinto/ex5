@@ -72,7 +72,7 @@ public class Terrain {
         int topYBlock;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-
+        boolean checkedGroundLayer = true;
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
             for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){

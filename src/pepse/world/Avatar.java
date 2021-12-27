@@ -30,6 +30,7 @@ public class Avatar extends danogl.GameObject
     private static final String AVATAR_TAG = "avatar";
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
+
     /**
      * Construct a new GameObject instance.
      *
@@ -40,8 +41,6 @@ public class Avatar extends danogl.GameObject
      */
     public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
         super(topLeftCorner, dimensions, renderable);
-        physics().preventIntersectionsFromDirection(Vector2.ZERO);
-        transform().setAccelerationY(GRAVITY);
     }
 
     /**
@@ -62,6 +61,8 @@ public class Avatar extends danogl.GameObject
         Avatar avatar = new Avatar(topLeftCorner,new Vector2(40,40),new OvalRenderable(Color.BLUE));
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
+        avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
+        avatar.transform().setAccelerationY(GRAVITY);
         return avatar;
 
     }
@@ -91,17 +92,5 @@ public class Avatar extends danogl.GameObject
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)) {
             transform().setVelocityY(VELOCITY_Y);
         }
-//        if (inputListener.wasKeyReleasedThisFrame(KeyEvent.VK_SPACE))
-//        {
-//            transform().setVelocityY(0);
-//
-//        }
-//            physics().preventIntersectionsFromDirection(null);
-//            new ScheduledTask(this, .5f, false,
-//                    ()->physics().preventIntersectionsFromDirection(Vector2.ZERO));
-//            return;
-//        }
-//        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0)
-//            transform().setVelocityY(VELOCITY_Y);
     }
 }
