@@ -45,11 +45,16 @@ public class Leaf extends Block {
     }
 
 
+    private void leafRoutine() {
+        new ScheduledTask(this, random.nextFloat(), true, this::makeItMove);
+        new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN), false, this::leafFallRoutine);
+    }
+
     private void makeItMove() {
         this.movingAngle = new Transition<Float>(this,
                 this.renderer()::setRenderableAngle,
                 0f,
-                50f,
+                15f,
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a cubic interpolator
                 3, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
@@ -66,19 +71,16 @@ public class Leaf extends Block {
 
     }
 
-    private void leafRoutine() {
-        new ScheduledTask(this, random.nextFloat(), true, this::makeItMove);
-        new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN), false, this::leafFallRoutine);
-    }
-
     private void leafFallRoutine() {
         makeItFall();
         makeItFade();
     }
 
+
     private void makeItFade() {
         this.renderer().fadeOut(FADEOUT_TIME, this::deathRoutine);
     }
+
 
     private void deathRoutine() {
         new ScheduledTask(this, random.nextInt(MAX_DEATH_TIME_SPAN), false, () -> {
@@ -99,25 +101,21 @@ public class Leaf extends Block {
                 HORIZONTAL_MOVEMENT_CYCLE_LENGTH, // transition fully over cycleLength
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
-
-
     }
 
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other.getTag().equals("ground")) {
-            this.setVelocity(Vector2.ZERO);
-            this.removeComponent(this.horizontalTransition);
-            this.removeComponent(this.movingAngle);
-            this.removeComponent(this.movingDimensions);
-    }
+//        if (other.getTag().equals("ground") && this.getVelocity().y() != 0) {
+        this.removeComponent(this.movingAngle);
+        this.removeComponent(this.movingDimensions);
+        this.removeComponent(this.horizontalTransition);
+        this.transform().setVelocity(Vector2.ZERO);
+//    }
 
 
 }
-
-
 
 
 }
