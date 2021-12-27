@@ -18,7 +18,7 @@ public class Leaf extends Block{
 //    private static final String LEAF_TAG = "leaf";
     private static final int FADEOUT_TIME = 6;
     private static final int FALL_VELOCITY = 20;
-
+    private final Random random = new Random();
     private int  randomLifeSpan;
 
 
@@ -65,10 +65,10 @@ public class Leaf extends Block{
 
     }
 
-    public void leafRoutine()
+    private void leafRoutine()
     {
-        new ScheduledTask(this,new Random().nextFloat() ,true,this::makeItMove);
-        new ScheduledTask(this, new Random().nextInt(5), false, this::leafFallRoutine);
+        new ScheduledTask(this,random.nextFloat() ,true,this::makeItMove);
+        new ScheduledTask(this, random.nextInt(30), false, this::leafFallRoutine);
     }
 
     private void leafFallRoutine()
