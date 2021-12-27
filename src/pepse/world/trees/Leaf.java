@@ -28,6 +28,7 @@ public class Leaf extends Block {
     private Transition<Float> horizontalTransition;
     private Transition<Float> movingAngle;
     private Transition<Vector2> movingDimensions;
+    private final float opaqueness;
 
 
     /**
@@ -38,7 +39,8 @@ public class Leaf extends Block {
      */
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
-        this.initialPositionOfLeaf = topLeftCorner;
+        this.opaqueness = this.renderer().getOpaqueness();
+        this.initialPositionOfLeaf = this.getCenter();
         physics().setMass(5f);
         leafRoutine();
 
@@ -47,7 +49,8 @@ public class Leaf extends Block {
 
     private void leafRoutine() {
         new ScheduledTask(this, random.nextFloat(), true, this::makeItMove);
-        new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN), false, this::leafFallRoutine);
+        new ScheduledTask(this, random.nextInt(MAX_LIFE_TIME_SPAN),
+                false, this::leafFallRoutine);
     }
 
     private void makeItMove() {
@@ -104,15 +107,25 @@ public class Leaf extends Block {
     }
 
 
+    private void returningToTreeTop(){
+        this.setCenter(this.initialPositionOfLeaf);
+        this.renderer().setOpaqueness(this.opaqueness);
+        leafRoutine();
+    }
+
+
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other.getTag().equals("ground")) {
-            this.transform().setVelocity(Vector2.ZERO);
-            this.removeComponent(this.horizontalTransition);
-            this.removeComponent(this.movingAngle);
-            this.removeComponent(this.movingDimensions);
-        }
+
+        this.transform().setVelocity(Vector2.ZERO);
+
+        this.removeComponent(this.horizontalTransition);
+        this.removeComponent(this.movingAngle);
+        this.removeComponent(this.movingDimensions);
+
+        new ScheduledTask(this, this.random.nextInt(5), false,
+                this::returningToTreeTop);
 
 
     }
