@@ -60,6 +60,9 @@ public class Leaf extends Block
         this.removeComponent(this.movingAngle);
         this.removeComponent(this.movingDimensions);
 
+        // updating in the next update the leaves to not move after erasing the horizontalTransition component.
+        new ScheduledTask(this, 0.01f, false,
+                () -> transform().setVelocity(Vector2.ZERO));
 
     }
 
