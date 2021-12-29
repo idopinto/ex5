@@ -17,6 +17,7 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -81,7 +82,14 @@ public class PepseGameManager extends danogl.GameManager{
         setCamera(new Camera(avatar, windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
-//        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, AVATAR, true);
+        new Random(Objects.hash(60,seed));
+
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
 
     }
 
