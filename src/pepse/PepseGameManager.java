@@ -17,7 +17,6 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -38,6 +37,10 @@ public class PepseGameManager extends danogl.GameManager{
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final float AVATAR_INITIAL_X_POS = 200;
     private Counter energyCounter;
+    private Avatar avatar;
+    private Terrain terrain;
+    private float maxMargin;
+    private float maxX;
 
 
 //    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -70,26 +73,31 @@ public class PepseGameManager extends danogl.GameManager{
         Terrain terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, seed); // initializing the terrain
         terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
 
-        Tree trees = new Tree(this.gameObjects(),terrain::groundHeightAt);
+        Tree trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
 
         Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,
-                terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
-        Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
+                this.terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
+        this.avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
+        this.maxMargin = windowDimensions.x() - this.avatar.getCenter().x();
+        this.maxX = windowDimensions.x();
         gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
 
-        setCamera(new Camera(avatar, windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
+        setCamera(new Camera(this.avatar, windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
-        new Random(Objects.hash(60,seed));
+//        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, AVATAR, true);
 
     }
+
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
+        if (this.maxX - this.avatar.getCenter().x() < this.maxMargin){
+            this.maxX = this.maxMargin - (this.maxX- this.avatar.getCenter().x());
+        }
 
     }
 
