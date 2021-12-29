@@ -62,7 +62,7 @@ public class Avatar extends danogl.GameObject
     {
         Avatar.inputListener = inputListener;
         Avatar.imageReader = imageReader;
-        Avatar.energyCounter = new Counter(200);
+        Avatar.energyCounter = new Counter(100);
         Energy energy = new Energy(Avatar.energyCounter, new Vector2(0,20), new Vector2(30, 30), gameObjects);
         gameObjects.addGameObject(energy, Layer.BACKGROUND);
         Avatar.hasNoEnergy = false;
@@ -108,6 +108,7 @@ public class Avatar extends danogl.GameObject
             {
                 hasNoEnergy = true;
                 transform().setVelocityY(0);
+//                energyCounter.reset();
             }
         }
 
@@ -119,7 +120,7 @@ public class Avatar extends danogl.GameObject
         if (hasNoEnergy) {
             hasNoEnergy = false;
         }
-        if ((other.getTag().equals("ground") && (energyCounter.value() < 200)))
+        if ((other.getTag().equals("ground") && (energyCounter.value() < 100)))
         {
 
             energyCounter.increment();
