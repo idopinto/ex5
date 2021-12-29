@@ -10,6 +10,7 @@ import danogl.util.Vector2;
 import pepse.world.Block;
 import java.util.Random;
 
+
 public class Leaf extends Block
 {
 
@@ -25,7 +26,7 @@ public class Leaf extends Block
     private Transition<Float> movingAngle;
     private Transition<Vector2> movingDimensions;
     private final float opaqueness;
-    private final GameObjectCollection gameObjects;
+    private GameObjectCollection gameObjects;
 
 
     /**
@@ -59,16 +60,10 @@ public class Leaf extends Block
         this.removeComponent(this.movingAngle);
         this.removeComponent(this.movingDimensions);
 
-//        new ScheduledTask(this, this.random.nextInt(5), false,
-//                this::returningToTreeTop);
-
-        returningToTreeTop();
-
 
     }
 
     private void leafRoutine() {
-//        this.hitTheGround = false;
 
         //  starts the vibrations of this leaf in the wind
         float waitTimeBeforeLeafVibrate = this.random.nextFloat();
@@ -109,7 +104,10 @@ public class Leaf extends Block
 
 
     private void makeLeafFadeOut() {
-        this.renderer().fadeOut(FADEOUT_TIME, ()->{});
+        int fadeOutTime = this.random.nextInt(FADEOUT_TIME);
+        this.renderer().fadeOut(fadeOutTime, ()->{});
+        new ScheduledTask(this, fadeOutTime+this.random.nextInt(5), false,
+                this::returningToTreeTop);
     }
 
 
