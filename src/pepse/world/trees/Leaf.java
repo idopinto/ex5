@@ -14,8 +14,8 @@ import java.util.Random;
 public class Leaf extends Block
 {
 
-    private static final int FADEOUT_TIME = 30;
-    private static final float HORIZONTAL_MOVEMENT_RANGE = 30;
+    private static final int FADEOUT_TIME = 15;
+    private static final float HORIZONTAL_MOVEMENT_RANGE = 20;
     private static final float HORIZONTAL_MOVEMENT_CYCLE_LENGTH = 2;
     private static final int MAX_DEATH_TIME_SPAN = 50;
     private static final int MAX_LIFE_TIME_SPAN = 100;
@@ -26,7 +26,7 @@ public class Leaf extends Block
     private Transition<Float> movingAngle;
     private Transition<Vector2> movingDimensions;
     private final float opaqueness;
-    private GameObjectCollection gameObjects;
+    private final GameObjectCollection gameObjects;
 
 
     /**
@@ -43,6 +43,7 @@ public class Leaf extends Block
         // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();
         this.initialPositionOfLeaf = this.getCenter();
+
         physics().setMass(5f);
         // start leaf routine
         leafRoutine();
@@ -99,6 +100,7 @@ public class Leaf extends Block
     private void fallingLeafRoutine() {
         gameObjects.removeGameObject(this,Tree.LEAF_LAYER);
         gameObjects.addGameObject(this,Tree.LEAF_LAYER + 2);
+
         // adding a falling leaf to the Layer which collides with the terrain.
 
         makeLeafFallToTheGround();
@@ -110,7 +112,7 @@ public class Leaf extends Block
         int fadeOutTime = this.random.nextInt(FADEOUT_TIME);
         this.renderer().fadeOut(fadeOutTime, ()->{});
         new ScheduledTask(this, fadeOutTime+this.random.nextInt(5), false,
-                this::returningToTreeTop);
+                this::leafReBirth);
     }
 
 
@@ -146,16 +148,13 @@ public class Leaf extends Block
     /*
 
      */
-//    private void leafReBirth()
-//    {
-//        if (gameObjects.removeGameObject(this,Tree.LEAF_LAYER + 2))
-//        {
-//            System.out.println("leaf removed");
-//        }
-//        gameObjects.addGameObject(this, Tree.LEAF_LAYER);
-//        new ScheduledTask(this, this.random.nextInt(MAX_DEATH_TIME_SPAN), false, this::returningToTreeTop);
+    private void leafReBirth()
+    {
+        gameObjects.removeGameObject(this,Tree.LEAF_LAYER + 2);
+        gameObjects.addGameObject(this, Tree.LEAF_LAYER);
+        new ScheduledTask(this, this.random.nextInt(MAX_DEATH_TIME_SPAN), false, this::returningToTreeTop);
 
-//    }
+    }
 
 
 }

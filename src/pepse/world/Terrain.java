@@ -20,10 +20,10 @@ public class Terrain {
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
-    private static final int MAXIMUM_HEIGHT_OF_TERRAIN = 600;
+//    private static final int MAXIMUM_HEIGHT_OF_TERRAIN = 600;
     private static final String GROUND_TAG = "ground";
 
-    private final int groundHeightAtX0;
+    private final float groundHeightAtX0;
     private final PerlinNoise myPerl;
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
@@ -43,7 +43,9 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.myPerl = new PerlinNoise(seed);
-        this.groundHeightAtX0 = MAXIMUM_HEIGHT_OF_TERRAIN;
+//        this.groundHeightAtX0 = 720;
+        this.groundHeightAtX0 = windowDimensions.y() *(2/3f);
+        System.out.println(this.groundHeightAtX0);
         System.out.println(this.groundLayer);
     }
 
@@ -54,9 +56,9 @@ public class Terrain {
      */
     public float groundHeightAt(float x)
     {
-        float result = (float) (Block.SIZE *this.myPerl.noise(x/Block.SIZE)*20);
-        if (result < 0) return this.groundHeightAtX0;
-        else if (this.groundHeightAtX0 + result > windowDimensions.y()) return windowDimensions.y() - 60;
+        float result = (float) (28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
+        if (result < 0) {return this.groundHeightAtX0 + Block.SIZE;}
+        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {return windowDimensions.y() - 3*Block.SIZE;}
         return this.groundHeightAtX0 + result;
 //        return 600;
     }
@@ -73,12 +75,11 @@ public class Terrain {
         int topYBlock;
         if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
         if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        int counter = 0;
         int layer;
         for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
             topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
             layer = this.groundLayer;
-            for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH*Block.SIZE) ; yBlock+=Block.SIZE){
+            for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH * Block.SIZE) ; yBlock+=Block.SIZE){
 
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 Block block = new Block(new Vector2(xBlock,yBlock), renderable);

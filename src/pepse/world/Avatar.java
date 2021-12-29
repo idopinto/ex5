@@ -93,7 +93,13 @@ public class Avatar extends danogl.GameObject
         // Fly with (Space + Shift)
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)) {
             transform().setVelocityY(VELOCITY_Y);
+            if (transform().getAcceleration().y() > GRAVITY)
+            {
+                System.out.println("gravity too high");
+                transform().setAccelerationY(GRAVITY);
+            }
         }
+
 
     }
 }
