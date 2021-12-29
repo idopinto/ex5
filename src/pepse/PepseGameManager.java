@@ -71,10 +71,6 @@ public class PepseGameManager extends danogl.GameManager{
         Tree trees = new Tree(this.gameObjects(),terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
 
-        this.energyCounter = new Counter(200);
-        Energy energy = new Energy(this.energyCounter, new Vector2(0,20), new Vector2(30, 30), gameObjects());
-        gameObjects().addGameObject(energy, Layer.BACKGROUND);
-
         Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,
                 terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
         Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
