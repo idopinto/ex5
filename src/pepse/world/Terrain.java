@@ -20,7 +20,7 @@ public class Terrain {
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
-    private static final int MAXIMUM_HEIGHT_OF_TERRAIN = 1000;
+    private static final int MAXIMUM_HEIGHT_OF_TERRAIN = 600;
     private static final String GROUND_TAG = "ground";
 
     private final int groundHeightAtX0;
