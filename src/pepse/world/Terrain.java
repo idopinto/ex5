@@ -42,11 +42,10 @@ public class Terrain {
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
-        this.myPerl = new PerlinNoise(seed);
-//        this.groundHeightAtX0 = 720;
         this.groundHeightAtX0 = windowDimensions.y() *(2/3f);
-        System.out.println(this.groundHeightAtX0);
-        System.out.println(this.groundLayer);
+        this.myPerl = new PerlinNoise(seed);
+
+
     }
 
     /**
