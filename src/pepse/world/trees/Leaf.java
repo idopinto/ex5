@@ -112,7 +112,7 @@ public class Leaf extends Block
         int fadeOutTime = this.random.nextInt(FADEOUT_TIME);
         this.renderer().fadeOut(fadeOutTime, ()->{});
         new ScheduledTask(this, fadeOutTime+this.random.nextInt(5), false,
-                this::leafReBirth);
+                this::returningToTreeTop);
     }
 
 
