@@ -45,6 +45,7 @@ public class Leaf extends Block {
         this.initialPositionOfLeaf = this.getCenter();
 
         physics().setMass(5f);
+
         // start leaf routine
         leafRoutine();
 

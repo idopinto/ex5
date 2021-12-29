@@ -56,9 +56,8 @@ public class Terrain {
     {
         float result = (float) (28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
         if (result < 0) {return this.groundHeightAtX0 + Block.SIZE;}
-        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {return windowDimensions.y() - 3*Block.SIZE;}
+        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {return windowDimensions.y() - 3 * Block.SIZE;}
         return this.groundHeightAtX0 + result;
-//        return 600;
     }
 
     /**
@@ -68,20 +67,20 @@ public class Terrain {
      */
     public void createInRange(int minX, int maxX)
     {
-        int newMinX = minX;
-        int newMaxX = maxX;
-        int topYBlock;
-        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
-        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
-        int layer;
-        for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE){
-            topYBlock = (int) groundHeightAt(xBlock); // highest block for an X coordinate.
-            layer = this.groundLayer;
-            for (int yBlock = topYBlock; yBlock < topYBlock + (TERRAIN_DEPTH * Block.SIZE) ; yBlock+=Block.SIZE){
+        int topY, layer;
+        minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
+        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : minX;
+
+        for (int x = minX; x <= maxX; x+=Block.SIZE){
+            topY = (int) groundHeightAt(x); // highest block for an X coordinate.
+            layer = this.groundLayer; // top ground layer
+
+            for (int y = topY; y < topY + (TERRAIN_DEPTH * Block.SIZE) ; y += Block.SIZE){
 
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-                Block block = new Block(new Vector2(xBlock,yBlock), renderable);
-                if ((yBlock != topYBlock) && (yBlock != topYBlock + Block.SIZE)&&yBlock != topYBlock + 2*Block.SIZE) {layer = this.groundLayer + 2;}
+                Block block = new Block(new Vector2(x,y), renderable);
+                // the first couple of blocks in each column should be in groundLayer else in groundLayer+2
+                if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
                 this.gameObjects.addGameObject(block, layer);
                 block.setTag(GROUND_TAG);
             }
@@ -89,3 +88,10 @@ public class Terrain {
     }
 
 }
+
+
+
+//        int newMinX = minX;
+//        int newMaxX = maxX;
+//        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
+//        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;

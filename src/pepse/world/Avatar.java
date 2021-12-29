@@ -5,14 +5,13 @@ import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
-import danogl.components.ScheduledTask;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.OvalRenderable;
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
+import pepse.util.Energy;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

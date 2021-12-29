@@ -2,15 +2,10 @@ package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
-import danogl.gui.rendering.RectangleRenderable;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.ColorSupplier;
 import pepse.world.Block;
-import pepse.world.Terrain;
 
 import java.util.Random;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 /**
@@ -18,21 +13,26 @@ import java.util.function.UnaryOperator;
  */
 public class Tree {
 
-    private static final int MINIMAL_TREE_HEIGHT = 6; //means four blocks
-    private static final int MAXIMAL_TREE_HEIGHT = 10;
+    private static final int MINIMAL_HEIGHT = 6; //means four blocks
+    private static final int MAXIMAL_HEIGHT = 10;
 
     static final int TRUNK_LAYER = Layer.STATIC_OBJECTS + 6;
     static final int LEAF_LAYER = Layer.STATIC_OBJECTS + 8;
 
-    private final Random random = new Random();
     private final GameObjectCollection gameObjects;
     private final UnaryOperator<Float> groundHeightFunc;
+    private int seed;
+    private final Random random;
 
 
+// added seed in constructor
 
-    public Tree(GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc){
+    public Tree(GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc, int seed){
         this.gameObjects = gameObjects;
         this.groundHeightFunc = groundHeightFunc;
+        this.seed = seed;
+        this.random = new Random(seed);
+
     }
 
     /**
@@ -42,36 +42,32 @@ public class Tree {
      */
     public void createInRange(int minX, int maxX)
     {
-        int newMinX = minX;
-        int newMaxX = maxX;
+
         int bottomYBlock;
-        int topOfTheTree;
-        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
-        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;
+        int treeHeight;
+        minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
+        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : minX;
 
         Vector2 treeTopTopLeftCorner;
-        for (int xBlock = newMinX; xBlock <= newMaxX; xBlock+=Block.SIZE) {
+        for (int x = minX; x <= maxX; x += Block.SIZE) {
             if (needToPlant()){
-                topOfTheTree = getRandomTrunkHeight();
-                bottomYBlock = (int) (this.groundHeightFunc.apply((float)xBlock)- Block.SIZE);
-                treeTopTopLeftCorner = new Vector2(xBlock - ((topOfTheTree/2f)*Block.SIZE),
-                        (bottomYBlock - topOfTheTree*Block.SIZE) - (topOfTheTree/2f)*Block.SIZE);
-                Trunk.createTrunk(this.gameObjects,new Vector2(xBlock, bottomYBlock), topOfTheTree);
-                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,topOfTheTree);
+                treeHeight = getRandomHeight();
+                bottomYBlock = (int) (this.groundHeightFunc.apply((float)x)- Block.SIZE);
+                treeTopTopLeftCorner = new Vector2(x - ((treeHeight/2f)*Block.SIZE),
+                        (bottomYBlock - treeHeight*Block.SIZE) - (treeHeight/2f)*Block.SIZE);
+                Trunk.createTrunk(this.gameObjects,new Vector2(x, bottomYBlock), treeHeight);
+                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight);
             }
 
         }
     }
 
 
-    private int getRandomTrunkHeight()
-    {
-        return this.random.nextInt(MAXIMAL_TREE_HEIGHT-MINIMAL_TREE_HEIGHT) + MINIMAL_TREE_HEIGHT;
-    }
+    private int getRandomHeight() {return this.random.nextInt(MAXIMAL_HEIGHT - MINIMAL_HEIGHT) + MINIMAL_HEIGHT;}
 
     private boolean needToPlant()
     {
-        return (float) random.nextInt(100) < 10;
+        return random.nextInt(100) < 10;
     }
 
 }

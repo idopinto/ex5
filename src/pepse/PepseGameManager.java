@@ -30,15 +30,15 @@ public class PepseGameManager extends danogl.GameManager{
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int LEAF_LAYER =  Layer.STATIC_OBJECTS + 8;
-    private static final int SEED = 25;
+    private static final int SEED = 100;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
-    private static final float AVATAR_INITIAL_X_POS = 200;
+    private static final float AVATAR_INITIAL_X_POS = 600;
     private Counter energyCounter;
     private Avatar avatar;
     private Terrain terrain;
     private int farMargin;
-    private int maxX;
+     private int maxX;
     private int closeMargin;
     private int minX;
 //    private int seed;
@@ -60,8 +60,10 @@ public class PepseGameManager extends danogl.GameManager{
         // Override GameObject initializeGame
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
         this.windowDimensions = windowController.getWindowDimensions();
+        this.minX = 0;
+        this.maxX = (int) windowDimensions.x();
+
         createBackground();
-//        setInitialGameSeed();
         generateInitialScenery();
         generateAvatar(inputListener,imageReader);
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
@@ -81,6 +83,7 @@ public class PepseGameManager extends danogl.GameManager{
     {
         int start = this.maxX, extraTerrainCols = 3 * Block.SIZE;
         int diffBetweenMaxToAvatar = start - (int)this.avatar.getCenter().x();
+
         int end = start + (this.farMargin - diffBetweenMaxToAvatar + extraTerrainCols);
         int oldMin  = this.minX;
         if (diffBetweenMaxToAvatar < this.farMargin)
@@ -94,18 +97,14 @@ public class PepseGameManager extends danogl.GameManager{
 //        if (this.avatar.getCenter().x() < this.closeMargin){
 //            this.minX -= this.closeMargin - this.avatar.getCenter().x();
 //        }
-        removeOldObjects(oldMin);
+        removeOldObjects();
     }
 
-    private void removeOldObjects(int oldMin) {
+    private void removeOldObjects() {
 
-//        for (int i = oldMin; i < this.minX; i+=Block.SIZE) {
-//
-//        }
         for (GameObject gameObject: gameObjects())
         {
             if ((gameObject.getTag().equals("ground")) && (gameObject.getCenter().x() < this.minX)){
-                System.out.println("true");
                 gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
             }
         }
@@ -118,13 +117,13 @@ public class PepseGameManager extends danogl.GameManager{
 
     private void generateAvatar(UserInputListener inputListener,ImageReader imageReader)
     {
-        Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS, this.terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
+        //        gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
+
+        Vector2 avatarInitialPosition = new Vector2(maxX/2f, this.terrain.groundHeightAt(maxX/2f)-Block.SIZE);
         this.avatar = Avatar.create(gameObjects(),AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
-//        gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
-        this.farMargin = (int)windowDimensions.x() - (int)this.avatar.getCenter().x();
-        this.maxX = (int)windowDimensions.x();
         this.closeMargin = (int)this.avatar.getCenter().x();
-        this.minX = 0;
+        this.farMargin = this.maxX - this.closeMargin;
+
 
         setCamera(new Camera(this.avatar,
                 this.windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
@@ -132,6 +131,8 @@ public class PepseGameManager extends danogl.GameManager{
                 this.windowDimensions));
 
     }
+
+
 //    private void setInitialGameSeed()
 //    {
 //
@@ -139,14 +140,20 @@ public class PepseGameManager extends danogl.GameManager{
 //        //        int seed = random.nextInt(500);
 //        this.seed = 25;
 //    }
+
+
     private void generateInitialScenery()
     {
-        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
-        terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
+        // initializing the terrain
+        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED);
+        // terrain spread on the whole screen.
+        terrain.createInRange(minX, maxX);
 
-        this.trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt);
-        trees.createInRange(0, (int) windowDimensions.x());
+        this.trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt,SEED);
+        trees.createInRange(minX, maxX);
     }
+
+
     private void createBackground()
     {
         Sky.create(this.gameObjects(),windowDimensions, SKY_LAYER);
