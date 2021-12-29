@@ -7,7 +7,6 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
-import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 import pepse.world.*;
@@ -17,7 +16,6 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -40,8 +38,10 @@ public class PepseGameManager extends danogl.GameManager{
     private Counter energyCounter;
     private Avatar avatar;
     private Terrain terrain;
-    private float maxMargin;
+    private float farMargin;
     private float maxX;
+    private float closeMargin;
+    private float minX;
 
 
 //    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -81,8 +81,11 @@ public class PepseGameManager extends danogl.GameManager{
                 this.terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
         this.avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
-        this.maxMargin = windowDimensions.x() - this.avatar.getCenter().x();
+        this.farMargin = windowDimensions.x() - this.avatar.getCenter().x();
         this.maxX = windowDimensions.x();
+        this.closeMargin = this.avatar.getCenter().x();
+        this.minX = 0;
+
         gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
 
         setCamera(new Camera(this.avatar, windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
@@ -97,10 +100,16 @@ public class PepseGameManager extends danogl.GameManager{
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (this.maxX - this.avatar.getCenter().x() < this.maxMargin){
-            this.maxX = this.maxMargin - (this.maxX- this.avatar.getCenter().x());
-        }
+        if (this.maxX - this.avatar.getCenter().x() < this.farMargin){
+            this.terrain.createInRange((int)this.maxX, (int)this.maxX + ((int)this.farMargin
+                    - (int)(this.maxX - this.avatar.getCenter().x())) + 3*Block.SIZE);
 
+            this.maxX += this.farMargin - (this.maxX- this.avatar.getCenter().x());
+        }
+        if (this.avatar.getCenter().x() < this.closeMargin){
+//            this.minX -= this.closeMargin - this.avatar.getCenter().x();
+
+        }
     }
 
     /**
