@@ -18,7 +18,7 @@ import java.util.function.UnaryOperator;
  */
 public class Tree {
 
-    private static final int MINIMAL_TREE_HEIGHT = 4; //means four blocks
+    private static final int MINIMAL_TREE_HEIGHT = 6; //means four blocks
     private static final int MAXIMAL_TREE_HEIGHT = 10;
 
     static final int TRUNK_LAYER = Layer.STATIC_OBJECTS + 6;

@@ -30,7 +30,7 @@ public class PepseGameManager extends danogl.GameManager{
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int LEAF_LAYER =  Layer.STATIC_OBJECTS + 8;
-
+    private static final int SEED = 25;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final float AVATAR_INITIAL_X_POS = 200;
@@ -40,9 +40,10 @@ public class PepseGameManager extends danogl.GameManager{
     private int farMargin;
     private int maxX;
     private int closeMargin;
-    private float minX;
-    private int seed;
+    private int minX;
+//    private int seed;
     private Vector2 windowDimensions;
+    private Tree trees;
 
 
     /**
@@ -60,13 +61,10 @@ public class PepseGameManager extends danogl.GameManager{
         super.initializeGame(imageReader,soundReader,inputListener,windowController);
         this.windowDimensions = windowController.getWindowDimensions();
         createBackground();
-        setInitialGameSeed();
+//        setInitialGameSeed();
         generateInitialScenery();
         generateAvatar(inputListener,imageReader);
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
-
-//        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, AVATAR, true);
-
     }
 
     @Override
@@ -75,23 +73,44 @@ public class PepseGameManager extends danogl.GameManager{
         generateWorldRight();
         generateWorldLeft();
 
-        if (this.avatar.getCenter().x() < this.closeMargin){
-            this.minX -= this.closeMargin - this.avatar.getCenter().x();
-        }
+
     }
 
 
     private void generateWorldRight()
     {
-        int start = this.maxX, extraTerrainCols = 0; //3 * Block.SIZE;
+        int start = this.maxX, extraTerrainCols = 3 * Block.SIZE;
         int diffBetweenMaxToAvatar = start - (int)this.avatar.getCenter().x();
-        int end = start + (this.farMargin - (diffBetweenMaxToAvatar) + extraTerrainCols);
+        int end = start + (this.farMargin - diffBetweenMaxToAvatar + extraTerrainCols);
+        int oldMin  = this.minX;
         if (diffBetweenMaxToAvatar < this.farMargin)
         {
             this.terrain.createInRange(start, end);
+//            this.trees.createInRange(start, end);
             this.maxX += this.farMargin - diffBetweenMaxToAvatar;
+            this.minX += this.farMargin - diffBetweenMaxToAvatar;
+
+        }
+//        if (this.avatar.getCenter().x() < this.closeMargin){
+//            this.minX -= this.closeMargin - this.avatar.getCenter().x();
+//        }
+        removeOldObjects(oldMin);
+    }
+
+    private void removeOldObjects(int oldMin) {
+
+//        for (int i = oldMin; i < this.minX; i+=Block.SIZE) {
+//
+//        }
+        for (GameObject gameObject: gameObjects())
+        {
+            if ((gameObject.getTag().equals("ground")) && (gameObject.getCenter().x() < this.minX)){
+                System.out.println("true");
+                gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
+            }
         }
     }
+
     private void generateWorldLeft()
     {
 
@@ -113,18 +132,19 @@ public class PepseGameManager extends danogl.GameManager{
                 this.windowDimensions));
 
     }
-    private void setInitialGameSeed()
-    {
-        //        Random random = new Random();
-        //        int seed = random.nextInt(500);
-        this.seed = 25;
-    }
+//    private void setInitialGameSeed()
+//    {
+//
+//        //        Random random = new Random();
+//        //        int seed = random.nextInt(500);
+//        this.seed = 25;
+//    }
     private void generateInitialScenery()
     {
-        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, seed); // initializing the terrain
+        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
         terrain.createInRange(0, (int) windowDimensions.x()); // terrain spread on the whole screen.
 
-        Tree trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt);
+        this.trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
     }
     private void createBackground()

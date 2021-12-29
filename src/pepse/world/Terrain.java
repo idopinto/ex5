@@ -28,7 +28,6 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
-    private final Random random = new Random();
 
     /**
      * Constructor.
