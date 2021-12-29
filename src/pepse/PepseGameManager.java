@@ -7,11 +7,9 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.OvalRenderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
-import pepse.world.Avatar;
-import pepse.world.Block;
-import pepse.world.Sky;
-import pepse.world.Terrain;
+import pepse.world.*;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
@@ -37,6 +35,7 @@ public class PepseGameManager extends danogl.GameManager{
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final float AVATAR_INITIAL_X_POS = 200;
+    private Counter energyCounter;
 
 
 //    PepseGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -72,6 +71,9 @@ public class PepseGameManager extends danogl.GameManager{
         Tree trees = new Tree(this.gameObjects(),terrain::groundHeightAt);
         trees.createInRange(0, (int) windowDimensions.x());
 
+        this.energyCounter = new Counter(200);
+        Energy energy = new Energy(this.energyCounter, new Vector2(0,20), new Vector2(30, 30), gameObjects());
+        gameObjects().addGameObject(energy, Layer.BACKGROUND);
 
         Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,
                 terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);

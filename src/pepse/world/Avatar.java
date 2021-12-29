@@ -3,6 +3,7 @@ package pepse.world;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
+import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import danogl.components.ScheduledTask;
 import danogl.gui.ImageReader;
@@ -10,6 +11,7 @@ import danogl.gui.UserInputListener;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 import java.awt.*;
@@ -30,7 +32,8 @@ public class Avatar extends danogl.GameObject
     private static final String AVATAR_TAG = "avatar";
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
-    private float energy = 100;
+    private static Counter energyCounter;
+    private static boolean hasNoEnergy;
 
     /**
      * Construct a new GameObject instance.
@@ -59,6 +62,10 @@ public class Avatar extends danogl.GameObject
     {
         Avatar.inputListener = inputListener;
         Avatar.imageReader = imageReader;
+        Avatar.energyCounter = new Counter(200);
+        Energy energy = new Energy(Avatar.energyCounter, new Vector2(0,20), new Vector2(30, 30), gameObjects);
+        gameObjects.addGameObject(energy, Layer.BACKGROUND);
+        Avatar.hasNoEnergy = false;
         Avatar avatar = new Avatar(topLeftCorner,new Vector2(40,40),new OvalRenderable(Color.BLUE));
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
@@ -89,17 +96,33 @@ public class Avatar extends danogl.GameObject
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && (getVelocity().y() == 0))
         {
             transform().setVelocityY(VELOCITY_Y);
+
         }
         // Fly with (Space + Shift)
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)) {
+
+
+        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)&&!hasNoEnergy) {
             transform().setVelocityY(VELOCITY_Y);
-            if (transform().getAcceleration().y() > GRAVITY)
+            energyCounter.decrement();
+            if (energyCounter.value() == 0)
             {
-                System.out.println("gravity too high");
-                transform().setAccelerationY(GRAVITY);
+                hasNoEnergy = true;
+                transform().setVelocityY(0);
             }
         }
 
+    }
 
+    @Override
+    public void onCollisionStay(GameObject other, Collision collision) {
+        super.onCollisionStay(other, collision);
+        if (hasNoEnergy) {
+            hasNoEnergy = false;
+        }
+        if ((other.getTag().equals("ground") && (energyCounter.value() < 200)))
+        {
+
+            energyCounter.increment();
+        }
     }
 }
