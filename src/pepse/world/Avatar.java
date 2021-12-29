@@ -129,7 +129,6 @@ public class Avatar extends danogl.GameObject
         }
         if ((other.getTag().equals(GROUND_TAG) && (energyCounter.value() < 200)))
         {
-
             energyCounter.increment();
         }
     }
@@ -138,9 +137,6 @@ public class Avatar extends danogl.GameObject
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
         if (other.getTag().equals(GROUND_TAG) || other.getTag().equals(FIRST_TREETOP_LAYER)){
-            System.out.println(other.getTag().equals(FIRST_TREETOP_LAYER));
-//            new ScheduledTask(this, 0.001f,
-//                    false, ()->this.setVelocity(Vector2.ZERO));
             this.setVelocity(Vector2.ZERO);
         }
     }
