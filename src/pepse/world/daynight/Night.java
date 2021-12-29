@@ -39,8 +39,8 @@ public class Night {
         new Transition<>(
                 night, // the game object being changed
                 night.renderer()::setOpaqueness, // the method to call
-                0f, // initial transition value
-                MIDNIGHT_OPACITY, // final transition value
+                MIDNIGHT_OPACITY, // initial transition value
+                0f, // final transition value
                 Transition.CUBIC_INTERPOLATOR_FLOAT, // use a cubic interpolator
                 cycleLength/2, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,

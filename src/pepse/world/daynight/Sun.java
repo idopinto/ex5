@@ -18,7 +18,6 @@ public class Sun {
     private static final int SUN_SIZE = 200;
     private static final float FULL_CYCLE = (float) (2 * Math.PI);
     private static final String SUN_TAG = "sun";
-    private float sunCenter;
 
 
     /**
@@ -37,9 +36,6 @@ public class Sun {
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sun, layer);
         sun.setTag(SUN_TAG);
-
-        // f: [0,360] -> void
-        // f(x) = sun.setCenter(calc(x))
 
         new Transition<Float>(
                 sun, // the game object being changed
