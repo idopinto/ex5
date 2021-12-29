@@ -31,7 +31,7 @@ public class Avatar extends danogl.GameObject
     private static final float GRAVITY = 500;
     private static final String AVATAR_TAG = "avatar";
     private static final String GROUND_TAG = "ground";
-    private static final String FIRST_TREETOP_LAYER = "top of the tree";
+    private static final String FIRST_TREETOP_LAYER = "top";
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
     private static Counter energyCounter;
@@ -66,13 +66,16 @@ public class Avatar extends danogl.GameObject
         Avatar.imageReader = imageReader;
         Avatar.energyCounter = new Counter(200);
         Energy energy = new Energy(Avatar.energyCounter, new Vector2(0,20), new Vector2(30, 30), gameObjects);
+        energy.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(energy, Layer.BACKGROUND);
+
         Avatar.hasNoEnergy = false;
         Avatar avatar = new Avatar(topLeftCorner,new Vector2(40,40),new OvalRenderable(Color.BLUE));
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
         avatar.transform().setAccelerationY(GRAVITY);
+
         return avatar;
 
     }
@@ -105,8 +108,6 @@ public class Avatar extends danogl.GameObject
 
         }
         // Fly with (Space + Shift)
-
-
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)&&!hasNoEnergy) {
             transform().setVelocityY(VELOCITY_Y);
             energyCounter.decrement();
@@ -137,6 +138,7 @@ public class Avatar extends danogl.GameObject
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
         if (other.getTag().equals(GROUND_TAG) || other.getTag().equals(FIRST_TREETOP_LAYER)){
+            System.out.println(other.getTag().equals(FIRST_TREETOP_LAYER));
 //            new ScheduledTask(this, 0.001f,
 //                    false, ()->this.setVelocity(Vector2.ZERO));
             this.setVelocity(Vector2.ZERO);

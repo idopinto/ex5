@@ -6,6 +6,7 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
@@ -76,6 +77,10 @@ public class PepseGameManager extends danogl.GameManager{
         Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
         gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
+
+        setCamera(new Camera(avatar, windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
+                windowController.getWindowDimensions(),
+                windowController.getWindowDimensions()));
 //        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, AVATAR, true);
 
     }
