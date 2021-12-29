@@ -30,6 +30,8 @@ public class Avatar extends danogl.GameObject
     private static final float VELOCITY_Y = -300;
     private static final float GRAVITY = 500;
     private static final String AVATAR_TAG = "avatar";
+    private static final String GROUND_TAG = "ground";
+    private static final String FIRST_TREETOP_LAYER = "top of the tree";
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
     private static Counter energyCounter;
@@ -83,6 +85,10 @@ public class Avatar extends danogl.GameObject
         //TODO: Should be able to rest on a treetop
         //TODO: Updating the energy parameter of the avatar according to its current state.
 
+        if (this.transform().getVelocity().y() < VELOCITY_Y){
+            this.transform().setVelocityY(VELOCITY_Y);
+        }
+
         // Move left
         if(inputListener.isKeyPressed(KeyEvent.VK_LEFT))
             xVel -= VELOCITY_X;
@@ -120,10 +126,20 @@ public class Avatar extends danogl.GameObject
         if (hasNoEnergy) {
             hasNoEnergy = false;
         }
-        if ((other.getTag().equals("ground") && (energyCounter.value() < 200)))
+        if ((other.getTag().equals(GROUND_TAG) && (energyCounter.value() < 200)))
         {
 
             energyCounter.increment();
+        }
+    }
+
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+        if (other.getTag().equals(GROUND_TAG) || other.getTag().equals(FIRST_TREETOP_LAYER)){
+//            new ScheduledTask(this, 0.001f,
+//                    false, ()->this.setVelocity(Vector2.ZERO));
+            this.setVelocity(Vector2.ZERO);
         }
     }
 }

@@ -30,7 +30,7 @@ public class PepseGameManager extends danogl.GameManager{
     private static final int SUN_LAYER = Layer.BACKGROUND;
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
-    private static final int FALLING_LEAF_LAYER =  Layer.STATIC_OBJECTS + 10;
+    private static final int FALLING_LEAF_LAYER =  Layer.STATIC_OBJECTS + 8;
 
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
@@ -76,6 +76,7 @@ public class PepseGameManager extends danogl.GameManager{
         Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
         gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);
+//        gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, AVATAR, true);
 
     }
 

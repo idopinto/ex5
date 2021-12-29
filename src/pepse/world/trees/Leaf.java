@@ -8,11 +8,11 @@ import danogl.components.Transition;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.Block;
+
 import java.util.Random;
 
 
-public class Leaf extends Block
-{
+public class Leaf extends Block {
 
     private static final int FADEOUT_TIME = 15;
     private static final float HORIZONTAL_MOVEMENT_RANGE = 20;
@@ -54,8 +54,6 @@ public class Leaf extends Block
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
 
-        this.transform().setVelocity(Vector2.ZERO);
-
         // Removing all the transitions made before
         this.removeComponent(this.horizontalTransition);
         this.removeComponent(this.movingAngle);
@@ -64,7 +62,6 @@ public class Leaf extends Block
         // updating in the next update the leaves to not move after erasing the horizontalTransition component.
         new ScheduledTask(this, 0.01f, false,
                 () -> transform().setVelocity(Vector2.ZERO));
-
     }
 
     private void leafRoutine() {
@@ -72,7 +69,7 @@ public class Leaf extends Block
         //  starts the vibrations of this leaf in the wind
         float waitTimeBeforeLeafVibrate = this.random.nextFloat();
         int waitTimeUntilLeafFall = this.random.nextInt(MAX_LIFE_TIME_SPAN);
-        new ScheduledTask(this,waitTimeBeforeLeafVibrate , true, this::vibrationsRoutine);
+        new ScheduledTask(this, waitTimeBeforeLeafVibrate, true, this::vibrationsRoutine);
         new ScheduledTask(this, waitTimeUntilLeafFall, false, this::fallingLeafRoutine);
     }
 
@@ -98,11 +95,6 @@ public class Leaf extends Block
     }
 
     private void fallingLeafRoutine() {
-        gameObjects.removeGameObject(this,Tree.LEAF_LAYER);
-        gameObjects.addGameObject(this,Tree.LEAF_LAYER + 2);
-
-        // adding a falling leaf to the Layer which collides with the terrain.
-
         makeLeafFallToTheGround();
         makeLeafFadeOut();
     }
@@ -110,11 +102,10 @@ public class Leaf extends Block
 
     private void makeLeafFadeOut() {
         int fadeOutTime = this.random.nextInt(FADEOUT_TIME);
-        this.renderer().fadeOut(fadeOutTime, ()->{});
-        new ScheduledTask(this, fadeOutTime+this.random.nextInt(5), false,
-                this::returningToTreeTop);
+        this.renderer().fadeOut(fadeOutTime, () ->
+                new ScheduledTask(this, this.random.nextInt(5),
+                        false, this::returningToTreeTop));
     }
-
 
 
     private void makeLeafFallToTheGround() {
@@ -133,27 +124,12 @@ public class Leaf extends Block
 
     private void returningToTreeTop() {
 
-        // set the leaf to initial state
-        this.renderer().fadeIn(0.1f);
+//        this.renderer().fadeIn(0.1f); // Only need this one
         this.setCenter(this.initialPositionOfLeaf);
-        this.renderer().setOpaqueness(this.opaqueness);
+        this.renderer().setOpaqueness(this.opaqueness); // or this one
 
         // start again the life cycle
         leafRoutine();
-    }
-
-
-
-
-    /*
-
-     */
-    private void leafReBirth()
-    {
-        gameObjects.removeGameObject(this,Tree.LEAF_LAYER + 2);
-        gameObjects.addGameObject(this, Tree.LEAF_LAYER);
-        new ScheduledTask(this, this.random.nextInt(MAX_DEATH_TIME_SPAN), false, this::returningToTreeTop);
-
     }
 
 
