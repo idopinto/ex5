@@ -14,19 +14,31 @@ import java.util.Random;
 
 public class Leaf extends Block {
 
+    /* Vibration Constants */
+    private static final float ANGLE_INITIAL_VAL = 0f;
+    private static final float ANGLE_FINAL_VAL = 50f;
+    private static final float VIBRATION_DURATION = 3;
+    private static final float MIN_DIMENSION = 26;
+    /* Horizontal movement of leaf while falling constants */
+    private static final float HORIZONTAL_MOVEMENT_RANGE = 20f;
+    private static final float HORIZONTAL_MOVEMENT_CYCLE_LENGTH = 2f;
+
+    /* Fade-out Constants */
     private static final int FADEOUT_TIME = 15;
-    private static final float HORIZONTAL_MOVEMENT_RANGE = 20;
-    private static final float HORIZONTAL_MOVEMENT_CYCLE_LENGTH = 2;
+
     private static final int MAX_DEATH_TIME_SPAN = 50;
     private static final int MAX_LIFE_TIME_SPAN = 100;
     private static final int FALL_VELOCITY = 30;
-    private final Random random = new Random();
+
+
     private final Vector2 initialPositionOfLeaf;
     private Transition<Float> horizontalTransition;
-    private Transition<Float> movingAngle;
-    private Transition<Vector2> movingDimensions;
+    private Transition<Float> angleVibrationEffect;
+    private Transition<Vector2> dimVibrationEffect;
     private final float opaqueness;
     private final GameObjectCollection gameObjects;
+    private final Random random;
+
 
 
     /**
@@ -36,14 +48,15 @@ public class Leaf extends Block {
      * @param topLeftCorner The location of the top-left corner of the created block
      * @param renderable    - A renderable to render as the block.
      */
-    public Leaf(GameObjectCollection gameObjects, Vector2 topLeftCorner, Renderable renderable) {
+    public Leaf(GameObjectCollection gameObjects, Vector2 topLeftCorner, Renderable renderable,int seed) {
         super(topLeftCorner, renderable);
+
         this.gameObjects = gameObjects;
+        this.random =  new Random();
 
         // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();
         this.initialPositionOfLeaf = this.getCenter();
-
         physics().setMass(5f);
 
         // start leaf routine
@@ -57,8 +70,8 @@ public class Leaf extends Block {
 
         // Removing all the transitions made before
         this.removeComponent(this.horizontalTransition);
-        this.removeComponent(this.movingAngle);
-        this.removeComponent(this.movingDimensions);
+        this.removeComponent(this.angleVibrationEffect);
+        this.removeComponent(this.dimVibrationEffect);
 
         // updating in the next update the leaves to not move after erasing the horizontalTransition component.
         new ScheduledTask(this, 0.01f, false,
@@ -75,21 +88,21 @@ public class Leaf extends Block {
     }
 
     private void vibrationsRoutine() {
-        this.movingAngle = new Transition<Float>(this,
+        this.angleVibrationEffect = new Transition<Float>(this,
                 this.renderer()::setRenderableAngle,
-                0f,
-                50f,
-                Transition.LINEAR_INTERPOLATOR_FLOAT, // use a cubic interpolator
-                3, // transition fully over half a day
+                ANGLE_INITIAL_VAL,
+                ANGLE_FINAL_VAL,
+                Transition.LINEAR_INTERPOLATOR_FLOAT,
+                VIBRATION_DURATION,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
 
-        this.movingDimensions = new Transition<Vector2>(this,
+        this.dimVibrationEffect = new Transition<Vector2>(this,
                 this::setDimensions,
-                new Vector2(26, 26),
-                new Vector2(30, 30),
+                new Vector2(MIN_DIMENSION, MIN_DIMENSION),
+                new Vector2(Block.SIZE, Block.SIZE),
                 Transition.LINEAR_INTERPOLATOR_VECTOR, // use a cubic interpolator
-                3, // transition fully over half a day
+                VIBRATION_DURATION, // transition fully over half a day
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null); // nothing further to execute upon reaching final value
 
@@ -102,9 +115,11 @@ public class Leaf extends Block {
 
 
     private void makeLeafFadeOut() {
-        this.renderer().fadeOut(FADEOUT_TIME, () ->
-                new ScheduledTask(this, this.random.nextInt(5),
-                        false, this::returningToTreeTop));
+        this.renderer().fadeOut(FADEOUT_TIME,
+                () -> new ScheduledTask(
+                        this, this.random.nextInt(MAX_DEATH_TIME_SPAN),
+                        false,
+                        this::returningToTreeTop));
     }
 
 

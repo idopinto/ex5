@@ -56,7 +56,7 @@ public class Tree {
                 treeTopTopLeftCorner = new Vector2(x - ((treeHeight/2f)*Block.SIZE),
                         (bottomYBlock - treeHeight*Block.SIZE) - (treeHeight/2f)*Block.SIZE);
                 Trunk.createTrunk(this.gameObjects,new Vector2(x, bottomYBlock), treeHeight);
-                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight);
+                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight,seed);
             }
 
         }
