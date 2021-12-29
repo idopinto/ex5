@@ -85,12 +85,13 @@ public class PepseGameManager extends danogl.GameManager{
         int diffBetweenMaxToAvatar = start - (int)this.avatar.getCenter().x();
 
         int end = start + (this.farMargin - diffBetweenMaxToAvatar + extraTerrainCols);
-        int oldMin  = this.minX;
+//        int end = start + (int)this.windowDimensions.x();
         if (diffBetweenMaxToAvatar < this.farMargin)
         {
             this.terrain.createInRange(start, end);
 //            this.trees.createInRange(start, end);
             this.maxX += this.farMargin - diffBetweenMaxToAvatar;
+//            this.maxX += end - start -extraTerrainCols;
             this.minX += this.farMargin - diffBetweenMaxToAvatar;
 
         }

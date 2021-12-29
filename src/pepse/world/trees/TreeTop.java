@@ -18,7 +18,7 @@ public class TreeTop {
 
     private static final Color LEAF_COLOR =new Color(50, 200, 30);
     private static final String LEAF_TAG = "leaf";
-    private static final String TOP_OF_THE_TREE_TAG = "top";
+//    private static final String TOP_OF_THE_TREE_TAG = "top";
 
 
     static void createTreeTop(GameObjectCollection gameObjects, Vector2 topLeftCorner,int  leafInRow,int seed)
@@ -32,10 +32,8 @@ public class TreeTop {
                 Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, seed);
 
                 gameObjects.addGameObject(leaf,Tree.LEAF_LAYER);
-                if (i == 0) {
-                    leaf.setTag(TOP_OF_THE_TREE_TAG);
-                }
-                else {leaf.setTag(LEAF_TAG);}
+//                if (i == 0) {leaf.setTag(TOP_OF_THE_TREE_TAG);} else {leaf.setTag(LEAF_TAG);}
+                leaf.setTag(LEAF_TAG);
                 x += Block.SIZE;
             }
             y +=Block.SIZE;
