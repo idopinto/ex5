@@ -73,7 +73,8 @@ public class PepseGameManager extends danogl.GameManager{
         trees.createInRange(0, (int) windowDimensions.x());
 
 
-        Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
+        Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS,
+                terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
         Avatar avatar = Avatar.create(gameObjects(),AVATAR_LAYER,avatarInitialPosition,inputListener,imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),FALLING_LEAF_LAYER);
         gameObjects().layers().shouldLayersCollide(FALLING_LEAF_LAYER, TOP_GROUND_LAYER, true);

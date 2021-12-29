@@ -30,6 +30,7 @@ public class Avatar extends danogl.GameObject
     private static final String AVATAR_TAG = "avatar";
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
+    private float energy = 100;
 
     /**
      * Construct a new GameObject instance.
@@ -72,14 +73,15 @@ public class Avatar extends danogl.GameObject
         super.update(deltaTime);
         float xVel = 0;
 
+        //TODO: Should be able to rest on a treetop
+        //TODO: Updating the energy parameter of the avatar according to its current state.
+
         // Move left
         if(inputListener.isKeyPressed(KeyEvent.VK_LEFT))
             xVel -= VELOCITY_X;
-
         // Move right
         if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT))
             xVel += VELOCITY_X;
-
         // Update X velocity
         transform().setVelocityX(xVel);
 
@@ -92,5 +94,6 @@ public class Avatar extends danogl.GameObject
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)) {
             transform().setVelocityY(VELOCITY_Y);
         }
+
     }
 }
