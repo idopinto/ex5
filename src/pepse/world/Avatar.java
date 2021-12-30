@@ -5,13 +5,14 @@ import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
+import danogl.components.ScheduledTask;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
-import pepse.util.Energy;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -107,7 +108,7 @@ public class Avatar extends danogl.GameObject
 
         }
         // Fly with (Space + Shift)
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)&&!hasNoEnergy) {
+        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT) && !hasNoEnergy) {
             transform().setVelocityY(VELOCITY_Y);
             energyCounter.decrement();
             if (energyCounter.value() == 0)

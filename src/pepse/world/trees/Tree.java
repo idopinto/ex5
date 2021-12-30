@@ -46,7 +46,7 @@ public class Tree {
         int bottomYBlock;
         int treeHeight;
         minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
-        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : minX;
+        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : maxX;
 
         Vector2 treeTopTopLeftCorner;
         for (int x = minX; x <= maxX; x += Block.SIZE) {

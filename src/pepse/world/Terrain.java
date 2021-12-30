@@ -52,6 +52,7 @@ public class Terrain {
      * @param x A number.
      * @return The ground height at the given location.
      */
+
     public float groundHeightAt(float x)
     {
         float result = (float) (28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
@@ -60,6 +61,12 @@ public class Terrain {
         return this.groundHeightAtX0 + result;
     }
 
+
+    /**
+     * This method creates terrain in a given range of x-values.
+     * @param minX The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
+     * @param maxX - The upper bound of the given range (will be rounded to a multiple of Block.SIZE).
+     */
     /**
      * This method creates terrain in a given range of x-values.
      * @param minX The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
@@ -69,7 +76,7 @@ public class Terrain {
     {
         int topY, layer;
         minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
-        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : minX;
+        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : maxX;
 
         for (int x = minX; x <= maxX; x+=Block.SIZE){
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.
@@ -88,10 +95,3 @@ public class Terrain {
     }
 
 }
-
-
-
-//        int newMinX = minX;
-//        int newMaxX = maxX;
-//        if (minX % Block.SIZE != 0) newMinX -= minX % Block.SIZE;
-//        if (maxX % Block.SIZE != 0) newMaxX -= maxX % Block.SIZE;

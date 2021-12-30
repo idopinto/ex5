@@ -19,6 +19,7 @@ public class Leaf extends Block {
     private static final float ANGLE_FINAL_VAL = 50f;
     private static final float VIBRATION_DURATION = 3;
     private static final float MIN_DIMENSION = 26;
+
     /* Horizontal movement of leaf while falling constants */
     private static final float HORIZONTAL_MOVEMENT_RANGE = 20f;
     private static final float HORIZONTAL_MOVEMENT_CYCLE_LENGTH = 2f;
@@ -58,7 +59,6 @@ public class Leaf extends Block {
         this.opaqueness = this.renderer().getOpaqueness();
         this.initialPositionOfLeaf = this.getCenter();
         physics().setMass(5f);
-
         // start leaf routine
         leafRoutine();
 
