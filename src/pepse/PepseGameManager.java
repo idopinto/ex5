@@ -44,7 +44,6 @@ public class PepseGameManager extends danogl.GameManager{
 //    private int seed;
     private Vector2 windowDimensions;
     private Tree trees;
-    private World[] worlds;
 
 
     /**
@@ -67,8 +66,6 @@ public class PepseGameManager extends danogl.GameManager{
         this.trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt,SEED);
 
         createBackground();
-//        this.worlds = new World[3];
-
         generateInitialScenery();
         generateAvatar(inputListener,imageReader);
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
