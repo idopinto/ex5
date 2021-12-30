@@ -87,15 +87,15 @@ public class PepseGameManager extends danogl.GameManager {
         int start = this.lastAvatarLocation;
 //        System.out.println("last: "+ start);
 //        System.out.println("center: "+ (int)this.avatar.getCenter().x());
-        int distance = start - (int) this.avatar.getCenter().x();
+        int distance =  (int) this.avatar.getCenter().x() - start;
 
-        int end = this.maxX - distance;
+        int end = this.maxX + distance;
 
-        boolean movedRight = distance < 0;
+        boolean movedRight = distance >= Block.SIZE;
 //        System.out.println(movedRight);
 
         if (movedRight) {
-            this.terrain.createInRange(end + distance, end);
+            this.terrain.createInRange(end - distance, end);
 //            this.trees.createInRange(end + distance, end);
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
             this.maxX += Block.SIZE;
@@ -108,6 +108,7 @@ public class PepseGameManager extends danogl.GameManager {
     private void removeTerrainAndTreeAtX0(int x) {
         for (Block block : this.cache.get(x)) {
             gameObjects().removeGameObject(block,TOP_GROUND_LAYER + 2);
+            gameObjects().removeGameObject(block,TOP_GROUND_LAYER);
 //            System.out.println("hi");
         }
 //        for (Block block : this.cache.get(this.minX)) {

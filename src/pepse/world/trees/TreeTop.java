@@ -23,12 +23,14 @@ public class TreeTop {
 
     static void createTreeTop(GameObjectCollection gameObjects, Vector2 topLeftCorner,int  leafInRow,int seed)
     {
+//        Random random = new Random(seed);
         int x ;
         int y = (int) topLeftCorner.y();
         for (int i = 0; i < leafInRow; i++) {
             x = (int) topLeftCorner.x();
             for (int j = 0; j < leafInRow; j++) {
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
+//                Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, random.nextInt(seed));
                 Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, seed);
                 gameObjects.addGameObject(leaf,Tree.LEAF_LAYER);
                 leaf.setTag(LEAF_TAG);

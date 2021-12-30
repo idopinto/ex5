@@ -51,7 +51,6 @@ public class Tree {
 
         Vector2 treeTopTopLeftCorner;
         for (int x = minX; x <= maxX; x += Block.SIZE) {
-
             this.random = new Random(Objects.hash(x,seed));
             if (needToPlant()){
                 treeHeight = getRandomHeight();
