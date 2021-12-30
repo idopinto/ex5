@@ -68,7 +68,8 @@ public class PepseGameManager extends danogl.GameManager{
         this.minX = 0;
         this.maxX = (int) windowDimensions.x();
         generateInitialScenery();
-        this.lastAvatarLocation = generateAvatar(inputListener,imageReader);
+        generateAvatar(inputListener,imageReader);
+        this.lastAvatarLocation = (int)this.avatar.getCenter().x();
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
     }
 
@@ -82,7 +83,6 @@ public class PepseGameManager extends danogl.GameManager{
 
     private void generateWorldRight()
     {
-//        int start = this.maxX, extraTerrainCols = 3 * Block.SIZE;
         int start = this.lastAvatarLocation;
         System.out.println("last: "+ start);
         System.out.println("center: "+ (int)this.avatar.getCenter().x());
@@ -93,17 +93,15 @@ public class PepseGameManager extends danogl.GameManager{
         boolean movedRight = distance < 0;
         System.out.println(movedRight);
 
-//        int end = start + (this.farMargin - distance + extraTerrainCols);
         if (movedRight)
         {
-//            System.out.println(start+"  "+ end);
             this.terrain.createInRange(end + distance, end);
             this.trees.createInRange(end + distance, end);
             this.lastAvatarLocation = (int)this.avatar.getCenter().x();
             this.maxX -= distance;
             this.minX -= distance;
-            removeOldObjects();
         }
+        removeOldObjects();
 
     }
 
@@ -111,7 +109,7 @@ public class PepseGameManager extends danogl.GameManager{
 
         for (GameObject gameObject: this.gameObjects().objectsInLayer(TOP_GROUND_LAYER))
         {
-            if (gameObject.getCenter().x() < this.minX){
+            if (gameObject.getCenter().x() < this.minX- Block.SIZE){
                 gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
             }
         }
@@ -145,23 +143,17 @@ public class PepseGameManager extends danogl.GameManager{
 //
 //    }
 
-    private int generateAvatar(UserInputListener inputListener,ImageReader imageReader)
+    private void generateAvatar(UserInputListener inputListener,ImageReader imageReader)
     {
 //        Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS, this.terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
         Vector2 avatarInitialPosition = new Vector2(maxX/2f, this.terrain.groundHeightAt(maxX/2f)-Block.SIZE);
         this.avatar = Avatar.create(gameObjects(),AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),LEAF_LAYER);
-        this.farMargin = (int)windowDimensions.x() - (int)this.avatar.getCenter().x();
-//        this.maxX = (int)windowDimensions.x();
-        this.closeMargin = (int)this.avatar.getCenter().x();
-//        this.minX = 0;
 
         setCamera(new Camera(this.avatar,
                 this.windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
                 this.windowDimensions,
                 this.windowDimensions));
-
-        return (int)avatarInitialPosition.x();
     }
 
     private void generateInitialScenery()
