@@ -47,6 +47,7 @@ public class PepseGameManager extends danogl.GameManager{
 //    private int seed;
     private Vector2 windowDimensions;
     private Tree trees;
+    private int lastAvatarLocation;
 
 
     /**
@@ -67,7 +68,7 @@ public class PepseGameManager extends danogl.GameManager{
         this.minX = 0;
         this.maxX = (int) windowDimensions.x();
         generateInitialScenery();
-        generateAvatar(inputListener,imageReader);
+        this.lastAvatarLocation = generateAvatar(inputListener,imageReader);
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
     }
 
@@ -81,21 +82,29 @@ public class PepseGameManager extends danogl.GameManager{
 
     private void generateWorldRight()
     {
-        int start = this.maxX, extraTerrainCols = 3 * Block.SIZE;
-        int diffBetweenMaxToAvatar = start - (int)this.avatar.getCenter().x();
-        int end = start + (this.farMargin - diffBetweenMaxToAvatar + extraTerrainCols);
-        if (diffBetweenMaxToAvatar < this.farMargin)
-        {
-            this.terrain.createInRange(start, end);
-//            this.trees.createInRange(start, end);
-            this.maxX += this.farMargin - diffBetweenMaxToAvatar;
-            this.minX += this.farMargin - diffBetweenMaxToAvatar;
+//        int start = this.maxX, extraTerrainCols = 3 * Block.SIZE;
+        int start = this.lastAvatarLocation;
+        System.out.println("last: "+ start);
+        System.out.println("center: "+ (int)this.avatar.getCenter().x());
+        int distance = start - (int)this.avatar.getCenter().x();
 
+        int end = this.maxX - distance;
+
+        boolean movedRight = distance < 0;
+        System.out.println(movedRight);
+
+//        int end = start + (this.farMargin - distance + extraTerrainCols);
+        if (movedRight)
+        {
+//            System.out.println(start+"  "+ end);
+            this.terrain.createInRange(end + distance, end);
+            this.trees.createInRange(end + distance, end);
+            this.lastAvatarLocation = (int)this.avatar.getCenter().x();
+            this.maxX -= distance;
+            this.minX -= distance;
+            removeOldObjects();
         }
-        if (this.avatar.getCenter().x() < this.closeMargin){
-            this.minX -= this.closeMargin - this.avatar.getCenter().x();
-        }
-        removeOldObjects();
+
     }
 
     private void removeOldObjects() {
@@ -136,7 +145,7 @@ public class PepseGameManager extends danogl.GameManager{
 //
 //    }
 
-    private void generateAvatar(UserInputListener inputListener,ImageReader imageReader)
+    private int generateAvatar(UserInputListener inputListener,ImageReader imageReader)
     {
 //        Vector2 avatarInitialPosition = new Vector2(AVATAR_INITIAL_X_POS, this.terrain.groundHeightAt(AVATAR_INITIAL_X_POS)-Block.SIZE);
         Vector2 avatarInitialPosition = new Vector2(maxX/2f, this.terrain.groundHeightAt(maxX/2f)-Block.SIZE);
@@ -152,6 +161,7 @@ public class PepseGameManager extends danogl.GameManager{
                 this.windowDimensions,
                 this.windowDimensions));
 
+        return (int)avatarInitialPosition.x();
     }
 
     private void generateInitialScenery()

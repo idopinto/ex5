@@ -30,9 +30,7 @@ public class TreeTop {
             for (int j = 0; j < leafInRow; j++) {
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR));
                 Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, seed);
-
                 gameObjects.addGameObject(leaf,Tree.LEAF_LAYER);
-//                if (i == 0) {leaf.setTag(TOP_OF_THE_TREE_TAG);} else {leaf.setTag(LEAF_TAG);}
                 leaf.setTag(LEAF_TAG);
                 x += Block.SIZE;
             }

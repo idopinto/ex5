@@ -9,6 +9,7 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.Block;
 
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -53,8 +54,8 @@ public class Leaf extends Block {
         super(topLeftCorner, renderable);
 
         this.gameObjects = gameObjects;
-        this.random =  new Random(seed);
-
+//        this.random =  new Random(Objects.hash(seed*(topLeftCorner.x() % topLeftCorner.y()),(seed^2)));
+        this.random = new Random(Objects.hash(this.getCenter().x()*this.getCenter().y(), seed));
         // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();
         this.initialPositionOfLeaf = this.getCenter();
@@ -86,6 +87,7 @@ public class Leaf extends Block {
         new ScheduledTask(this, waitTimeBeforeLeafVibrate, true, this::vibrationsRoutine);
         new ScheduledTask(this, waitTimeUntilLeafFall, false, this::fallingLeafRoutine);
     }
+
 
     private void vibrationsRoutine() {
         this.angleVibrationEffect = new Transition<Float>(this,
