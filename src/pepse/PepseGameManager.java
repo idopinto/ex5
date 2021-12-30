@@ -55,13 +55,14 @@ public class PepseGameManager extends danogl.GameManager {
     /**
      * The method will be called once when a GameGUIComponent is created,
      * and again after every invocation of windowController.resetGame().
-     * @param imageReader Contains a single method: readImage, which reads an image from disk.
-     * @param soundReader soundReader Contains a single method: readSound, which reads a wav file from disk.
-     * @param inputListener inputListener Contains a single method: isKeyPressed, which returns whether a given key is currently pressed by the user or not.
+     *
+     * @param imageReader      Contains a single method: readImage, which reads an image from disk.
+     * @param soundReader      soundReader Contains a single method: readSound, which reads a wav file from disk.
+     * @param inputListener    inputListener Contains a single method: isKeyPressed, which returns whether a given key is currently pressed by the user or not.
      * @param windowController windowController Contains an array of helpful, self explanatory methods concerning the window.
      */
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
-                    UserInputListener inputListener, WindowController windowController) {
+                               UserInputListener inputListener, WindowController windowController) {
         // Override GameObject initializeGame
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.windowDimensions = windowController.getWindowDimensions();
@@ -97,7 +98,7 @@ public class PepseGameManager extends danogl.GameManager {
             this.terrain.createInRange(end + distance, end);
             this.trees.createInRange(end + distance, end);
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
-            removeTerrainAndTreeAtX0(this.maxX);
+//            removeTerrainAndTreeAtX0(this.maxX);
             this.maxX -= Block.SIZE;
             this.minX -= Block.SIZE;
         }
@@ -114,8 +115,14 @@ public class PepseGameManager extends danogl.GameManager {
 
         if (movedRight) {
 //            this.terrain.setCache(this.cache);
-            this.terrain.createInRange(end - distance, end);
-            this.trees.createInRange(end - distance, end);
+            if (this.cache.containsKey(end - distance)) {
+                for (Block block : this.cache.get(end + distance)) {
+                    gameObjects().addGameObject(block);
+                }
+            } else {
+                this.terrain.createInRange(end - distance, end);
+                this.trees.createInRange(end - distance, end);
+            }
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
             this.maxX += Block.SIZE;
             removeTerrainAndTreeAtX0(this.minX);
@@ -146,8 +153,7 @@ public class PepseGameManager extends danogl.GameManager {
                 this.windowDimensions));
     }
 
-    private void generateInitialScenery()
-    {
+    private void generateInitialScenery() {
         this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
         this.terrain.setCache(this.cache);
         terrain.createInRange(0, maxX); // terrain spread on the whole screen.
@@ -157,21 +163,20 @@ public class PepseGameManager extends danogl.GameManager {
         trees.createInRange(0, maxX);
     }
 
-    private void createBackground()
-    {
-        Sky.create(this.gameObjects(),windowDimensions, SKY_LAYER);
-        Night.create(this.gameObjects(), NIGHT_LAYER,windowDimensions,NIGHT_CYCLE_LENGTH);
+    private void createBackground() {
+        Sky.create(this.gameObjects(), windowDimensions, SKY_LAYER);
+        Night.create(this.gameObjects(), NIGHT_LAYER, windowDimensions, NIGHT_CYCLE_LENGTH);
         GameObject sun = Sun.create(this.gameObjects(), SUN_LAYER, windowDimensions, SUN_CYCLE_LENGTH);
-        SunHalo.create(this.gameObjects(),SUN_HALO_LAYER, sun,SUN_HALO_COLOR);
+        SunHalo.create(this.gameObjects(), SUN_HALO_LAYER, sun, SUN_HALO_COLOR);
 
     }
 
     /**
      * Runs the entire simulation.
+     *
      * @param args args
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         new PepseGameManager().run();
     }
 
