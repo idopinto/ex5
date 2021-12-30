@@ -53,7 +53,7 @@ public class Leaf extends Block {
         super(topLeftCorner, renderable);
 
         this.gameObjects = gameObjects;
-        this.random =  new Random();
+        this.random =  new Random(seed);
 
         // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();

@@ -14,6 +14,7 @@ import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
+import pepse.world.trees.Trunk;
 
 import java.awt.*;
 
@@ -30,6 +31,8 @@ public class PepseGameManager extends danogl.GameManager{
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int LEAF_LAYER =  Layer.STATIC_OBJECTS + 8;
+    static final int TRUNK_LAYER = Layer.STATIC_OBJECTS + 6;
+
     private static final int SEED = 25;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
@@ -97,14 +100,35 @@ public class PepseGameManager extends danogl.GameManager{
 
     private void removeOldObjects() {
 
-        for (GameObject gameObject: gameObjects())
+        for (GameObject gameObject: this.gameObjects().objectsInLayer(TOP_GROUND_LAYER))
         {
-            if ((gameObject.getTag().equals("ground")) && (gameObject.getCenter().x() < this.minX)){
+            if (gameObject.getCenter().x() < this.minX){
                 gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
-                gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER+2);
-
             }
         }
+
+        for (GameObject gameObject: this.gameObjects().objectsInLayer(TOP_GROUND_LAYER+2))
+        {
+            if (gameObject.getCenter().x() < this.minX){
+                gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER + 2);
+            }
+        }
+
+        for (GameObject gameObject: this.gameObjects().objectsInLayer(LEAF_LAYER))
+        {
+            if (gameObject.getCenter().x() < this.minX){
+                gameObjects().removeGameObject(gameObject,LEAF_LAYER);
+            }
+        }
+
+        for (GameObject gameObject: this.gameObjects().objectsInLayer(TRUNK_LAYER))
+        {
+            if (gameObject.getCenter().x() < this.minX){
+                gameObjects().removeGameObject(gameObject,TRUNK_LAYER);
+            }
+        }
+
+
     }
 
 //    private void generateWorldLeft()
