@@ -113,9 +113,8 @@ public class PepseGameManager extends danogl.GameManager {
         boolean movedRight = distance >= Block.SIZE;
 
         if (movedRight) {
-            this.terrain.setCache(this.cache);
+//            this.terrain.setCache(this.cache);
             this.terrain.createInRange(end - distance, end);
-
             this.trees.createInRange(end - distance, end);
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
             this.maxX += Block.SIZE;
@@ -127,18 +126,13 @@ public class PepseGameManager extends danogl.GameManager {
     }
 
     private void removeTerrainAndTreeAtX0(int x) throws NullPointerException {
-//        try {
         for (Block block : this.cache.get(x)) {
             gameObjects().removeGameObject(block, TOP_GROUND_LAYER + 2);
             gameObjects().removeGameObject(block, TOP_GROUND_LAYER);
             gameObjects().removeGameObject(block, LEAF_LAYER);
             gameObjects().removeGameObject(block, TRUNK_LAYER);
         }
-//        }
-//        catch (NullPointerException e){
-//            throw new NullPointerException();
-//
-//        }
+
 
     }
 
