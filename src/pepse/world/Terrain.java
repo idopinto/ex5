@@ -11,6 +11,8 @@ import pepse.world.trees.Leaf;
 
 import java.awt.*;
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -28,6 +30,8 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
+    private Map<Integer, ArrayList<Block>> cache;
+
 
     /**
      * Constructor.
@@ -81,7 +85,7 @@ public class Terrain {
         for (int x = minX; x <= maxX; x+=Block.SIZE){
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.
             layer = this.groundLayer; // top ground layer
-
+            ArrayList<Block> blockArray = new ArrayList<Block>();
             for (int y = topY; y < topY + (TERRAIN_DEPTH * Block.SIZE) ; y += Block.SIZE){
 
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
@@ -89,9 +93,16 @@ public class Terrain {
                 // the first couple of blocks in each column should be in groundLayer else in groundLayer+2
                 if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
                 this.gameObjects.addGameObject(block, layer);
+                blockArray.add(block);
                 block.setTag(GROUND_TAG);
             }
+            this.cache.put(x, blockArray);
         }
+    }
+
+    public void setCache(Map<Integer, ArrayList<Block>> cache)
+    {
+        this.cache = cache;
     }
 
 }
