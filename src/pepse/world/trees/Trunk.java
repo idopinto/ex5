@@ -8,6 +8,8 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Trunk {
     private static final Color TRUNK_COLOR =new Color(100, 50, 20);
@@ -15,7 +17,7 @@ public class Trunk {
 
 
 
-    static void createTrunk (GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight)
+    static void createTrunk(GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight, Map<Integer, ArrayList<Block>> cache)
     {
         int counter = 0;
         for (int currentHeightOfTree = 0; currentHeightOfTree < trunkHeight;
@@ -24,6 +26,7 @@ public class Trunk {
             Block trunkBlock = new Block(new Vector2(trunkLocation.x(),
                     trunkLocation.y() - Block.SIZE*counter), renderable);
             gameObjects.addGameObject(trunkBlock, Tree.TRUNK_LAYER);
+            cache.get((int)trunkLocation.x()).add(trunkBlock);
             trunkBlock.setTag(TRUNK_TAG);
             counter ++;
         }

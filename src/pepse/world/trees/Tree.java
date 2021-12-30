@@ -5,6 +5,8 @@ import danogl.collisions.Layer;
 import danogl.util.Vector2;
 import pepse.world.Block;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.UnaryOperator;
@@ -24,6 +26,8 @@ public class Tree {
     private final UnaryOperator<Float> groundHeightFunc;
     private int seed;
     private Random random;
+    private Map<Integer, ArrayList<Block>> cache;
+
 
 
 // added seed in constructor
@@ -59,8 +63,8 @@ public class Tree {
                 treeTopTopLeftCorner = new Vector2(x - ((treeHeight/2f)*Block.SIZE),
                         (bottomYBlock - treeHeight*Block.SIZE) - (treeHeight/2f)*Block.SIZE);
 
-                Trunk.createTrunk(this.gameObjects,new Vector2(x, bottomYBlock), treeHeight);
-                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight,seed);
+                Trunk.createTrunk(this.gameObjects,new Vector2(x, bottomYBlock), treeHeight,cache);
+                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight,seed,cache,x);
             }
 
         }
@@ -74,4 +78,8 @@ public class Tree {
         return random.nextInt(100) < 10;
     }
 
+    public void setCache(Map<Integer, ArrayList<Block>> cache)
+    {
+        this.cache = cache;
+    }
 }

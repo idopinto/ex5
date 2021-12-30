@@ -12,6 +12,8 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class TreeTop {
@@ -21,7 +23,8 @@ public class TreeTop {
 //    private static final String TOP_OF_THE_TREE_TAG = "top";
 
 
-    static void createTreeTop(GameObjectCollection gameObjects, Vector2 topLeftCorner,int  leafInRow,int seed)
+    static void createTreeTop(GameObjectCollection gameObjects, Vector2 topLeftCorner, int leafInRow,
+                              int seed, Map<Integer, ArrayList<Block>> cache, int cacheIndex)
     {
 //        Random random = new Random(seed);
         int x ;
@@ -33,6 +36,7 @@ public class TreeTop {
 //                Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, random.nextInt(seed));
                 Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, seed);
                 gameObjects.addGameObject(leaf,Tree.LEAF_LAYER);
+                cache.get(cacheIndex).add(leaf);
                 leaf.setTag(LEAF_TAG);
                 x += Block.SIZE;
             }

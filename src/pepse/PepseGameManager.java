@@ -73,88 +73,74 @@ public class PepseGameManager extends danogl.GameManager {
         generateAvatar(inputListener, imageReader);
         this.lastAvatarLocation = (int) this.avatar.getCenter().x();
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(TRUNK_LAYER, AVATAR_LAYER, true);
+
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
         generateWorldRight();
-//        generateWorldLeft();
+        generateWorldLeft();
+    }
+
+    private void generateWorldLeft() {
+        int start = this.lastAvatarLocation;
+        int distance = (int) this.avatar.getCenter().x() - start;
+
+        int end = this.minX - Block.SIZE;
+
+        boolean movedLeft = distance <= -Block.SIZE;
+
+        if (movedLeft) {
+//            this.terrain.setCache(this.cache);
+            this.terrain.createInRange(end + distance, end);
+            this.trees.createInRange(end + distance, end);
+            this.lastAvatarLocation = (int) this.avatar.getCenter().x();
+            removeTerrainAndTreeAtX0(this.maxX);
+            this.maxX -= Block.SIZE;
+            this.minX -= Block.SIZE;
+        }
     }
 
 
     private void generateWorldRight() {
         int start = this.lastAvatarLocation;
-//        System.out.println("last: "+ start);
-//        System.out.println("center: "+ (int)this.avatar.getCenter().x());
-        int distance =  (int) this.avatar.getCenter().x() - start;
+        int distance = (int) this.avatar.getCenter().x() - start;
 
-        int end = this.maxX + distance;
+        int end = this.maxX + Block.SIZE;
 
         boolean movedRight = distance >= Block.SIZE;
-//        System.out.println(movedRight);
 
         if (movedRight) {
+            this.terrain.setCache(this.cache);
             this.terrain.createInRange(end - distance, end);
-//            this.trees.createInRange(end + distance, end);
+
+            this.trees.createInRange(end - distance, end);
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
             this.maxX += Block.SIZE;
             removeTerrainAndTreeAtX0(this.minX);
             this.minX += Block.SIZE;
         }
 
+
     }
 
-    private void removeTerrainAndTreeAtX0(int x) {
+    private void removeTerrainAndTreeAtX0(int x) throws NullPointerException {
+//        try {
         for (Block block : this.cache.get(x)) {
-            gameObjects().removeGameObject(block,TOP_GROUND_LAYER + 2);
-            gameObjects().removeGameObject(block,TOP_GROUND_LAYER);
-//            System.out.println("hi");
+            gameObjects().removeGameObject(block, TOP_GROUND_LAYER + 2);
+            gameObjects().removeGameObject(block, TOP_GROUND_LAYER);
+            gameObjects().removeGameObject(block, LEAF_LAYER);
+            gameObjects().removeGameObject(block, TRUNK_LAYER);
         }
-//        for (Block block : this.cache.get(this.minX)) {
-//            if (block == null) {
-//                System.out.println("BOOM");
-//            }
-//            gameObjects().removeGameObject(block);
 //        }
+//        catch (NullPointerException e){
+//            throw new NullPointerException();
+//
+//        }
+
     }
-//        for (GameObject gameObject: this.gameObjects().objectsInLayer(TOP_GROUND_LAYER))
-//        {
-//            if (gameObject.getCenter().x() < this.minX){
-//                gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
-//            }
-//        }
-//
-//        for (GameObject gameObject: this.gameObjects().objectsInLayer(TOP_GROUND_LAYER+2))
-//        {
-//            if (gameObject.getCenter().x() < this.minX){
-//                gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER + 2);
-//            }
-//        }
-//
-//        for (GameObject gameObject: this.gameObjects().objectsInLayer(LEAF_LAYER))
-//        {
-//            if (gameObject.getCenter().x() < this.minX){
-//                gameObjects().removeGameObject(gameObject,LEAF_LAYER);
-//            }
-//        }
-//
-//        for (GameObject gameObject: this.gameObjects().objectsInLayer(TRUNK_LAYER))
-//        {
-//            if (gameObject.getCenter().x() < this.minX){
-//                gameObjects().removeGameObject(gameObject,TRUNK_LAYER);
-//            }
-//        }
-
-
-//        System.out.println(this.minX);
-//        if (this.cache.get(this.minX) == null) {
-//            System.out.println("BOOM");
-//        }
-//    private void generateWorldLeft()
-//    {
-//
-//    }
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
         Vector2 avatarInitialPosition = new Vector2(maxX / 2f, this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE);
@@ -172,7 +158,8 @@ public class PepseGameManager extends danogl.GameManager {
         this.terrain.setCache(this.cache);
         terrain.createInRange(0, maxX); // terrain spread on the whole screen.
 
-        this.trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt,SEED);
+        this.trees = new Tree(this.gameObjects(), this.terrain::groundHeightAt, SEED);
+        this.trees.setCache(this.cache);
         trees.createInRange(0, maxX);
     }
 
