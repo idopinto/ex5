@@ -76,7 +76,7 @@ public class Terrain {
     {
         int topY, layer;
         minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
-        maxX =  (maxX % Block.SIZE != 0) ? maxX - (maxX % Block.SIZE) : maxX;
+        maxX =  (maxX % Block.SIZE != 0) ? maxX + (maxX % Block.SIZE) : maxX;
 
         for (int x = minX; x <= maxX; x+=Block.SIZE){
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.

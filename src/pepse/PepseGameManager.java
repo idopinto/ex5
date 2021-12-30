@@ -109,7 +109,7 @@ public class PepseGameManager extends danogl.GameManager{
 
         for (GameObject gameObject: this.gameObjects().objectsInLayer(TOP_GROUND_LAYER))
         {
-            if (gameObject.getCenter().x() < this.minX- Block.SIZE){
+            if (gameObject.getCenter().x() < this.minX){
                 gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
             }
         }
@@ -149,6 +149,10 @@ public class PepseGameManager extends danogl.GameManager{
         Vector2 avatarInitialPosition = new Vector2(maxX/2f, this.terrain.groundHeightAt(maxX/2f)-Block.SIZE);
         this.avatar = Avatar.create(gameObjects(),AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO,Vector2.ZERO,null),LEAF_LAYER);
+        this.farMargin = (int)windowDimensions.x() - (int)this.avatar.getCenter().x();
+//        this.maxX = (int)windowDimensions.x();
+        this.closeMargin = (int)this.avatar.getCenter().x();
+//        this.minX = 0;
 
         setCamera(new Camera(this.avatar,
                 this.windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
