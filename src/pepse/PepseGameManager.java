@@ -44,6 +44,7 @@ public class PepseGameManager extends danogl.GameManager{
 //    private int seed;
     private Vector2 windowDimensions;
     private Tree trees;
+    private World[] worlds;
 
 
     /**
@@ -62,8 +63,12 @@ public class PepseGameManager extends danogl.GameManager{
         this.windowDimensions = windowController.getWindowDimensions();
         this.minX = 0;
         this.maxX = (int) windowDimensions.x();
+        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED);
+        this.trees = new Tree(this.gameObjects(),this.terrain::groundHeightAt,SEED);
 
         createBackground();
+//        this.worlds = new World[3];
+
         generateInitialScenery();
         generateAvatar(inputListener,imageReader);
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
@@ -105,8 +110,11 @@ public class PepseGameManager extends danogl.GameManager{
 
         for (GameObject gameObject: gameObjects())
         {
-            if ((gameObject.getTag().equals("ground")) && (gameObject.getCenter().x() < this.minX)){
+            if ((gameObject instanceof Block) && (gameObject.getCenter().x() < this.minX)){
+
                 gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER);
+                gameObjects().removeGameObject(gameObject,TOP_GROUND_LAYER + 2);
+
             }
         }
     }
