@@ -94,13 +94,23 @@ public class PepseGameManager extends danogl.GameManager {
         boolean movedLeft = distance <= -Block.SIZE;
 
         if (movedLeft) {
-//            this.terrain.setCache(this.cache);
-            this.terrain.createInRange(end + distance, end);
-            this.trees.createInRange(end + distance, end);
+            this.terrain.setCache(this.cache);
+            if (this.cache.containsKey(end + distance)) {
+                for (Block block : this.cache.get(end + distance)) {
+                    gameObjects().addGameObject(block);
+                }
+            } else {
+                this.terrain.createInRange(end + distance, end);
+                this.trees.createInRange(end + distance, end);
+            }
+
+//            this.terrain.createInRange(end + distance, end);
+//            this.trees.createInRange(end + distance, end);
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
-//            removeTerrainAndTreeAtX0(this.maxX);
+            removeTerrainAndTreeAtX0(this.maxX);
             this.maxX -= Block.SIZE;
             this.minX -= Block.SIZE;
+
         }
     }
 
@@ -114,15 +124,18 @@ public class PepseGameManager extends danogl.GameManager {
         boolean movedRight = distance >= Block.SIZE;
 
         if (movedRight) {
-//            this.terrain.setCache(this.cache);
+            this.terrain.setCache(this.cache);
             if (this.cache.containsKey(end - distance)) {
-                for (Block block : this.cache.get(end + distance)) {
+                for (Block block : this.cache.get(end - distance)) {
                     gameObjects().addGameObject(block);
                 }
             } else {
                 this.terrain.createInRange(end - distance, end);
                 this.trees.createInRange(end - distance, end);
             }
+
+//            this.terrain.createInRange(end - distance, end);
+//            this.trees.createInRange(end - distance, end);
             this.lastAvatarLocation = (int) this.avatar.getCenter().x();
             this.maxX += Block.SIZE;
             removeTerrainAndTreeAtX0(this.minX);
@@ -173,7 +186,6 @@ public class PepseGameManager extends danogl.GameManager {
 
     /**
      * Runs the entire simulation.
-     *
      * @param args args
      */
     public static void main(String[] args) {

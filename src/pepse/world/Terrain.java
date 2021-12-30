@@ -84,12 +84,6 @@ public class Terrain {
 
         for (int x = minX; x <= maxX; x+=Block.SIZE){
             // if x in hashmap - running on the array list and adding to the game. then quite the function.
-//            if (this.cache.containsKey(x)) {
-//                for (Block block: this.cache.get(x)) {
-//                    gameObjects.addGameObject(block);
-//                }
-//                return;
-//            }
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.
             layer = this.groundLayer; // top ground layer
             ArrayList<Block> blockArray = new ArrayList<Block>();
