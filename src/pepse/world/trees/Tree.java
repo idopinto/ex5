@@ -3,9 +3,13 @@ package pepse.world.trees;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.util.Vector2;
+import pepse.util.CareTaker;
+import pepse.util.BlockMemento;
+import pepse.util.Originator;
 import pepse.world.Block;
 
-import java.util.ArrayList;
+import java.lang.reflect.Member;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -26,18 +30,16 @@ public class Tree {
     private final UnaryOperator<Float> groundHeightFunc;
     private int seed;
     private Random random;
-    private Map<Integer, ArrayList<Block>> cache;
-
+    private Map<Integer, CareTaker> cache;
+    static final Originator originator = new Originator();
 
 
 // added seed in constructor
 
-    public Tree(GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc, int seed){
+    public Tree(GameObjectCollection gameObjects, UnaryOperator<Float> groundHeightFunc){
         this.gameObjects = gameObjects;
         this.groundHeightFunc = groundHeightFunc;
-        this.seed = seed;
-//        this.random = new Random(seed);
-
+        this.random = new Random(seed);
     }
 
     /**
@@ -53,19 +55,19 @@ public class Tree {
         minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
         maxX =  (maxX % Block.SIZE != 0) ? maxX + (maxX % Block.SIZE) : maxX;
 
-
         Vector2 treeTopTopLeftCorner;
         for (int x = minX; x <= maxX; x += Block.SIZE) {
+
             this.random = new Random(Objects.hash(x,seed));
+            CareTaker careTaker = this.cache.get(x);
             if (needToPlant()){
                 treeHeight = getRandomHeight();
 
                 bottomYBlock = (int) (this.groundHeightFunc.apply((float)x)- Block.SIZE);
                 treeTopTopLeftCorner = new Vector2(x - ((treeHeight/2f)*Block.SIZE),
                         (bottomYBlock - treeHeight*Block.SIZE) - (treeHeight/2f)*Block.SIZE);
-
-                Trunk.createTrunk(this.gameObjects,new Vector2(x, bottomYBlock), treeHeight,cache);
-                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight,seed,cache,x);
+                Trunk.createTrunk(this.gameObjects,new Vector2(x, bottomYBlock), treeHeight,careTaker);
+                TreeTop.createTreeTop(this.gameObjects,treeTopTopLeftCorner,treeHeight,seed,careTaker);
             }
 
         }
@@ -79,8 +81,12 @@ public class Tree {
         return random.nextInt(100) < 10;
     }
 
-    public void setCache(Map<Integer, ArrayList<Block>> cache)
+    public void setCache(Map<Integer, CareTaker> cache)
     {
         this.cache = cache;
+    }
+    public void setSeed(int seed)
+    {
+        this.seed = seed;
     }
 }

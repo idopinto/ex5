@@ -1,19 +1,14 @@
 package pepse.world;
 
 import danogl.collisions.GameObjectCollection;
-import danogl.collisions.Layer;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.ColorSupplier;
-import pepse.util.PerlinNoise;
-import pepse.world.trees.Leaf;
+import pepse.util.*;
 
 import java.awt.*;
 import java.lang.Math;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Responsible for the creation and management of terrain.
@@ -30,7 +25,9 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
-    private Map<Integer, ArrayList<Block>> cache;
+    private Map<Integer, CareTaker> cache;
+    private Originator originator;
+
 
 
     /**
@@ -47,6 +44,7 @@ public class Terrain {
         this.windowDimensions = windowDimensions;
         this.groundHeightAtX0 = windowDimensions.y() *(2/3f);
         this.myPerl = new PerlinNoise(seed);
+        this.originator = new Originator();
 
 
     }
@@ -59,10 +57,11 @@ public class Terrain {
 
     public float groundHeightAt(float x)
     {
-        float result = (float) (28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
-        if (result < 0) {return this.groundHeightAtX0 + Block.SIZE;}
-        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {return windowDimensions.y() - 3 * Block.SIZE;}
-        return this.groundHeightAtX0 + result;
+//        float result = (float) (28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
+//        if (result < 0) {return this.groundHeightAtX0 + Block.SIZE;}
+//        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {return windowDimensions.y() - 3 * Block.SIZE;}
+//        return this.groundHeightAtX0 + result;
+        return 500;
     }
 
 
@@ -82,11 +81,11 @@ public class Terrain {
         minX =  (minX % Block.SIZE != 0) ? minX - (minX % Block.SIZE) : minX;
         maxX =  (maxX % Block.SIZE != 0) ? maxX + (maxX % Block.SIZE) : maxX;
 
-        for (int x = minX; x <= maxX; x+=Block.SIZE){
+        for (int x = minX; x <= maxX ; x+=Block.SIZE){
             // if x in hashmap - running on the array list and adding to the game. then quite the function.
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.
             layer = this.groundLayer; // top ground layer
-            ArrayList<Block> blockArray = new ArrayList<Block>();
+            CareTaker blockCareTaker = new CareTaker();
             for (int y = topY; y < topY + (TERRAIN_DEPTH * Block.SIZE) ; y += Block.SIZE){
 
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
@@ -94,14 +93,15 @@ public class Terrain {
                 // the first couple of blocks in each column should be in groundLayer else in groundLayer+2
                 if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
                 this.gameObjects.addGameObject(block, layer);
-                blockArray.add(block);
+                originator.setState("in",block,layer);
+                blockCareTaker.add(originator.saveStateToMemento());
                 block.setTag(GROUND_TAG);
             }
-            this.cache.put(x, blockArray);
+            this.cache.put(x, blockCareTaker);
         }
     }
 
-    public void setCache(Map<Integer, ArrayList<Block>> cache)
+    public void setCache(Map<Integer, CareTaker> cache)
     {
         this.cache = cache;
     }

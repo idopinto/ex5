@@ -8,6 +8,9 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
+import pepse.util.BlockMemento;
+import pepse.util.CareTaker;
+import pepse.util.Originator;
 import pepse.world.Avatar;
 import pepse.world.Block;
 import pepse.world.Sky;
@@ -18,7 +21,7 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.lang.module.FindException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +53,13 @@ public class PepseGameManager extends danogl.GameManager {
     private Vector2 windowDimensions;
     private Tree trees;
     private int lastAvatarLocation;
-    private Map<Integer, ArrayList<Block>> cache;
+    //    private Map<Integer, ArrayList<Block>> cache;
+    private Map<Integer, CareTaker> cache;
+    private Originator originator;
+
+    public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
+        super(windowTitle, windowDimensions);
+    }
 
     /**
      * The method will be called once when a GameGUIComponent is created,
@@ -67,97 +76,153 @@ public class PepseGameManager extends danogl.GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.windowDimensions = windowController.getWindowDimensions();
         createBackground();
-        this.minX = 0;
-        this.maxX = (int) windowDimensions.x() + (int) windowDimensions.x() % Block.SIZE;
-        this.cache = new HashMap<Integer, ArrayList<Block>>();
-        generateInitialScenery();
+//        this.minX = 0;
+//        this.maxX = (int) windowDimensions.x() + (int) windowDimensions.x() % Block.SIZE;
+        /*ADD here*/
+        this.cache = new HashMap<Integer, CareTaker>();
+        this.originator = new Originator();
+        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
+        this.terrain.setCache(this.cache);
+        this.trees = new Tree(this.gameObjects(), this.terrain::groundHeightAt);
+        this.trees.setSeed(SEED);
+        this.trees.setCache(this.cache);
         generateAvatar(inputListener, imageReader);
+
         this.lastAvatarLocation = (int) this.avatar.getCenter().x();
+        this.minX = (int) (windowDimensions.x() / 2 - (windowDimensions.x()));
+
+        this.maxX = (int) (windowDimensions.x() * 1.5);
+
+        generateSceneryInRange(minX, maxX);
+
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
-        gameObjects().layers().shouldLayersCollide(TRUNK_LAYER, AVATAR_LAYER, true);
+//        gameObjects().layers().shouldLayersCollide(TRUNK_LAYER, AVATAR_LAYER, true);
 
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        generateWorldRight();
         generateWorldLeft();
+        generateWorldRight();
     }
+
 
     private void generateWorldLeft() {
-        int start = this.lastAvatarLocation;
-        int distance = (int) this.avatar.getCenter().x() - start;
-
-        int end = this.minX - Block.SIZE;
-
-        boolean movedLeft = distance <= -Block.SIZE;
-
-        if (movedLeft) {
-            this.terrain.setCache(this.cache);
-            if (this.cache.containsKey(end + distance)) {
-                for (Block block : this.cache.get(end + distance)) {
-                    gameObjects().addGameObject(block);
-                }
+        int halfScreen = (int) windowDimensions.x() / 2;
+        if (Math.abs(this.avatar.getCenter().x() - minX) < halfScreen) {
+            if (this.cache.containsKey(minX - Block.SIZE)) {
+                System.out.println("------------------------");
+                System.out.println("Terrain Restored in range [ " + (minX - halfScreen) + ", " + minX + " ]");
+                restoreSceneryInRange(minX - halfScreen, minX);
             } else {
-                this.terrain.createInRange(end + distance, end);
-                this.trees.createInRange(end + distance, end);
+                System.out.println("------------------------");
+                System.out.println("Terrain Created in range [ " + (minX - halfScreen) + ", " + minX + " ]");
+                generateSceneryInRange(minX - halfScreen, minX);
             }
 
-//            this.terrain.createInRange(end + distance, end);
-//            this.trees.createInRange(end + distance, end);
-            this.lastAvatarLocation = (int) this.avatar.getCenter().x();
-            removeTerrainAndTreeAtX0(this.maxX);
-            this.maxX -= Block.SIZE;
-            this.minX -= Block.SIZE;
-
+            this.maxX -= halfScreen;
+            removeSceneryInRange(maxX - halfScreen, maxX);
+            System.out.println("Terrain Removed in range [ " + (maxX - halfScreen) + ", " + maxX + " ]");
+            System.out.println("------------------------");
+            this.minX -= halfScreen;
         }
     }
+
+
 
 
     private void generateWorldRight() {
-        int start = this.lastAvatarLocation;
-        int distance = (int) this.avatar.getCenter().x() - start;
+        int halfScreen = (int) windowDimensions.x() / 2;
+        if (Math.abs(this.avatar.getCenter().x() - maxX) < halfScreen) {
+            if (this.cache.containsKey(maxX+Block.SIZE)) {
 
-        int end = this.maxX + Block.SIZE;
+                System.out.println("------------------------");
+                System.out.println("Terrain Restored in range [ " + (maxX) + ", " + (maxX+halfScreen )+ " ]");
+                restoreSceneryInRange(maxX ,maxX+ halfScreen);
 
-        boolean movedRight = distance >= Block.SIZE;
-
-        if (movedRight) {
-            this.terrain.setCache(this.cache);
-            if (this.cache.containsKey(end - distance)) {
-                for (Block block : this.cache.get(end - distance)) {
-                    gameObjects().addGameObject(block);
-                }
             } else {
-                this.terrain.createInRange(end - distance, end);
-                this.trees.createInRange(end - distance, end);
+                System.out.println("------------------------");
+                System.out.println("Terrain Created in range [ " + maxX + ", " + (maxX + halfScreen) + " ]");
+                generateSceneryInRange(maxX, maxX + halfScreen);
+            }
+            this.maxX += halfScreen;
+
+            removeSceneryInRange(minX, minX + halfScreen);
+            System.out.println("Terrain Removed in range [ " + minX + ", " + (minX + halfScreen) + " ]");
+            System.out.println("------------------------");
+            this.minX += halfScreen;
+        }
+    }
+
+    private void restoreSceneryInRange(int minX0,int maxX0) {
+        for (int i = minX0; i < maxX0; i+=Block.SIZE) {
+            if (this.cache.containsKey(i)) {
+                restoreSceneryFromCacheAt(i);
+            }
+        }
+    }
+
+    private void restoreSceneryFromCacheAt(int nextCol) {
+        CareTaker careTaker = this.cache.get(nextCol);
+
+        for (int i = 0; i < careTaker.getMementoListSize(); i++) {
+            originator.getStateFromMemento(careTaker.get(i));
+            if (originator.getState().equals("out"))
+            {
+                gameObjects().addGameObject(originator.getBlock(), originator.getLayer());
+                originator.setState("in");
+                careTaker.saveState(originator,i);
+            }
+        }
+
+    }
+
+    private void removeSceneryInRange(int low, int high) throws NullPointerException {
+        for (int i = low; i < high; i+=Block.SIZE) {
+            if (this.cache.containsKey(i)) {
+//                System.out.println("Terrain Removed at "+i);
+
+                CareTaker careTaker = this.cache.get(i);
+                for (int j = 0; j < careTaker.getMementoListSize(); j++) {
+                    originator.getStateFromMemento(careTaker.get(j));
+                    if (originator.getState().equals("in"))
+                    {
+                        if(gameObjects().removeGameObject(originator.getBlock(), originator.getLayer()))
+                        {
+//                            System.out.println("removal success at: "+ j);
+                        }
+                        originator.setState("out");
+                        careTaker.saveState(originator,j);
+                    }
+                }
+//                for (BlockMemento blockMemento : careTaker.getMementoList()) {
+//
+//                    originator.getStateFromMemento(blockMemento);
+//
+//                    if (originator.getState().equals("in"))
+//                    {
+//                        if(gameObjects().removeGameObject(originator.getBlock(), originator.getLayer()))
+//                        {
+//                            System.out.println("removal success at: "+ i);
+//                        }
+//
+//                        originator.setState("out", originator.getBlock(), originator.getLayer());
+//
+//                        blockMemento = originator.saveStateToMemento();
+//                        originator.getStateFromMemento(blockMemento);
+//                    }
+                }
+
             }
 
-//            this.terrain.createInRange(end - distance, end);
-//            this.trees.createInRange(end - distance, end);
-            this.lastAvatarLocation = (int) this.avatar.getCenter().x();
-            this.maxX += Block.SIZE;
-            removeTerrainAndTreeAtX0(this.minX);
-            this.minX += Block.SIZE;
         }
 
 
-    }
 
-    private void removeTerrainAndTreeAtX0(int x) throws NullPointerException {
-        for (Block block : this.cache.get(x)) {
-            gameObjects().removeGameObject(block, TOP_GROUND_LAYER + 2);
-            gameObjects().removeGameObject(block, TOP_GROUND_LAYER);
-            gameObjects().removeGameObject(block, LEAF_LAYER);
-            gameObjects().removeGameObject(block, TRUNK_LAYER);
-        }
-
-
-    }
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
-        Vector2 avatarInitialPosition = new Vector2(maxX / 2f, this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE);
+        Vector2 avatarInitialPosition = new Vector2(windowDimensions.x() / 2f, this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE);
         this.avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, Vector2.ZERO, null), LEAF_LAYER);
         setCamera(new Camera(this.avatar,
@@ -166,14 +231,10 @@ public class PepseGameManager extends danogl.GameManager {
                 this.windowDimensions));
     }
 
-    private void generateInitialScenery() {
-        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
-        this.terrain.setCache(this.cache);
-        terrain.createInRange(0, maxX); // terrain spread on the whole screen.
+    private void generateSceneryInRange(int minX0, int maxX0) {
 
-        this.trees = new Tree(this.gameObjects(), this.terrain::groundHeightAt, SEED);
-        this.trees.setCache(this.cache);
-        trees.createInRange(0, maxX);
+        terrain.createInRange(minX0, maxX0); // terrain spread on the whole screen.
+        trees.createInRange(minX0, maxX0);
     }
 
     private void createBackground() {
@@ -181,7 +242,6 @@ public class PepseGameManager extends danogl.GameManager {
         Night.create(this.gameObjects(), NIGHT_LAYER, windowDimensions, NIGHT_CYCLE_LENGTH);
         GameObject sun = Sun.create(this.gameObjects(), SUN_LAYER, windowDimensions, SUN_CYCLE_LENGTH);
         SunHalo.create(this.gameObjects(), SUN_HALO_LAYER, sun, SUN_HALO_COLOR);
-
     }
 
     /**
@@ -189,7 +249,7 @@ public class PepseGameManager extends danogl.GameManager {
      * @param args args
      */
     public static void main(String[] args) {
-        new PepseGameManager().run();
+        new PepseGameManager("pepse", new Vector2(900, 900)).run();
     }
 
 }
