@@ -81,18 +81,15 @@ public class PepseGameManager extends danogl.GameManager {
         /*ADD here*/
         this.cache = new HashMap<Integer, CareTaker>();
         this.originator = new Originator();
-        this.terrain = new Terrain(this.gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
-        this.terrain.setCache(this.cache);
-        this.trees = new Tree(this.gameObjects(), this.terrain::groundHeightAt);
-        this.trees.setSeed(SEED);
-        this.trees.setCache(this.cache);
+        this.terrain = new Terrain(gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
+        this.terrain.setCache(cache);
+        this.trees = new Tree(gameObjects(), terrain::groundHeightAt);
+        this.trees.setSeed(SEED); trees.setCache(cache);
         generateAvatar(inputListener, imageReader);
 
         this.lastAvatarLocation = (int) this.avatar.getCenter().x();
         this.minX = (int) (windowDimensions.x() / 2 - (windowDimensions.x()));
-
         this.maxX = (int) (windowDimensions.x() * 1.5);
-
         generateSceneryInRange(minX, maxX);
 
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
@@ -121,8 +118,8 @@ public class PepseGameManager extends danogl.GameManager {
                 generateSceneryInRange(minX - halfScreen, minX);
             }
 
-            this.maxX -= halfScreen;
             removeSceneryInRange(maxX - halfScreen, maxX);
+            this.maxX -= halfScreen;
             System.out.println("Terrain Removed in range [ " + (maxX - halfScreen) + ", " + maxX + " ]");
             System.out.println("------------------------");
             this.minX -= halfScreen;
@@ -250,6 +247,8 @@ public class PepseGameManager extends danogl.GameManager {
      */
     public static void main(String[] args) {
         new PepseGameManager("pepse", new Vector2(900, 900)).run();
+//        new PepseGameManager().run();
+
     }
 
 }
