@@ -7,7 +7,6 @@ import danogl.util.Vector2;
 import pepse.util.*;
 
 import java.awt.*;
-import java.lang.Math;
 import java.util.Map;
 
 /**
@@ -94,7 +93,7 @@ public class Terrain {
                 if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
                 this.gameObjects.addGameObject(block, layer);
 
-                originator.setState("in",block,layer);
+                originator.setBlockState("in",block,layer);
                 blockCareTaker.add(originator.saveStateToMemento());
                 block.setTag(GROUND_TAG);
             }

@@ -15,6 +15,7 @@ import pepse.util.Energy;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.function.UnaryOperator;
 
 /**
  *
@@ -30,11 +31,12 @@ public class Avatar extends danogl.GameObject
     private static final float GRAVITY = 500;
     private static final String AVATAR_TAG = "avatar";
     private static final String GROUND_TAG = "ground";
-    private static final String FIRST_TREETOP_LAYER = "top";
+    private static final String TRUNK_LAYER = "trunk";
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
     private static Counter energyCounter;
     private static boolean hasNoEnergy;
+    private  UnaryOperator<Float> groundHeightFunc;
 
     /**
      * Construct a new GameObject instance.
@@ -71,7 +73,7 @@ public class Avatar extends danogl.GameObject
 
         Avatar.hasNoEnergy = false;
 
-        Renderable characterRenderable = imageReader.readImage("C:/Users/User/IdeaProjects/ex5/assets/idle_1.png",
+        Renderable characterRenderable = imageReader.readImage("assets/idle_1.png",
                 true);
         Avatar avatar = new Avatar(topLeftCorner,new Vector2(80,80),characterRenderable);
         gameObjects.addGameObject(avatar, layer);
@@ -91,8 +93,10 @@ public class Avatar extends danogl.GameObject
         //TODO: Should be able to rest on a treetop
         //TODO: Updating the energy parameter of the avatar according to its current state.
 
-        if (this.transform().getVelocity().y() < VELOCITY_Y){
+        if ((this.transform().getVelocity().y() < VELOCITY_Y)||
+        (this.getCenter().y() > this.groundHeightFunc.apply(this.getCenter().x()))){
             this.transform().setVelocityY(VELOCITY_Y);
+            this.transform().setCenter(this.getCenter().x(),this.groundHeightFunc.apply(this.getCenter().x())-Block.SIZE);
         }
 
         // Move left
@@ -130,7 +134,7 @@ public class Avatar extends danogl.GameObject
         if (hasNoEnergy) {
             hasNoEnergy = false;
         }
-        if ((other.getTag().equals(GROUND_TAG) && (energyCounter.value() < 200)))
+        if (((other.getTag().equals(GROUND_TAG) ||other.getTag().equals(TRUNK_LAYER)) && (energyCounter.value() < 200)))
         {
             energyCounter.increment();
         }
@@ -139,8 +143,14 @@ public class Avatar extends danogl.GameObject
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other.getTag().equals(GROUND_TAG) || other.getTag().equals(FIRST_TREETOP_LAYER)){
+        if (other.getTag().equals(GROUND_TAG) || other.getTag().equals(TRUNK_LAYER)){
             this.setVelocity(Vector2.ZERO);
         }
     }
+
+    public void setGroundHeightFunc(UnaryOperator<Float> groundHeightFunc)
+    {
+        this.groundHeightFunc = groundHeightFunc;
+    }
+
 }

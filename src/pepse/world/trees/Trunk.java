@@ -6,11 +6,9 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.CareTaker;
 import pepse.util.ColorSupplier;
-import pepse.util.BlockMemento;
 import pepse.world.Block;
 
 import java.awt.*;
-import java.util.List;
 
 public class Trunk {
     private static final Color TRUNK_COLOR =new Color(100, 50, 20);
@@ -27,7 +25,7 @@ public class Trunk {
                     trunkLocation.y() - Block.SIZE*counter), renderable);
             gameObjects.addGameObject(trunkBlock, Tree.TRUNK_LAYER);
 
-            Tree.originator.setState("in",trunkBlock,Tree.TRUNK_LAYER);
+            Tree.originator.setBlockState("in",trunkBlock,Tree.TRUNK_LAYER);
             blockCareTaker.add(Tree.originator.saveStateToMemento());
 //            cache.get((int)trunkLocation.x()).add(trunkBlock);
             trunkBlock.setTag(TRUNK_TAG);

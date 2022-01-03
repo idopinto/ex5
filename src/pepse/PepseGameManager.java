@@ -82,8 +82,8 @@ public class PepseGameManager extends danogl.GameManager {
         this.trees.setSeed(SEED); trees.setCache(cache);
         generateAvatar(inputListener, imageReader);
 
-        this.minX = (int) (windowDimensions.x() / 2 - (windowDimensions.x()));
-        this.maxX = (int) (windowDimensions.x() * 1.5);
+        this.minX = (int) (windowDimensions.x() *0.75f - (windowDimensions.x()));
+        this.maxX = (int) (windowDimensions.x() * 1.25);
         generateSceneryInRange(minX, maxX);
 
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
@@ -100,7 +100,7 @@ public class PepseGameManager extends danogl.GameManager {
 
 
     private void generateWorldLeft() {
-        int halfScreen = (int) windowDimensions.x() / 2;
+        int halfScreen = (int) (windowDimensions.x() /2);
         if (Math.abs(this.avatar.getCenter().x() - minX) < halfScreen) {
             if (this.cache.containsKey(minX - Block.SIZE)) {
                 System.out.println("------------------------");
@@ -124,7 +124,7 @@ public class PepseGameManager extends danogl.GameManager {
 
 
     private void generateWorldRight() {
-        int halfScreen = (int) windowDimensions.x() / 2;
+        int halfScreen = (int)(windowDimensions.x()/2);
         if (Math.abs(this.avatar.getCenter().x() - maxX) < halfScreen) {
             if (this.cache.containsKey(maxX+Block.SIZE)) {
 
@@ -163,7 +163,7 @@ public class PepseGameManager extends danogl.GameManager {
             if (originator.getState().equals("out"))
             {
                 gameObjects().addGameObject(originator.getBlock(), originator.getLayer());
-                originator.setState("in");
+                originator.setBlockState("in");
                 careTaker.saveState(originator,i);
             }
         }
@@ -179,7 +179,7 @@ public class PepseGameManager extends danogl.GameManager {
                     if (originator.getState().equals("in"))
                     {
                         gameObjects().removeGameObject(originator.getBlock(), originator.getLayer());
-                        originator.setState("out");
+                        originator.setBlockState("out");
                         careTaker.saveState(originator,j);
                     }
                 }
@@ -194,8 +194,9 @@ public class PepseGameManager extends danogl.GameManager {
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
         Vector2 avatarInitialPosition = new Vector2(windowDimensions.x() / 2f,
-                this.terrain.groundHeightAt(maxX / 2f) + Block.SIZE );
+                this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE );
         this.avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
+        this.avatar.setGroundHeightFunc(this.terrain::groundHeightAt);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, Vector2.ZERO, null), LEAF_LAYER);
         setCamera(new Camera(this.avatar,
                 this.windowDimensions.mult(0.5f).subtract(avatarInitialPosition),
@@ -204,7 +205,6 @@ public class PepseGameManager extends danogl.GameManager {
     }
 
     private void generateSceneryInRange(int minX0, int maxX0) {
-
         terrain.createInRange(minX0, maxX0); // terrain spread on the whole screen.
         trees.createInRange(minX0, maxX0);
     }
@@ -221,9 +221,8 @@ public class PepseGameManager extends danogl.GameManager {
      * @param args args
      */
     public static void main(String[] args) {
-//        new PepseGameManager("pepse", new Vector2(700, 600)).run();
+//        new PepseGameManager("pepse", new Vector2(1000, 1000)).run();
         new PepseGameManager().run();
-
     }
 
 }

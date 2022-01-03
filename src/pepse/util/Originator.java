@@ -7,14 +7,18 @@ public class Originator {
     private Block block;
     private int layer;
 
-    public void setState(String state,Block block,int layer){
+    public void setBlockState(String state, Block block, int layer){
         this.state = state;
         this.block = block;
         this.layer = layer;
     }
 
-    public void setState(String state){
+    public void setBlockState(String state){
         this.state = state;
+    }
+    public void setBlockState(int layer)
+    {
+        this.layer = layer;
     }
 
 

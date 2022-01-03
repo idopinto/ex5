@@ -8,7 +8,7 @@ import danogl.util.Vector2;
 import pepse.util.CareTaker;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
-import pepse.util.BlockMemento;
+
 import java.awt.*;
 
 public class TreeTop {
@@ -29,7 +29,7 @@ public class TreeTop {
                 Leaf leaf = new Leaf(gameObjects,new Vector2(x,y),renderable, seed);
 
                 gameObjects.addGameObject(leaf,Tree.LEAF_LAYER);
-                Tree.originator.setState("in",leaf,Tree.LEAF_LAYER);
+                Tree.originator.setBlockState("in",leaf,Tree.LEAF_LAYER);
                 blockCareTaker.add(Tree.originator.saveStateToMemento());
                 leaf.setTag(LEAF_TAG);
                 x += Block.SIZE;

@@ -56,7 +56,7 @@ public class Tree {
         maxX =  (maxX % Block.SIZE != 0) ? maxX + (maxX % Block.SIZE) : maxX;
 
         Vector2 treeTopTopLeftCorner;
-        for (int x = minX; x <= maxX; x += Block.SIZE) {
+        for (int x = minX; x <= maxX; x += 3*Block.SIZE) {
 
             this.random = new Random(Objects.hash(x,seed));
             CareTaker careTaker = this.cache.get(x);

@@ -7,6 +7,7 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.util.CareTaker;
 import pepse.world.Block;
 
 import java.util.Objects;
@@ -45,12 +46,12 @@ public class Leaf extends Block {
 
     /**
      * Construct a new GameObject instance.
-     *
-     * @param gameObjects
+     *  @param gameObjects
      * @param topLeftCorner The location of the top-left corner of the created block
      * @param renderable    - A renderable to render as the block.
+     * @param blockCareTaker
      */
-    public Leaf(GameObjectCollection gameObjects, Vector2 topLeftCorner, Renderable renderable,int seed) {
+    public Leaf(GameObjectCollection gameObjects, Vector2 topLeftCorner, Renderable renderable, int seed) {
         super(topLeftCorner, renderable);
 
         this.gameObjects = gameObjects;
