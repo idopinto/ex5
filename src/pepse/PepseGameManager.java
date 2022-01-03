@@ -8,8 +8,8 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
-import pepse.util.CareTaker;
-import pepse.util.Originator;
+import pepse.util.BlockCareTaker;
+import pepse.util.BlockOriginator;
 import pepse.world.Avatar;
 import pepse.world.Block;
 import pepse.world.Sky;
@@ -28,6 +28,8 @@ import java.util.Map;
  */
 public class PepseGameManager extends danogl.GameManager {
 
+
+    /* Transitions cycle length constants */
     private static final int NIGHT_CYCLE_LENGTH = 30;
     private static final int SUN_CYCLE_LENGTH = 30;
 
@@ -37,25 +39,27 @@ public class PepseGameManager extends danogl.GameManager {
     private static final int SUN_LAYER = Layer.BACKGROUND;
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TOP_GROUND_LAYER = Layer.STATIC_OBJECTS;
+    private static final int TRUNK_LAYER = Layer.STATIC_OBJECTS + 6;
     private static final int LEAF_LAYER = Layer.STATIC_OBJECTS + 8;
-    static final int TRUNK_LAYER = Layer.STATIC_OBJECTS + 6;
-
-    private static final int SEED = 25;
-    private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int AVATAR_LAYER = Layer.DEFAULT;
 
-    private Avatar avatar;
+    /* constant for the seed */
+    private static final int SEED = 25;
+
+    /* Colors constants */
+    private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
+
+
+    /* Fields */
+    private Avatar avatar; // avatar object
     private Terrain terrain;
-    private int maxX;
-    private int minX;
     private Vector2 windowDimensions;
     private Tree trees;
-    private Map<Integer, CareTaker> cache;
-    private Originator originator;
+    private Map<Integer, BlockCareTaker> cache;
+    private BlockOriginator originator;
+    private int maxX; // highest  X value of the world that is currently in the game.
+    private int minX; //// lowest  X value of the world that is currently in the game.
 
-//    public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
-//        super(windowTitle, windowDimensions);
-//    }
 
     /**
      * The method will be called once when a GameGUIComponent is created,
@@ -63,34 +67,36 @@ public class PepseGameManager extends danogl.GameManager {
      *
      * @param imageReader      Contains a single method: readImage, which reads an image from disk.
      * @param soundReader      soundReader Contains a single method: readSound, which reads a wav file from disk.
-     * @param inputListener    inputListener Contains a single method: isKeyPressed, which returns whether a given key is currently pressed by the user or not.
-     * @param windowController windowController Contains an array of helpful, self explanatory methods concerning the window.
+     * @param inputListener    inputListener Contains a single method: isKeyPressed, which returns whether
+     *                         a given key is currently pressed by the user or not.
+     * @param windowController windowController Contains an array of helpful,
+     *                         self explanatory methods concerning the window.
      */
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
         // Override GameObject initializeGame
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
+
         this.windowDimensions = windowController.getWindowDimensions();
+        this.cache = new HashMap<>();
+        this.originator = new BlockOriginator();
+        this.minX = (int) (this.windowDimensions.x() * 0.75f - (this.windowDimensions.x()));
+        this.maxX = (int) (this.windowDimensions.x() * 1.25);
+
+
         createBackground();
-
-        /*ADD here*/
-        this.cache = new HashMap<Integer, CareTaker>();
-        this.originator = new Originator();
-        this.terrain = new Terrain(gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
-        this.terrain.setCache(cache);
-        this.trees = new Tree(gameObjects(), terrain::groundHeightAt);
-        this.trees.setSeed(SEED); trees.setCache(cache);
+        createTerrainAndTrees();
         generateAvatar(inputListener, imageReader);
-
-        this.minX = (int) (windowDimensions.x() *0.75f - (windowDimensions.x()));
-        this.maxX = (int) (windowDimensions.x() * 1.25);
         generateSceneryInRange(minX, maxX);
-
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
         gameObjects().layers().shouldLayersCollide(TRUNK_LAYER, AVATAR_LAYER, true);
-
     }
 
+    /**
+     * update
+     *
+     * @param deltaTime deltaTime
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -99,8 +105,19 @@ public class PepseGameManager extends danogl.GameManager {
     }
 
 
+    /* Create instances of terrain and tree  */
+    private void createTerrainAndTrees() {
+        this.terrain = new Terrain(gameObjects(), TOP_GROUND_LAYER, windowDimensions, SEED); // initializing the terrain
+        this.terrain.setCache(this.cache);
+        this.trees = new Tree(gameObjects(), terrain::groundHeightAt);
+        this.trees.setSeed(SEED);
+        this.trees.setCache(this.cache);
+    }
+
+    /* this method generates\restores (from cache) new world scenery if the avatar went left far enough
+     *  and removes the unseen scenery  from the right side. */
     private void generateWorldLeft() {
-        int halfScreen = (int) (windowDimensions.x() /2);
+        int halfScreen = (int) (windowDimensions.x() / 2);
         if (Math.abs(this.avatar.getCenter().x() - minX) < halfScreen) {
             if (this.cache.containsKey(minX - Block.SIZE)) {
                 System.out.println("------------------------");
@@ -121,16 +138,16 @@ public class PepseGameManager extends danogl.GameManager {
     }
 
 
-
-
+    /* this method generates\restores (from cache) new world scenery if the avatar went right far enough
+     *  and removes the unseen scenery  from the left side. */
     private void generateWorldRight() {
-        int halfScreen = (int)(windowDimensions.x()/2);
+        int halfScreen = (int) (windowDimensions.x() / 2);
         if (Math.abs(this.avatar.getCenter().x() - maxX) < halfScreen) {
-            if (this.cache.containsKey(maxX+Block.SIZE)) {
+            if (this.cache.containsKey(maxX + Block.SIZE)) {
 
                 System.out.println("------------------------");
-                System.out.println("Terrain Restored in range [ " + (maxX) + ", " + (maxX+halfScreen )+ " ]");
-                restoreSceneryInRange(maxX ,maxX+ halfScreen);
+                System.out.println("Terrain Restored in range [ " + (maxX) + ", " + (maxX + halfScreen) + " ]");
+                restoreSceneryInRange(maxX, maxX + halfScreen);
 
             } else {
                 System.out.println("------------------------");
@@ -146,55 +163,60 @@ public class PepseGameManager extends danogl.GameManager {
         }
     }
 
+    /* this method gets range to generate new Scenery to the game*/
+    private void generateSceneryInRange(int minX0, int maxX0) {
+        terrain.createInRange(minX0, maxX0); // terrain spread on the whole screen.
+        trees.createInRange(minX0, maxX0);
+    }
 
-    private void restoreSceneryInRange(int minX0,int maxX0) {
-        for (int i = minX0; i < maxX0; i+=Block.SIZE) {
+    /* this method gets range to restore scenery from the cache */
+    private void restoreSceneryInRange(int minX0, int maxX0) {
+        for (int i = minX0; i < maxX0; i += Block.SIZE) {
             if (this.cache.containsKey(i)) {
                 restoreSceneryFromCacheAt(i);
             }
         }
     }
 
+    /* this method gets specific column index to restore all it's blocks from the cache (including terrain and trees) */
     private void restoreSceneryFromCacheAt(int nextCol) {
-        CareTaker careTaker = this.cache.get(nextCol);
+        BlockCareTaker careTaker = this.cache.get(nextCol);
 
         for (int i = 0; i < careTaker.size(); i++) {
             originator.getStateFromMemento(careTaker.get(i));
-            if (originator.getState().equals("out"))
-            {
+            if (originator.getState().equals("out")) {
                 gameObjects().addGameObject(originator.getBlock(), originator.getLayer());
                 originator.setBlockState("in");
-                careTaker.saveState(originator,i);
+                careTaker.replaceMemento(originator, i);
             }
         }
 
     }
 
-    private void removeSceneryInRange(int low, int high) throws NullPointerException {
-        for (int i = low; i < high; i+=Block.SIZE) {
+    /* this method gets range to remove blocks from the gameobjects and updates the cache on their new state. */
+    private void removeSceneryInRange(int minX0, int maxX0) throws NullPointerException {
+        for (int i = minX0; i < maxX0; i += Block.SIZE) {
             if (this.cache.containsKey(i)) {
-                CareTaker careTaker = this.cache.get(i);
+                BlockCareTaker careTaker = this.cache.get(i);
                 for (int j = 0; j < careTaker.size(); j++) {
                     originator.getStateFromMemento(careTaker.get(j));
-                    if (originator.getState().equals("in"))
-                    {
+                    if (originator.getState().equals("in")) {
                         gameObjects().removeGameObject(originator.getBlock(), originator.getLayer());
                         originator.setBlockState("out");
-                        careTaker.saveState(originator,j);
+                        careTaker.replaceMemento(originator, j);
                     }
                 }
-                }
-
             }
-
         }
 
+    }
 
 
+    /* this method generates the game avatar*/
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
         Vector2 avatarInitialPosition = new Vector2(windowDimensions.x() / 2f,
-                this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE );
+                this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE);
         this.avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         this.avatar.setGroundHeightFunc(this.terrain::groundHeightAt);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, Vector2.ZERO, null), LEAF_LAYER);
@@ -204,11 +226,8 @@ public class PepseGameManager extends danogl.GameManager {
                 this.windowDimensions));
     }
 
-    private void generateSceneryInRange(int minX0, int maxX0) {
-        terrain.createInRange(minX0, maxX0); // terrain spread on the whole screen.
-        trees.createInRange(minX0, maxX0);
-    }
 
+    /* this method creates the game background */
     private void createBackground() {
         Sky.create(this.gameObjects(), windowDimensions, SKY_LAYER);
         Night.create(this.gameObjects(), NIGHT_LAYER, windowDimensions, NIGHT_CYCLE_LENGTH);
@@ -221,7 +240,6 @@ public class PepseGameManager extends danogl.GameManager {
      * @param args args
      */
     public static void main(String[] args) {
-//        new PepseGameManager("pepse", new Vector2(1000, 1000)).run();
         new PepseGameManager().run();
     }
 

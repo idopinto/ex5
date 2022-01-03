@@ -3,13 +3,10 @@ package pepse.world.trees;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.util.Vector2;
-import pepse.util.CareTaker;
-import pepse.util.BlockMemento;
-import pepse.util.Originator;
+import pepse.util.BlockCareTaker;
+import pepse.util.BlockOriginator;
 import pepse.world.Block;
 
-import java.lang.reflect.Member;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -30,8 +27,8 @@ public class Tree {
     private final UnaryOperator<Float> groundHeightFunc;
     private int seed;
     private Random random;
-    private Map<Integer, CareTaker> cache;
-    static final Originator originator = new Originator();
+    private Map<Integer, BlockCareTaker> cache;
+    static final BlockOriginator originator = new BlockOriginator();
 
 
 // added seed in constructor
@@ -59,7 +56,7 @@ public class Tree {
         for (int x = minX; x <= maxX; x += 3*Block.SIZE) {
 
             this.random = new Random(Objects.hash(x,seed));
-            CareTaker careTaker = this.cache.get(x);
+            BlockCareTaker careTaker = this.cache.get(x);
             if (needToPlant()){
                 treeHeight = getRandomHeight();
 
@@ -81,7 +78,7 @@ public class Tree {
         return random.nextInt(100) < 10;
     }
 
-    public void setCache(Map<Integer, CareTaker> cache)
+    public void setCache(Map<Integer, BlockCareTaker> cache)
     {
         this.cache = cache;
     }

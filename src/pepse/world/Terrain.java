@@ -24,8 +24,8 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
-    private Map<Integer, CareTaker> cache;
-    private Originator originator;
+    private Map<Integer, BlockCareTaker> cache;
+    private BlockOriginator originator;
 
 
 
@@ -43,7 +43,7 @@ public class Terrain {
         this.windowDimensions = windowDimensions;
         this.groundHeightAtX0 = windowDimensions.y() *(2/3f);
         this.myPerl = new PerlinNoise(seed);
-        this.originator = new Originator();
+        this.originator = new BlockOriginator();
 
 
     }
@@ -84,7 +84,7 @@ public class Terrain {
             // if x in hashmap - running on the array list and adding to the game. then quite the function.
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.
             layer = this.groundLayer; // top ground layer
-            CareTaker blockCareTaker = new CareTaker();
+            BlockCareTaker blockCareTaker = new BlockCareTaker();
             for (int y = topY; y < topY + (TERRAIN_DEPTH * Block.SIZE) ; y += Block.SIZE){
 
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
@@ -93,7 +93,7 @@ public class Terrain {
                 if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
                 this.gameObjects.addGameObject(block, layer);
 
-                originator.setBlockState("in",block,layer);
+                originator.setBlockState(block,layer,"in");
                 blockCareTaker.add(originator.saveStateToMemento());
                 block.setTag(GROUND_TAG);
             }
@@ -101,7 +101,7 @@ public class Terrain {
         }
     }
 
-    public void setCache(Map<Integer, CareTaker> cache)
+    public void setCache(Map<Integer, BlockCareTaker> cache)
     {
         this.cache = cache;
     }

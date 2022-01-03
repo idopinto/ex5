@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class SunHalo {
 
+    /* Constants */
     private static final String HALO_TAG = "halo";
 
     /**

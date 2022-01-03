@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class Night {
 
+    /* Constants*/
     private static final Float MIDNIGHT_OPACITY = 0.5f;
     private static final Color NIGHT_COLOR = Color.black;
     private static final String NIGHT_TAG = "night";

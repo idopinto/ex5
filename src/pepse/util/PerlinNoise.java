@@ -1,16 +1,27 @@
 package pepse.util;
 
+/**
+ * this class represents PerlinNoise algorithm implementation.
+ */
 public class PerlinNoise {
 
+    /* Fields */
     private double seed;
     private long default_size;
     private int[] p;
 
+    /**
+     * constructor
+     * @param seed seed to initialize
+     */
     public PerlinNoise(double seed) {
         this.seed = seed;
         init();
     }
 
+    /**
+     * initialize the perlinNoise
+     */
     private void init() {
         // Initialize the permutation array.
         this.p = new int[512];
@@ -43,14 +54,27 @@ public class PerlinNoise {
 
     }
 
+    /**
+     * setter
+     * @param seed seed to change
+     */
     public void setSeed(double seed) {
         this.seed = seed;
     }
 
+    /**
+     * getter
+     * @return seed
+     */
     public double getSeed() {
         return this.seed;
     }
 
+    /**
+     * noise
+     * @param x double value
+     * @return value
+     */
     public double noise(double x) {
         double value = 0.0;
         double size = default_size;
@@ -64,6 +88,13 @@ public class PerlinNoise {
         return value / initialSize;
     }
 
+    /**
+     * smoothNoise
+     * @param x double
+     * @param y double
+     * @param z double
+     * @return double
+     */
     public double smoothNoise(double x, double y, double z) {
         // Offset each coordinate by the seed value
         x += this.seed;
@@ -99,14 +130,17 @@ public class PerlinNoise {
                                 grad(p[BB + 1], x - 1, y - 1, z - 1))));
     }
 
+    /* fade */
     private double fade(double t) {
         return t * t * t * (t * (t * 6 - 15) + 10);
     }
 
+    /* lerp */
     private double lerp(double t, double a, double b) {
         return a + t * (b - a);
     }
 
+    /* grad*/
     private double grad(int hash, double x, double y, double z) {
         int h = hash & 15; // CONVERT LO 4 BITS OF HASH CODE
         double u = h < 8 ? x : y, // INTO 12 GRADIENT DIRECTIONS.

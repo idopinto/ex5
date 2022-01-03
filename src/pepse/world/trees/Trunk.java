@@ -4,7 +4,7 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.CareTaker;
+import pepse.util.BlockCareTaker;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
@@ -16,7 +16,7 @@ public class Trunk {
 
 
 
-    static void createTrunk(GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight, CareTaker blockCareTaker)
+    static void createTrunk(GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight, BlockCareTaker blockCareTaker)
     {
         int counter = 0;
         for (int currentHeightOfTree = 0; currentHeightOfTree < trunkHeight; currentHeightOfTree ++){
@@ -25,7 +25,7 @@ public class Trunk {
                     trunkLocation.y() - Block.SIZE*counter), renderable);
             gameObjects.addGameObject(trunkBlock, Tree.TRUNK_LAYER);
 
-            Tree.originator.setBlockState("in",trunkBlock,Tree.TRUNK_LAYER);
+            Tree.originator.setBlockState(trunkBlock,Tree.TRUNK_LAYER,"in");
             blockCareTaker.add(Tree.originator.saveStateToMemento());
 //            cache.get((int)trunkLocation.x()).add(trunkBlock);
             trunkBlock.setTag(TRUNK_TAG);

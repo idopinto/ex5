@@ -12,8 +12,8 @@ public class Energy extends GameObject{
     /**
      * Display a graphic object on the game window showing a numeric count of energy left.
      */
-        /* Constants */
-        private static final TextRenderable textRenderable = new TextRenderable("");
+    /* Constants */
+    private static final TextRenderable textRenderable = new TextRenderable("");
 
     /* Class Fields */
     private final Counter energyCounter;
@@ -34,7 +34,12 @@ public class Energy extends GameObject{
             textRenderable.setColor(Color.BLACK);
         }
 
-        @Override
+
+    /**
+     *  update method
+     * @param deltaTime deltaTIme
+     */
+    @Override
         public void update(float deltaTime) {
             super.update(deltaTime);
             if(energyCounter.value() > 0) {
