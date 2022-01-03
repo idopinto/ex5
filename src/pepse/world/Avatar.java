@@ -64,12 +64,16 @@ public class Avatar extends danogl.GameObject
         Avatar.inputListener = inputListener;
         Avatar.imageReader = imageReader;
         Avatar.energyCounter = new Counter(200);
-        Energy energy = new Energy(Avatar.energyCounter, new Vector2(0,20), new Vector2(30, 30), gameObjects);
+        Energy energy = new Energy(Avatar.energyCounter, new Vector2(0,20),
+                new Vector2(30, 30), gameObjects);
         energy.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(energy, Layer.BACKGROUND);
 
         Avatar.hasNoEnergy = false;
-        Avatar avatar = new Avatar(topLeftCorner,new Vector2(40,40),new OvalRenderable(Color.BLUE));
+
+        Renderable characterRenderable = imageReader.readImage("C:/Users/User/IdeaProjects/ex5/assets/idle_1.png",
+                true);
+        Avatar avatar = new Avatar(topLeftCorner,new Vector2(80,80),characterRenderable);
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);

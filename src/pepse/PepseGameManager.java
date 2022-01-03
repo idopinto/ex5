@@ -63,8 +63,7 @@ public class PepseGameManager extends danogl.GameManager {
      *
      * @param imageReader      Contains a single method: readImage, which reads an image from disk.
      * @param soundReader      soundReader Contains a single method: readSound, which reads a wav file from disk.
-     * @param inputListener    inputListener Contains a single method: isKeyPressed, which returns whether a given key
-     *                         is currently pressed by the user or not.
+     * @param inputListener    inputListener Contains a single method: isKeyPressed, which returns whether a given key is currently pressed by the user or not.
      * @param windowController windowController Contains an array of helpful, self explanatory methods concerning the window.
      */
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
@@ -195,7 +194,7 @@ public class PepseGameManager extends danogl.GameManager {
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
         Vector2 avatarInitialPosition = new Vector2(windowDimensions.x() / 2f,
-                this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE);
+                this.terrain.groundHeightAt(maxX / 2f) + Block.SIZE );
         this.avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, Vector2.ZERO, null), LEAF_LAYER);
         setCamera(new Camera(this.avatar,
@@ -222,7 +221,7 @@ public class PepseGameManager extends danogl.GameManager {
      * @param args args
      */
     public static void main(String[] args) {
-//        new PepseGameManager("pepse", new Vector2(900, 900)).run();
+//        new PepseGameManager("pepse", new Vector2(700, 600)).run();
         new PepseGameManager().run();
 
     }
