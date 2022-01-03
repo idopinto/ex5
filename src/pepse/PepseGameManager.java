@@ -44,7 +44,7 @@ public class PepseGameManager extends danogl.GameManager {
     private static final int AVATAR_LAYER = Layer.DEFAULT;
 
     /* constant for the seed */
-    private static final int SEED = 25;
+    private static final int SEED = 50;
 
     /* Colors constants */
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);

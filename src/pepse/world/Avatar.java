@@ -26,7 +26,7 @@ import java.util.function.UnaryOperator;
 public class Avatar extends danogl.GameObject
 {
 
-    private static final float VELOCITY_X = 200;
+    private static final float VELOCITY_X = 400;
     private static final float VELOCITY_Y = -300;
     private static final float GRAVITY = 500;
     private static final String AVATAR_TAG = "avatar";

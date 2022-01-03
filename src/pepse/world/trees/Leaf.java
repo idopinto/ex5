@@ -61,7 +61,6 @@ public class Leaf extends Block {
         physics().setMass(5f);
         // start leaf routine
         leafRoutine();
-
     }
 
     @Override
