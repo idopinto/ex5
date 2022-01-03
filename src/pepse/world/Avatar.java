@@ -7,13 +7,13 @@ import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
-import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.AnimationRenderable;
+import danogl.gui.rendering.ImageRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 import pepse.util.Energy;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.function.UnaryOperator;
 
@@ -32,10 +32,23 @@ public class Avatar extends danogl.GameObject
     private static final String AVATAR_TAG = "avatar";
     private static final String GROUND_TAG = "ground";
     private static final String TRUNK_LAYER = "trunk";
+    private static final String[] WALK_ANIMATION = {"assets/run_0.png", "assets/run_1.png",
+            "assets/run_2.png", "assets/run_3.png", "assets/run_4.png", "assets/run_5.png"};
+    private static final String[] JUMP_ANIMATION = {"assets/jump_0.png", "assets/jump_1.png",
+            "assets/jump_2.png", "assets/jump_3.png"};
+    private static final String[] FLY_ANIMATION = {"assets/swim_0.png","assets/swim_1.png",
+            "assets/swim_2.png", "assets/swim_3.png", "assets/swim_4.png","assets/swim_5.png"};
+    private static final String FALLING_ANIMATION = "assets/x_1.png";
+    private static final String STANDING_ANIMATION = "assets/idle_1.png";
+    private static Renderable fallingRenderable;
+    private static AnimationRenderable animationRenderableFly;
+    private static AnimationRenderable animationRenderableJump;
+    private static AnimationRenderable animationRenderableWalk;
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
     private static Counter energyCounter;
     private static boolean hasNoEnergy;
+    private static Renderable standingRenderable;
     private  UnaryOperator<Float> groundHeightFunc;
 
     /**
@@ -48,6 +61,14 @@ public class Avatar extends danogl.GameObject
      */
     public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
         super(topLeftCorner, dimensions, renderable);
+        Avatar.animationRenderableWalk = new AnimationRenderable(WALK_ANIMATION,
+                imageReader, true, 0.1f);
+
+        Avatar.animationRenderableJump = new AnimationRenderable(JUMP_ANIMATION, Avatar.imageReader,
+                true, 0.5f);
+        Avatar.animationRenderableFly = new AnimationRenderable(FLY_ANIMATION, Avatar.imageReader,
+                true, 0.1f);
+        Avatar.fallingRenderable = imageReader.readImage(FALLING_ANIMATION, true);
     }
 
     /**
@@ -73,9 +94,9 @@ public class Avatar extends danogl.GameObject
 
         Avatar.hasNoEnergy = false;
 
-        Renderable characterRenderable = imageReader.readImage("assets/idle_1.png",
+        Avatar.standingRenderable = imageReader.readImage(STANDING_ANIMATION,
                 true);
-        Avatar avatar = new Avatar(topLeftCorner,new Vector2(80,80),characterRenderable);
+        Avatar avatar = new Avatar(topLeftCorner,new Vector2(80,80), standingRenderable);
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
@@ -88,6 +109,7 @@ public class Avatar extends danogl.GameObject
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        this.renderer().setRenderable(Avatar.standingRenderable);
         float xVel = 0;
 
         //TODO: Should be able to rest on a treetop
@@ -96,15 +118,23 @@ public class Avatar extends danogl.GameObject
         if ((this.transform().getVelocity().y() < VELOCITY_Y)||
         (this.getCenter().y() > this.groundHeightFunc.apply(this.getCenter().x()))){
             this.transform().setVelocityY(VELOCITY_Y);
-            this.transform().setCenter(this.getCenter().x(),this.groundHeightFunc.apply(this.getCenter().x())-Block.SIZE);
+            this.transform().setCenter(this.getCenter().x(),
+                    this.groundHeightFunc.apply(this.getCenter().x())-Block.SIZE);
         }
 
         // Move left
-        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT))
+        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
             xVel -= VELOCITY_X;
+            this.renderer().setRenderable(Avatar.animationRenderableWalk);
+            this.renderer().setIsFlippedHorizontally(true);
+        }
+
         // Move right
-        if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT))
+        if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
             xVel += VELOCITY_X;
+            this.renderer().setRenderable(Avatar.animationRenderableWalk);
+            this.renderer().setIsFlippedHorizontally(false);
+        }
         // Update X velocity
         transform().setVelocityX(xVel);
 
@@ -112,19 +142,23 @@ public class Avatar extends danogl.GameObject
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && (getVelocity().y() == 0))
         {
             transform().setVelocityY(VELOCITY_Y);
-
+            this.renderer().setRenderable(Avatar.animationRenderableJump);
         }
         // Fly with (Space + Shift)
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT) && !hasNoEnergy) {
             transform().setVelocityY(VELOCITY_Y);
             energyCounter.decrement();
+            this.renderer().setRenderable(Avatar.animationRenderableFly);
             if (energyCounter.value() == 0)
             {
                 hasNoEnergy = true;
                 transform().setVelocityY(0);
-//                energyCounter.reset();
             }
         }
+        if (energyCounter.value() == 0){
+            this.renderer().setRenderable(Avatar.fallingRenderable);
+        }
+
 
     }
 
