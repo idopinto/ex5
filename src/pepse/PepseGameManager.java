@@ -8,7 +8,6 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
-import pepse.util.BlockMemento;
 import pepse.util.CareTaker;
 import pepse.util.Originator;
 import pepse.world.Avatar;
@@ -21,7 +20,6 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
-import java.lang.module.FindException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +50,6 @@ public class PepseGameManager extends danogl.GameManager {
     private int minX;
     private Vector2 windowDimensions;
     private Tree trees;
-    private int lastAvatarLocation;
-    //    private Map<Integer, ArrayList<Block>> cache;
     private Map<Integer, CareTaker> cache;
     private Originator originator;
 
@@ -76,8 +72,7 @@ public class PepseGameManager extends danogl.GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.windowDimensions = windowController.getWindowDimensions();
         createBackground();
-//        this.minX = 0;
-//        this.maxX = (int) windowDimensions.x() + (int) windowDimensions.x() % Block.SIZE;
+
         /*ADD here*/
         this.cache = new HashMap<Integer, CareTaker>();
         this.originator = new Originator();
@@ -87,13 +82,12 @@ public class PepseGameManager extends danogl.GameManager {
         this.trees.setSeed(SEED); trees.setCache(cache);
         generateAvatar(inputListener, imageReader);
 
-        this.lastAvatarLocation = (int) this.avatar.getCenter().x();
         this.minX = (int) (windowDimensions.x() / 2 - (windowDimensions.x()));
         this.maxX = (int) (windowDimensions.x() * 1.5);
         generateSceneryInRange(minX, maxX);
 
         gameObjects().layers().shouldLayersCollide(LEAF_LAYER, TOP_GROUND_LAYER, true);
-//        gameObjects().layers().shouldLayersCollide(TRUNK_LAYER, AVATAR_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(TRUNK_LAYER, AVATAR_LAYER, true);
 
     }
 
@@ -152,6 +146,7 @@ public class PepseGameManager extends danogl.GameManager {
         }
     }
 
+
     private void restoreSceneryInRange(int minX0,int maxX0) {
         for (int i = minX0; i < maxX0; i+=Block.SIZE) {
             if (this.cache.containsKey(i)) {
@@ -163,7 +158,7 @@ public class PepseGameManager extends danogl.GameManager {
     private void restoreSceneryFromCacheAt(int nextCol) {
         CareTaker careTaker = this.cache.get(nextCol);
 
-        for (int i = 0; i < careTaker.getMementoListSize(); i++) {
+        for (int i = 0; i < careTaker.size(); i++) {
             originator.getStateFromMemento(careTaker.get(i));
             if (originator.getState().equals("out"))
             {
@@ -178,37 +173,16 @@ public class PepseGameManager extends danogl.GameManager {
     private void removeSceneryInRange(int low, int high) throws NullPointerException {
         for (int i = low; i < high; i+=Block.SIZE) {
             if (this.cache.containsKey(i)) {
-//                System.out.println("Terrain Removed at "+i);
-
                 CareTaker careTaker = this.cache.get(i);
-                for (int j = 0; j < careTaker.getMementoListSize(); j++) {
+                for (int j = 0; j < careTaker.size(); j++) {
                     originator.getStateFromMemento(careTaker.get(j));
                     if (originator.getState().equals("in"))
                     {
-                        if(gameObjects().removeGameObject(originator.getBlock(), originator.getLayer()))
-                        {
-//                            System.out.println("removal success at: "+ j);
-                        }
+                        gameObjects().removeGameObject(originator.getBlock(), originator.getLayer());
                         originator.setState("out");
                         careTaker.saveState(originator,j);
                     }
                 }
-//                for (BlockMemento blockMemento : careTaker.getMementoList()) {
-//
-//                    originator.getStateFromMemento(blockMemento);
-//
-//                    if (originator.getState().equals("in"))
-//                    {
-//                        if(gameObjects().removeGameObject(originator.getBlock(), originator.getLayer()))
-//                        {
-//                            System.out.println("removal success at: "+ i);
-//                        }
-//
-//                        originator.setState("out", originator.getBlock(), originator.getLayer());
-//
-//                        blockMemento = originator.saveStateToMemento();
-//                        originator.getStateFromMemento(blockMemento);
-//                    }
                 }
 
             }

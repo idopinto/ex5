@@ -15,7 +15,6 @@ public class Originator {
 
     public void setState(String state){
         this.state = state;
-
     }
 
 
@@ -32,14 +31,11 @@ public class Originator {
     }
 
 
-    public BlockMemento saveStateToMemento(){
-        return new BlockMemento(this.block,this.layer,this.state);
-    }
+    public BlockMemento saveStateToMemento(){return new BlockMemento(this.block,this.layer,this.state);}
 
     public void getStateFromMemento(BlockMemento blockMemento){
         state = blockMemento.getState();
         block= blockMemento.getBlock();
         layer = blockMemento.getLayer();
-
     }
 }

@@ -93,6 +93,7 @@ public class Terrain {
                 // the first couple of blocks in each column should be in groundLayer else in groundLayer+2
                 if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
                 this.gameObjects.addGameObject(block, layer);
+
                 originator.setState("in",block,layer);
                 blockCareTaker.add(originator.saveStateToMemento());
                 block.setTag(GROUND_TAG);

@@ -26,6 +26,7 @@ public class Trunk {
             Block trunkBlock = new Block(new Vector2(trunkLocation.x(),
                     trunkLocation.y() - Block.SIZE*counter), renderable);
             gameObjects.addGameObject(trunkBlock, Tree.TRUNK_LAYER);
+
             Tree.originator.setState("in",trunkBlock,Tree.TRUNK_LAYER);
             blockCareTaker.add(Tree.originator.saveStateToMemento());
 //            cache.get((int)trunkLocation.x()).add(trunkBlock);

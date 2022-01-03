@@ -19,10 +19,7 @@ public class BlockMemento {
     public int getLayer(){
         return layer;
     }
-
     public Block getBlock(){
         return block;
     }
-
-
 }

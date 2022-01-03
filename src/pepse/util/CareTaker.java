@@ -9,13 +9,10 @@ public class CareTaker {
     public void add(BlockMemento state){
         blockMementoList.add(state);
     }
-    public void saveState(Originator originator, int index)
-    {
-        blockMementoList.set(index ,originator.saveStateToMemento());
-    }
     public BlockMemento get(int index){
         return blockMementoList.get(index);
     }
-    public int getMementoListSize(){return blockMementoList.size();}
+    public int size(){return blockMementoList.size();}
+    public void saveState(Originator originator, int index) {blockMementoList.set(index ,originator.saveStateToMemento());}
 }
 
