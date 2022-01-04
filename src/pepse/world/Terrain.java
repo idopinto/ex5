@@ -16,8 +16,11 @@ public class Terrain {
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
-//    private static final int MAXIMUM_HEIGHT_OF_TERRAIN = 600;
     private static final String GROUND_TAG = "ground";
+    private static final String IN_STATE = "in";
+    private static final int CONSTANT_28 = 28;
+    private static final int CONSTANT_3 = 3;
+    private static final int CONSTANT_2 = 2;
 
     private final float groundHeightAtX0;
     private final PerlinNoise myPerl;
@@ -56,19 +59,15 @@ public class Terrain {
 
     public float groundHeightAt(float x)
     {
-        float result = (float) (28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
+        float result = (float) (CONSTANT_28 * Block.SIZE * this.myPerl.noise(x/Block.SIZE));
         if (result < 0) {return this.groundHeightAtX0 + Block.SIZE;}
-        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {return windowDimensions.y() - 3 * Block.SIZE;}
+        else if (this.groundHeightAtX0 + result > windowDimensions.y()) {
+            return windowDimensions.y() - CONSTANT_3 * Block.SIZE;
+        }
         return this.groundHeightAtX0 + result;
-//        return 500;
     }
 
 
-    /**
-     * This method creates terrain in a given range of x-values.
-     * @param minX The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
-     * @param maxX - The upper bound of the given range (will be rounded to a multiple of Block.SIZE).
-     */
     /**
      * This method creates terrain in a given range of x-values.
      * @param minX The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
@@ -82,6 +81,7 @@ public class Terrain {
 
         for (int x = minX; x <= maxX ; x+=Block.SIZE){
             // if x in hashmap - running on the array list and adding to the game. then quite the function.
+
             topY = (int) groundHeightAt(x); // highest block for an X coordinate.
             layer = this.groundLayer; // top ground layer
             BlockCareTaker blockCareTaker = new BlockCareTaker();
@@ -90,10 +90,10 @@ public class Terrain {
                 Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 Block block = new Block(new Vector2(x,y), renderable);
                 // the first couple of blocks in each column should be in groundLayer else in groundLayer+2
-                if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + 2;}
+                if ((y != topY) && (y != topY + Block.SIZE)) {layer = this.groundLayer + CONSTANT_2;}
                 this.gameObjects.addGameObject(block, layer);
 
-                originator.setBlockState(block,layer,"in");
+                originator.setBlockState(block,layer,IN_STATE);
                 blockCareTaker.add(originator.saveStateToMemento());
                 block.setTag(GROUND_TAG);
             }
@@ -101,6 +101,12 @@ public class Terrain {
         }
     }
 
+
+    /**
+     * Stets the hashMap which contains the x coordinates as keys and BlockCareTaker as values as th field variable.
+     *
+     * @param cache the hashMap which contains the x coordinates as keys and BlockCareTaker as values.
+     */
     public void setCache(Map<Integer, BlockCareTaker> cache)
     {
         this.cache = cache;

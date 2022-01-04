@@ -42,10 +42,10 @@ public class Leaf extends Block {
     private final Random random;
 
 
-
     /**
      * Construct a new GameObject instance.
-     *  @param gameObjects
+     *
+     * @param gameObjects
      * @param topLeftCorner The location of the top-left corner of the created block
      * @param renderable    - A renderable to render as the block.
      */
@@ -53,7 +53,7 @@ public class Leaf extends Block {
         super(topLeftCorner, renderable);
 
         this.gameObjects = gameObjects;
-        this.random =  new Random(Objects.hash(this.getCenter().x()*this.getCenter().y(), seed));
+        this.random = new Random(Objects.hash(this.getCenter().x() * this.getCenter().y(), seed));
 
         // save initial state of the leaf
         this.opaqueness = this.renderer().getOpaqueness();
@@ -63,6 +63,13 @@ public class Leaf extends Block {
         leafRoutine();
     }
 
+
+    /**
+     * Defines the behavior of the leaf on collision. The leaf stops from moving from side to side.
+     *
+     * @param other     - The GameObject which the leaf is set to collide with.
+     * @param collision - Information about what does the collision contains.
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
@@ -77,6 +84,9 @@ public class Leaf extends Block {
                 () -> transform().setVelocity(Vector2.ZERO));
     }
 
+    /**
+     * The behavior of a leaf after being created. Waits a while and then starts to vibrate and fall.
+     */
     private void leafRoutine() {
 
         //  starts the vibrations of this leaf in the wind
@@ -86,6 +96,10 @@ public class Leaf extends Block {
         new ScheduledTask(this, waitTimeUntilLeafFall, false, this::fallingLeafRoutine);
     }
 
+
+    /**
+     * Sets the way the leaf will sway in the wind when it's on the tree.
+     */
     private void vibrationsRoutine() {
         this.angleVibrationEffect = new Transition<Float>(this,
                 this.renderer()::setRenderableAngle,
@@ -107,12 +121,19 @@ public class Leaf extends Block {
 
     }
 
+    /**
+     * Calls the functions which set the way the leaf fall and fade out from the game.
+     */
     private void fallingLeafRoutine() {
         makeLeafFallToTheGround();
         makeLeafFadeOut();
     }
 
 
+    /**
+     * Fades the leaf from the game. After the disappearance of the leaf, calls to the returningToTreeTop function
+     * which is responsible for returning the leaf the tree top.
+     */
     private void makeLeafFadeOut() {
         this.renderer().fadeOut(FADEOUT_TIME,
                 () -> new ScheduledTask(
@@ -122,6 +143,10 @@ public class Leaf extends Block {
     }
 
 
+    /**
+     * Sets the way the leaf falls of the tree,
+     * as well as setting the way the leaf will sway in the wind while falling.
+     */
     private void makeLeafFallToTheGround() {
 
         this.transform().setVelocityY(Vector2.DOWN.y() * FALL_VELOCITY);
@@ -136,11 +161,14 @@ public class Leaf extends Block {
     }
 
 
+    /**
+     * Responsible for returning the leaf to the tree-top. After that, calling the leafRoutine function to start the
+     * cycle of the life of the leaf all over again.
+     */
     private void returningToTreeTop() {
 
-//        this.renderer().fadeIn(0.1f); // Only need this one
         this.setCenter(this.initialPositionOfLeaf);
-        this.renderer().setOpaqueness(this.opaqueness); // or this one
+        this.renderer().setOpaqueness(this.opaqueness);
 
         // start again the life cycle
         leafRoutine();
