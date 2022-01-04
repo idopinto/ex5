@@ -237,6 +237,7 @@ public class PepseGameManager extends danogl.GameManager {
 
     /**
      * Runs the entire simulation.
+     *
      * @param args args
      */
     public static void main(String[] args) {

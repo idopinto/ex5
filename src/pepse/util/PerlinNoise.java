@@ -12,6 +12,7 @@ public class PerlinNoise {
 
     /**
      * constructor
+     *
      * @param seed seed to initialize
      */
     public PerlinNoise(double seed) {
@@ -56,6 +57,7 @@ public class PerlinNoise {
 
     /**
      * setter
+     *
      * @param seed seed to change
      */
     public void setSeed(double seed) {
@@ -64,6 +66,7 @@ public class PerlinNoise {
 
     /**
      * getter
+     *
      * @return seed
      */
     public double getSeed() {
@@ -72,6 +75,7 @@ public class PerlinNoise {
 
     /**
      * noise
+     *
      * @param x double value
      * @return value
      */
@@ -90,6 +94,7 @@ public class PerlinNoise {
 
     /**
      * smoothNoise
+     *
      * @param x double
      * @param y double
      * @param z double

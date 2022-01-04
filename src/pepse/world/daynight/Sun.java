@@ -43,7 +43,7 @@ public class Sun {
 
         new Transition<>(
                 sun, // the game object being changed
-                angle -> {sun.setCenter(windowDimensions.mult(0.5f).add(vecToAdd(angle,windowDimensions)));},
+                angle -> sun.setCenter(windowDimensions.mult(0.5f).add(vecToAdd(angle, windowDimensions))),
                 0f, // initial transition value
                 FULL_CYCLE, // final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT, // use a linear interpolator
