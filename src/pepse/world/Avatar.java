@@ -29,14 +29,14 @@ public class Avatar extends danogl.GameObject {
     private static final String AVATAR_TAG = "avatar";
     private static final String GROUND_TAG = "ground";
     private static final String TRUNK_LAYER = "trunk";
-    private static final String[] WALK_ANIMATION = {"assets/run_0.png", "assets/run_1.png",
-            "assets/run_2.png", "assets/run_3.png", "assets/run_4.png", "assets/run_5.png"};
-    private static final String[] JUMP_ANIMATION = {"assets/jump_0.png", "assets/jump_1.png",
-            "assets/jump_2.png", "assets/jump_3.png"};
-    private static final String[] FLY_ANIMATION = {"assets/swim_0.png", "assets/swim_1.png",
-            "assets/swim_2.png", "assets/swim_3.png", "assets/swim_4.png", "assets/swim_5.png"};
-    private static final String FALLING_ANIMATION = "assets/x_1.png";
-    private static final String STANDING_ANIMATION = "assets/idle_1.png";
+    private static final String[] WALK_ANIMATION = {"pepse/assets/run_0.png", "pepse/assets/run_1.png",
+            "pepse/assets/run_2.png", "pepse/assets/run_3.png", "pepse/assets/run_4.png", "pepse/assets/run_5.png"};
+    private static final String[] JUMP_ANIMATION = {"pepse/assets/jump_0.png", "pepse/assets/jump_1.png",
+            "pepse/assets/jump_2.png", "pepse/assets/jump_3.png"};
+    private static final String[] FLY_ANIMATION = {"pepse/assets/swim_0.png", "pepse/assets/swim_1.png",
+            "pepse/assets/swim_2.png", "pepse/assets/swim_3.png", "pepse/assets/swim_4.png", "pepse/assets/swim_5.png"};
+    private static final String FALLING_ANIMATION = "pepse/assets/x_1.png";
+    private static final String STANDING_ANIMATION = "pepse/assets/idle_1.png";
     private static final int INITIAL_ENERGY_COUNTER_VALUE = 200;
     private static final float ENERGY_Y_COORDINATE = 20;
     private static final float ENERGY_DISPLAYER_SIZE = 30;
