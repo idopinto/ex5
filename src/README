@@ -2,3 +2,49 @@ kiwi_gun
 idopinto12
 
 
+The differance between the uml_before and the unl after is:
+The uml_before doesn't contains the classes: BlockMemento, BlockOriginator, BlockCareTaker. When we first constructed
+the plan of the game, we didn't think we would need a memento pattern, but later on we found it very useful.
+
+The way we transformed our world into an infinite world:
+At first we thought it would be smart to delete the ground and trees on a certain x coordinate, for each step the
+avatar advances, and create ground and trees at the opposite margin of the direction the avatar advances to.
+We saw that these actions overload the game and the update function particularly, so we decided to create and delete
+a quarter of a screen (defined by the screen dimensions) so that it won't be necessary to create and delete every frame.
+That way, we insured the game wouldn't be as overloaded as before.
+After a while we Thought that we can actually improve the way we create and delete the terrain and trees from the game.
+Instead of actually creating and deleting actual instances of the terrain and trees every time, we thought about
+constructing a hashMap which will contain the x coordinate as a key and an array list of terrain and trees as the value.
+That way when we create a new piece of the world (quarter of the screen) we can save it in the hashMap, so that when
+we delete it from the game, it won't be deleted from the program and we won't need to create it from scratch.
+Instead, by storing the piece of the world we have already created, we would be able to restore it and add it back
+to the game by accessing the hashMap and construct the value of the certain X coordinate of where the new piece of the
+world should reappear. When we want to delete the quarter of a screen we passed with the avatar, we simply removed it
+from the game, but it stayed in the hashMap for farther use.
+About the way we decided to create and delete pieces of the world: We wanted to keep a certain distance between the
+avatar and the margins of the world. We saw that we have problems doing that with the actual screen margins (which means
+keeping the distance of the margins to be 0.5 of the dimension of the screen all the time) so we decided to keep the
+distance in between 0.75 and 0.5 of the screen dimension. at the begging the margins are set to be 1.25 of the screen
+dimension from the right, and -0.25 screen dimension from the left. Wherever the avatar advances to, when it reaches
+a distance of at most 0.5 of screen dimension from one of the margins - A new piece of the world appears and the other
+piece of the world (same sized piece from the opposite margin) is being removed. Each piece is about 0.25 of screen
+dimension.
+
+
+
+
+
+Ido:
+->  sky
+-> day and night
+->sun
+-> sunHalo
+
+Netanel:
+->Block,terrain
+->tree plant
+-> falling leaves
+-> leaf in the wind
+
+together:
+->avatar
