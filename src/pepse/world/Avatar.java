@@ -71,7 +71,7 @@ public class Avatar extends danogl.GameObject {
         this.animationRenderableFly = new AnimationRenderable(FLY_ANIMATION, Avatar.imageReader,
                 true, 0.1f);
         this.fallingRenderable = Avatar.imageReader.readImage(FALLING_ANIMATION, true);
-        this.standingRenderable = Avatar.imageReader.readImage(STANDING_ANIMATION,true);
+        this.standingRenderable = Avatar.imageReader.readImage(STANDING_ANIMATION, true);
     }
 
     /**

@@ -25,7 +25,8 @@ public class Trunk {
      * @param blockCareTaker The CareTaker of a current x coordinate which contains the arrayList of mementos which
      *                       represents the blocks which appears at the x coordinates, including leaves' blocks.
      */
-    static void createTrunk(GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight, BlockCareTaker blockCareTaker) {
+    static void createTrunk(GameObjectCollection gameObjects, Vector2 trunkLocation, int trunkHeight,
+                            BlockCareTaker blockCareTaker) {
         int counter = 0;
         for (int currentHeightOfTree = 0; currentHeightOfTree < trunkHeight; currentHeightOfTree++) {
             Renderable renderable = new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR));

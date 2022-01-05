@@ -15,6 +15,7 @@ public class TreeTop {
 
     private static final Color LEAF_COLOR = new Color(50, 200, 30);
     private static final String LEAF_TAG = "leaf";
+    private static final String IN_STATE = "in";
 
 
     /**
@@ -37,7 +38,7 @@ public class TreeTop {
                 Leaf leaf = new Leaf(gameObjects, new Vector2(x, y), renderable, seed);
 
                 gameObjects.addGameObject(leaf, Tree.LEAF_LAYER);
-                Tree.originator.setBlockState(leaf, Tree.LEAF_LAYER, "in");
+                Tree.originator.setBlockState(leaf, Tree.LEAF_LAYER, IN_STATE);
                 blockCareTaker.add(Tree.originator.saveStateToMemento());
                 leaf.setTag(LEAF_TAG);
                 x += Block.SIZE;

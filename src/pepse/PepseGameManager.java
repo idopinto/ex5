@@ -48,6 +48,8 @@ public class PepseGameManager extends danogl.GameManager {
 
     /* Colors constants */
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
+    private static final String OUT_STATE = "out";
+    private static final String IN_STATE = "in";
 
 
     /* Fields */
@@ -120,19 +122,13 @@ public class PepseGameManager extends danogl.GameManager {
         int halfScreen = (int) (windowDimensions.x() / 2);
         if (Math.abs(this.avatar.getCenter().x() - minX) < halfScreen) {
             if (this.cache.containsKey(minX - Block.SIZE)) {
-                System.out.println("------------------------");
-                System.out.println("Terrain Restored in range [ " + (minX - halfScreen) + ", " + minX + " ]");
                 restoreSceneryInRange(minX - halfScreen, minX);
             } else {
-                System.out.println("------------------------");
-                System.out.println("Terrain Created in range [ " + (minX - halfScreen) + ", " + minX + " ]");
                 generateSceneryInRange(minX - halfScreen, minX);
             }
 
             removeSceneryInRange(maxX - halfScreen, maxX);
             this.maxX -= halfScreen;
-            System.out.println("Terrain Removed in range [ " + (maxX - halfScreen) + ", " + maxX + " ]");
-            System.out.println("------------------------");
             this.minX -= halfScreen;
         }
     }
@@ -144,21 +140,14 @@ public class PepseGameManager extends danogl.GameManager {
         int halfScreen = (int) (windowDimensions.x() / 2);
         if (Math.abs(this.avatar.getCenter().x() - maxX) < halfScreen) {
             if (this.cache.containsKey(maxX + Block.SIZE)) {
-
-                System.out.println("------------------------");
-                System.out.println("Terrain Restored in range [ " + (maxX) + ", " + (maxX + halfScreen) + " ]");
                 restoreSceneryInRange(maxX, maxX + halfScreen);
 
             } else {
-                System.out.println("------------------------");
-                System.out.println("Terrain Created in range [ " + maxX + ", " + (maxX + halfScreen) + " ]");
                 generateSceneryInRange(maxX, maxX + halfScreen);
             }
             this.maxX += halfScreen;
 
             removeSceneryInRange(minX, minX + halfScreen);
-            System.out.println("Terrain Removed in range [ " + minX + ", " + (minX + halfScreen) + " ]");
-            System.out.println("------------------------");
             this.minX += halfScreen;
         }
     }
@@ -184,9 +173,9 @@ public class PepseGameManager extends danogl.GameManager {
 
         for (int i = 0; i < careTaker.size(); i++) {
             originator.getStateFromMemento(careTaker.get(i));
-            if (originator.getState().equals("out")) {
+            if (originator.getState().equals(OUT_STATE)) {
                 gameObjects().addGameObject(originator.getBlock(), originator.getLayer());
-                originator.setBlockState("in");
+                originator.setBlockState(IN_STATE);
                 careTaker.replaceMemento(originator, i);
             }
         }
@@ -200,9 +189,9 @@ public class PepseGameManager extends danogl.GameManager {
                 BlockCareTaker careTaker = this.cache.get(i);
                 for (int j = 0; j < careTaker.size(); j++) {
                     originator.getStateFromMemento(careTaker.get(j));
-                    if (originator.getState().equals("in")) {
+                    if (originator.getState().equals(IN_STATE)) {
                         gameObjects().removeGameObject(originator.getBlock(), originator.getLayer());
-                        originator.setBlockState("out");
+                        originator.setBlockState(OUT_STATE);
                         careTaker.replaceMemento(originator, j);
                     }
                 }
@@ -216,7 +205,7 @@ public class PepseGameManager extends danogl.GameManager {
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
         Vector2 avatarInitialPosition = new Vector2(windowDimensions.x() / 2f,
-                this.terrain.groundHeightAt(maxX / 2f) - 2*Block.SIZE);
+                this.terrain.groundHeightAt(maxX / 2f) - 2 * Block.SIZE);
         this.avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         this.avatar.setGroundHeightFunc(this.terrain::groundHeightAt);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, Vector2.ZERO, null), LEAF_LAYER);

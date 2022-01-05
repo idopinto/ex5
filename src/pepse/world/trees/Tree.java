@@ -84,7 +84,8 @@ public class Tree {
      * @return The height of the tree in Block.Size value.
      */
     private int getRandomHeight() {
-        return this.random.nextInt(MAXIMAL_HEIGHT - MINIMAL_HEIGHT) + MINIMAL_HEIGHT;
+        return this.random.nextInt(MAXIMAL_HEIGHT - MINIMAL_HEIGHT) +
+                MINIMAL_HEIGHT;
     }
 
     /**
