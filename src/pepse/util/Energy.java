@@ -15,6 +15,7 @@ public class Energy extends GameObject {
      */
     /* Constants */
     private static final TextRenderable textRenderable = new TextRenderable("");
+    private static final String ENERGY_DISPLAYER = "Energy: %d ";
 
     /* Class Fields */
     private final Counter energyCounter;
@@ -25,13 +26,11 @@ public class Energy extends GameObject {
      * @param topLeftCorner        Position of the object, in window coordinates (pixels).
      *                             Note that (0,0) is the top-left corner of the window.
      * @param dimensions           Width and height in window coordinates.
-     * @param gameObjectCollection global game object collection.
      */
-    public Energy(Counter energyCounter, Vector2 topLeftCorner, Vector2 dimensions,
-                  GameObjectCollection gameObjectCollection) {
+    public Energy(Counter energyCounter, Vector2 topLeftCorner, Vector2 dimensions) {
         super(topLeftCorner, dimensions, textRenderable);
         this.energyCounter = energyCounter;
-        textRenderable.setString(String.format("Energy: %d ", this.energyCounter.value() / 2));
+        textRenderable.setString(String.format(ENERGY_DISPLAYER, this.energyCounter.value() / 2));
         textRenderable.setColor(Color.BLACK);
     }
 
@@ -45,7 +44,7 @@ public class Energy extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
         if (energyCounter.value() > 0) {
-            String textString = String.format("Energy: %d ", this.energyCounter.value() / 2);
+            String textString = String.format(ENERGY_DISPLAYER, this.energyCounter.value() / 2);
             textRenderable.setString(textString);
         }
     }

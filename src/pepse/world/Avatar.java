@@ -37,15 +37,19 @@ public class Avatar extends danogl.GameObject {
             "assets/swim_2.png", "assets/swim_3.png", "assets/swim_4.png", "assets/swim_5.png"};
     private static final String FALLING_ANIMATION = "assets/x_1.png";
     private static final String STANDING_ANIMATION = "assets/idle_1.png";
-    private static Renderable fallingRenderable;
-    private static AnimationRenderable animationRenderableFly;
-    private static AnimationRenderable animationRenderableJump;
-    private static AnimationRenderable animationRenderableWalk;
+    private static final int INITIAL_ENERGY_COUNTER_VALUE = 200;
+    private static final float ENERGY_Y_COORDINATE = 20;
+    private static final float ENERGY_DISPLAYER_SIZE = 30;
+    private static final float AVATAR_DIMENSIONS = 80;
+    private final Renderable fallingRenderable;
+    private final AnimationRenderable animationRenderableFly;
+    private final AnimationRenderable animationRenderableJump;
+    private final AnimationRenderable animationRenderableWalk;
     private static UserInputListener inputListener;
     private static ImageReader imageReader;
     private static Counter energyCounter;
     private static boolean hasNoEnergy;
-    private static Renderable standingRenderable;
+    private final Renderable standingRenderable;
     private UnaryOperator<Float> groundHeightFunc;
 
 
@@ -59,14 +63,15 @@ public class Avatar extends danogl.GameObject {
      */
     public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
         super(topLeftCorner, dimensions, renderable);
-        Avatar.animationRenderableWalk = new AnimationRenderable(WALK_ANIMATION,
+        this.animationRenderableWalk = new AnimationRenderable(WALK_ANIMATION,
                 imageReader, true, 0.1f);
 
-        Avatar.animationRenderableJump = new AnimationRenderable(JUMP_ANIMATION, Avatar.imageReader,
+        this.animationRenderableJump = new AnimationRenderable(JUMP_ANIMATION, Avatar.imageReader,
                 true, 0.5f);
-        Avatar.animationRenderableFly = new AnimationRenderable(FLY_ANIMATION, Avatar.imageReader,
+        this.animationRenderableFly = new AnimationRenderable(FLY_ANIMATION, Avatar.imageReader,
                 true, 0.1f);
-        Avatar.fallingRenderable = imageReader.readImage(FALLING_ANIMATION, true);
+        this.fallingRenderable = Avatar.imageReader.readImage(FALLING_ANIMATION, true);
+        this.standingRenderable = Avatar.imageReader.readImage(STANDING_ANIMATION,true);
     }
 
     /**
@@ -84,17 +89,16 @@ public class Avatar extends danogl.GameObject {
                                 UserInputListener inputListener, ImageReader imageReader) {
         Avatar.inputListener = inputListener;
         Avatar.imageReader = imageReader;
-        Avatar.energyCounter = new Counter(200);
-        Energy energy = new Energy(Avatar.energyCounter, new Vector2(0, 20),
-                new Vector2(30, 30), gameObjects);
+        Avatar.energyCounter = new Counter(INITIAL_ENERGY_COUNTER_VALUE);
+        Energy energy = new Energy(Avatar.energyCounter, new Vector2(0, ENERGY_Y_COORDINATE),
+                new Vector2(ENERGY_DISPLAYER_SIZE, ENERGY_DISPLAYER_SIZE));
         energy.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(energy, Layer.BACKGROUND);
 
         Avatar.hasNoEnergy = false;
 
-        Avatar.standingRenderable = imageReader.readImage(STANDING_ANIMATION,
-                true);
-        Avatar avatar = new Avatar(topLeftCorner, new Vector2(80, 80), standingRenderable);
+        Avatar avatar = new Avatar(topLeftCorner, new Vector2(AVATAR_DIMENSIONS, AVATAR_DIMENSIONS),
+                imageReader.readImage(STANDING_ANIMATION, true));
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
@@ -112,7 +116,7 @@ public class Avatar extends danogl.GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        this.renderer().setRenderable(Avatar.standingRenderable);
+        this.renderer().setRenderable(this.standingRenderable);
         float xVel = 0;
 
         hittingTheGround();
@@ -133,7 +137,7 @@ public class Avatar extends danogl.GameObject {
      */
     private void fallingFromZeroEnergy() {
         if (energyCounter.value() == 0) {
-            this.renderer().setRenderable(Avatar.fallingRenderable);
+            this.renderer().setRenderable(this.fallingRenderable);
         }
     }
 
@@ -159,7 +163,7 @@ public class Avatar extends danogl.GameObject {
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_SHIFT) && !hasNoEnergy) {
             transform().setVelocityY(VELOCITY_Y);
             energyCounter.decrement();
-            this.renderer().setRenderable(Avatar.animationRenderableFly);
+            this.renderer().setRenderable(this.animationRenderableFly);
             if (energyCounter.value() == 0) {
                 hasNoEnergy = true;
                 transform().setVelocityY(0);
@@ -175,7 +179,7 @@ public class Avatar extends danogl.GameObject {
         // Jump only if on the ground
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && (getVelocity().y() == 0)) {
             transform().setVelocityY(VELOCITY_Y);
-            this.renderer().setRenderable(Avatar.animationRenderableJump);
+            this.renderer().setRenderable(this.animationRenderableJump);
         }
     }
 
@@ -188,7 +192,7 @@ public class Avatar extends danogl.GameObject {
         // Move right
         if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
             xVel += VELOCITY_X;
-            this.renderer().setRenderable(Avatar.animationRenderableWalk);
+            this.renderer().setRenderable(this.animationRenderableWalk);
             this.renderer().setIsFlippedHorizontally(false);
         }
         return xVel;
@@ -203,7 +207,7 @@ public class Avatar extends danogl.GameObject {
         // Move left
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
             xVel -= VELOCITY_X;
-            this.renderer().setRenderable(Avatar.animationRenderableWalk);
+            this.renderer().setRenderable(this.animationRenderableWalk);
             this.renderer().setIsFlippedHorizontally(true);
         }
         return xVel;
