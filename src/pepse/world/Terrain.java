@@ -4,7 +4,10 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.*;
+import pepse.util.BlockCareTaker;
+import pepse.util.BlockOriginator;
+import pepse.util.ColorSupplier;
+import pepse.util.PerlinNoise;
 
 import java.awt.*;
 import java.util.Map;
@@ -28,7 +31,7 @@ public class Terrain {
     private final int groundLayer;
     private final Vector2 windowDimensions;
     private Map<Integer, BlockCareTaker> cache;
-    private BlockOriginator originator;
+    private final BlockOriginator originator;
 
 
 
@@ -70,6 +73,7 @@ public class Terrain {
 
     /**
      * This method creates terrain in a given range of x-values.
+     *
      * @param minX The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
      * @param maxX - The upper bound of the given range (will be rounded to a multiple of Block.SIZE).
      */
@@ -103,7 +107,7 @@ public class Terrain {
 
 
     /**
-     * Stets the hashMap which contains the x coordinates as keys and BlockCareTaker as values as th field variable.
+     * Sets the hashMap which contains the x coordinates as keys and BlockCareTaker as values as th field variable.
      *
      * @param cache the hashMap which contains the x coordinates as keys and BlockCareTaker as values.
      */

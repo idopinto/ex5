@@ -216,7 +216,7 @@ public class PepseGameManager extends danogl.GameManager {
 
     private void generateAvatar(UserInputListener inputListener, ImageReader imageReader) {
         Vector2 avatarInitialPosition = new Vector2(windowDimensions.x() / 2f,
-                this.terrain.groundHeightAt(maxX / 2f) - Block.SIZE);
+                this.terrain.groundHeightAt(maxX / 2f) - 2*Block.SIZE);
         this.avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avatarInitialPosition, inputListener, imageReader);
         this.avatar.setGroundHeightFunc(this.terrain::groundHeightAt);
         gameObjects().addGameObject(new GameObject(Vector2.ZERO, Vector2.ZERO, null), LEAF_LAYER);
