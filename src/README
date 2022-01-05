@@ -31,6 +31,27 @@ piece of the world (same sized piece from the opposite margin) is being removed.
 dimension.
 
 
+How we decided to implement the tree package:
+We decided to work with four classes in the package - Tree, Trunk, TreeTop and leaf.
+The way the implementation works is simple -
+First we create an instance of Tree. We use the Tree's function createInRange(int minX, int maxX) to create the amount
+of trees which which will actually appear in the created piece of the world. for each X coordinate (which is defined
+by skipping each time a Block.Size distance in between every X coordinate, and added into the hashMap we have written
+about before) we toss a coin with a 0.1 ratio of true. If true we plant a tree, if false we don't plant a tree at that
+specific X coordinate. Each tree has a certain height which is randomly selected. We then for for each tree that is
+planted we create an instance of TreeTop and Trunk by using it's createTrunk and TreeTop.createTreeTop static functions.
+We decided to have different classes for the tree-top and the trunk because they have different functionalities and
+different roles and the game, although they together construct the tree.
+The Trunk class is responsible for the trunk. Creates blocks which are set for the avatar to not go through or move.
+The blocks of the trunk are added to the hashMap of the X coordinate, as part of the arrayList.
+The TreeTop class using it's createTreeTop function to create the tree-top. The leaves of the tree-top are created
+one by one by creating instances of the Leaf class, and being added to the arrayList of the hashMap of the certain
+X coordinate. The leaf class is responsible for the behavior of each leaf - it sets how it moves in the wind, how and
+when it falls and when it dies and reborn.
+We chose this type of implementation because it was easier to define certain rolls to each component of the tree, that
+will be responsible for a certain or several functionalities that are not dependent on the any other set of
+functionalities. We insured independent rolls and leeway for every component of the tree.
+
 
 
 
