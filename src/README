@@ -1,71 +1,83 @@
 kiwi_gun
 idopinto12
 
-
-The differance between the uml_before and the unl after is:
-The uml_before doesn't contains the classes: BlockMemento, BlockOriginator, BlockCareTaker. When we first constructed
-the plan of the game, we didn't think we would need a memento pattern, but later on we found it very useful.
-
-The way we transformed our world into an infinite world:
-At first we thought it would be smart to delete the ground and trees on a certain x coordinate, for each step the
-avatar advances, and create ground and trees at the opposite margin of the direction the avatar advances to.
-We saw that these actions overload the game and the update function particularly, so we decided to create and delete
-a quarter of a screen (defined by the screen dimensions) so that it won't be necessary to create and delete every frame.
-That way, we insured the game wouldn't be as overloaded as before.
-After a while we Thought that we can actually improve the way we create and delete the terrain and trees from the game.
-Instead of actually creating and deleting actual instances of the terrain and trees every time, we thought about
-constructing a hashMap which will contain the x coordinate as a key and an array list of terrain and trees as the value.
-That way when we create a new piece of the world (quarter of the screen) we can save it in the hashMap, so that when
-we delete it from the game, it won't be deleted from the program and we won't need to create it from scratch.
-Instead, by storing the piece of the world we have already created, we would be able to restore it and add it back
-to the game by accessing the hashMap and construct the value of the certain X coordinate of where the new piece of the
-world should reappear. When we want to delete the quarter of a screen we passed with the avatar, we simply removed it
-from the game, but it stayed in the hashMap for farther use.
-About the way we decided to create and delete pieces of the world: We wanted to keep a certain distance between the
-avatar and the margins of the world. We saw that we have problems doing that with the actual screen margins (which means
-keeping the distance of the margins to be 0.5 of the dimension of the screen all the time) so we decided to keep the
-distance in between 0.75 and 0.5 of the screen dimension. at the begging the margins are set to be 1.25 of the screen
-dimension from the right, and -0.25 screen dimension from the left. Wherever the avatar advances to, when it reaches
-a distance of at most 0.5 of screen dimension from one of the margins - A new piece of the world appears and the other
-piece of the world (same sized piece from the opposite margin) is being removed. Each piece is about 0.25 of screen
-dimension.
+## The differance between the uml_before and the uml_after ##
+    The uml_before doesn't contains the classes: BlockMemento, BlockOriginator, BlockCareTaker. When we first constructed
+    the plan of the game, we didn't think we would need a memento pattern, but later on we found it very useful.
+    The way we transformed our world into an infinite world:
+    At first we thought it would be smart to delete the ground and trees on a certain x coordinate, for each step the
+    avatar advances, and create ground and trees at the opposite margin of the direction the avatar advances to.
+    We saw that these actions overload the game and the update function particularly, so we decided to create and delete
+    a quarter of a screen (defined by the screen dimensions) so that it won't be necessary to create and delete every frame.
+    That way, we insured the game wouldn't be as overloaded as before.
+    After a while we Thought that we can actually improve the way we create and delete the terrain and trees from the game.
+    Instead of actually creating and deleting actual instances of the terrain and trees every time, we thought about
+    constructing a hashMap which will contain the x coordinate as a key and an array list of terrain and trees as the value.
+    That way when we create a new piece of the world (quarter of the screen) we can save it in the hashMap, so that when
+    we delete it from the game, it won't be deleted from the program and we won't need to create it from scratch.
+    Instead, by storing the piece of the world we have already created, we would be able to restore it and add it back
+    to the game by accessing the hashMap and construct the value of the certain X coordinate of where the new piece of the
+    world should reappear. When we want to delete the quarter of a screen we passed with the avatar, we simply removed it
+    from the game, but it stayed in the hashMap for farther use.
+    About the way we decided to create and delete pieces of the world: We wanted to keep a certain distance between the
+    avatar and the margins of the world. We saw that we have problems doing that with the actual screen margins (which means
+    keeping the distance of the margins to be 0.5 of the dimension of the screen all the time) so we decided to keep the
+    distance in between 0.75 and 0.5 of the screen dimension. at the begging the margins are set to be 1.25 of the screen
+    dimension from the right, and -0.25 screen dimension from the left. Wherever the avatar advances to, when it reaches
+    a distance of at most 0.5 of screen dimension from one of the margins - A new piece of the world appears and the other
+    piece of the world (same sized piece from the opposite margin) is being removed. Each piece is about 0.25 of screen
+    dimension.
 
 
-How we decided to implement the tree package:
-We decided to work with four classes in the package - Tree, Trunk, TreeTop and leaf.
-The way the implementation works is simple -
-First we create an instance of Tree. We use the Tree's function createInRange(int minX, int maxX) to create the amount
-of trees which which will actually appear in the created piece of the world. for each X coordinate (which is defined
-by skipping each time a Block.Size distance in between every X coordinate, and added into the hashMap we have written
-about before) we toss a coin with a 0.1 ratio of true. If true we plant a tree, if false we don't plant a tree at that
-specific X coordinate. Each tree has a certain height which is randomly selected. We then for for each tree that is
-planted we create an instance of TreeTop and Trunk by using it's createTrunk and TreeTop.createTreeTop static functions.
-We decided to have different classes for the tree-top and the trunk because they have different functionalities and
-different roles and the game, although they together construct the tree.
-The Trunk class is responsible for the trunk. Creates blocks which are set for the avatar to not go through or move.
-The blocks of the trunk are added to the hashMap of the X coordinate, as part of the arrayList.
-The TreeTop class using it's createTreeTop function to create the tree-top. The leaves of the tree-top are created
-one by one by creating instances of the Leaf class, and being added to the arrayList of the hashMap of the certain
-X coordinate. The leaf class is responsible for the behavior of each leaf - it sets how it moves in the wind, how and
-when it falls and when it dies and reborn.
-We chose this type of implementation because it was easier to define certain rolls to each component of the tree, that
-will be responsible for a certain or several functionalities that are not dependent on the any other set of
-functionalities. We insured independent rolls and leeway for every component of the tree.
+## How we decided to implement the tree package ##
+    We decided to work with four classes in the package - Tree, Trunk, TreeTop and leaf.
+    The way the implementation works is simple -
+    First we create an instance of Tree. We use the Tree's function createInRange(int minX, int maxX) to create the amount
+    of trees which which will actually appear in the created piece of the world. for each X coordinate (which is defined
+    by skipping each time a Block.Size distance in between every X coordinate, and added into the hashMap we have written
+    about before) we toss a coin with a 0.1 ratio of true. If true we plant a tree, if false we don't plant a tree at that
+    specific X coordinate. Each tree has a certain height which is randomly selected. We then for for each tree that is
+    planted we create an instance of TreeTop and Trunk by using it's createTrunk and TreeTop.createTreeTop static functions.
+    We decided to have different classes for the tree-top and the trunk because they have different functionalities and
+    different roles and the game, although they together construct the tree.
+    The Trunk class is responsible for the trunk. Creates blocks which are set for the avatar to not go through or move.
+    The blocks of the trunk are added to the hashMap of the X coordinate, as part of the arrayList.
+    The TreeTop class using it's createTreeTop function to create the tree-top. The leaves of the tree-top are created
+    one by one by creating instances of the Leaf class, and being added to the arrayList of the hashMap of the certain
+    X coordinate. The leaf class is responsible for the behavior of each leaf - it sets how it moves in the wind, how and
+    when it falls and when it dies and reborn.
+    We chose this type of implementation because it was easier to define certain rolls to each component of the tree, that
+    will be responsible for a certain or several functionalities that are not dependent on the any other set of
+    functionalities. We insured independent rolls and leeway for every component of the tree.
 
+## Explanation about design dilemmas and how we managed to solve them ##
 
+    1. Memento:
+    As we said before, we had a true dilemma about what is the most "OOP" approach to create, restore and remove blocks.
+    we tried to use hash-map and array list of blocks as values.
+    As we implemented this we realized that it is kind of a problem because in the GameManager we don't know the game object
+    layer as we remove or restore it and it forced us to check this with tags. furthermore we understood that maybe we should
+    encapsulate the process of **how** we save and restore blocks from the user eyes.
+    Later on we implemented Memento Design Pattern as we learned in the course.
+    We found it answers our questions.
+    We decided to identify each block in the Game as 'memento' in a way that is a bit different.
+    Each 'memento' contain the following information:
+    1. Block instance
+    2. layer (for easy Removal, Restore)
+    3. state
+    (Can be 'in' or 'out' depending whether the object in gameObjects; To ensure we remove/restore correctly and debugging )
+    and we still use hash-map (for constant time access) that maps for every x coordinate the corresponding CareTaker that
+    holds array list of mementos (blocks).
+    at initialization and creation of the terrain we create the CareTakers and add Block Mementos using the Originator.
+    after this stage the block will never be generated again and can be easily restored at any time.
+    We expanded the CareTaker functionality so it can not only add or get Memento but replace one for another.
+    The state is the only thing that changes through removing (state is 'out') and restoring (state is 'in').
 
-
-Ido:
-->  sky
--> day and night
-->sun
--> sunHalo
-
-Netanel:
-->Block,terrain
-->tree plant
--> falling leaves
--> leaf in the wind
-
-together:
-->avatar
+    2. Energy:
+    At first we wanted to implement the energy feature as data member of avatar instance without any
+    numeric display, later on we realized that it can be solved better by using Counter instance that
+    keep track of the energy level and overrides each frame graphic energy text on the top left corner of the
+    screen. Because we needed to increase\decrease the energy level by 0.5 and the Counter only increment\decrement by
+    integer. the solution we came up with is to initialize the Counter to 200 (double the max energy level)
+    and modify it value by one so the graphic Counter display the current energy level divided by 2.
+    We overcame our problem bravely and it only made us stronger.
